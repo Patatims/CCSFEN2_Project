@@ -1,0 +1,944 @@
+import sys
+from PyQt5.uic import loadUi
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+
+import mysql.connector
+from mysql.connector.errors import *
+import warnings
+
+# Suppress DeprecationWarnings globally
+warnings.simplefilter("ignore", category=DeprecationWarning)
+
+########################################################################
+########################################################################
+########################################################################
+
+conn = mysql.connector.connect(
+    host="127.0.0.1",
+    user="root",
+    passwd="WFZximct1!",                   #MYSQL connection
+    database="seproject_db",
+    autocommit=True ) 
+    
+cur = conn.cursor()
+
+########################################################################
+########################################################################
+########################################################################
+
+#Login Screen of the program and also first screen to be displayed.
+class LoginScreen(QDialog):
+    def __init__(self):
+        super(LoginScreen, self).__init__()
+        loadUi("ui/loginscreen.ui", self)
+        self.passwordfield.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.loginbtn.clicked.connect(self.login)
+        self.userfield.returnPressed.connect(self.login)  ###Key event
+        self.passwordfield.returnPressed.connect(self.login)  ### Para gumana yung Enter key as click to the loginbtn
+
+    def login(self):
+        user = self.userfield.text()
+        password = self.passwordfield.text()
+        if len(user) == 0 or len(password) == 0:
+            self.error.setText("Please input all fields.")
+        else:
+            try:
+                conn = mysql.connector.connect(
+                    host="127.0.0.1",
+                    user="root",
+                    passwd="WFZximct1!",
+                    database="seproject_db")
+                cur = conn.cursor()
+
+                query = 'SELECT password FROM employee WHERE username = \'' + user + "\'"
+                cur.execute(query,)
+
+                result_pass = cur.fetchone()
+                if result_pass is not None and result_pass[0].strip() == password:
+                    self.error.setText("Success!")
+                    self.error.setStyleSheet("color: green")
+                    self.loginbtn.setText("Proceed")
+                    self.userfield.returnPressed.connect(lambda: self.redirect_based_on_role(user))
+                    self.passwordfield.returnPressed.connect(lambda: self.redirect_based_on_role(user))
+                    self.loginbtn.clicked.connect(lambda: self.redirect_based_on_role(user))
+                else:
+                    self.passwordfield.clear()
+                    self.error.setText("Invalid username or password")
+
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+
+            finally:
+                if 'conn' in locals() and conn.is_connected():
+                    conn.close()
+
+    def redirect_based_on_role(self, user):  # redirect based on employee's role after login
+        try:
+            query = 'SELECT role FROM employee WHERE username = \'' + user + "\'"
+            cur.execute(query)
+
+            result_role = cur.fetchone()
+            if result_role is not None:
+                role = result_role[0].strip()
+                if role == 'admin':  # if the user is an admin, go to user screen
+                    self.gotoadmincashierscreen(user)
+                elif role == 'cashier':
+                    self.gotocashierscreen(user)  # if the user is a cashier, go to cashier screen
+                else:
+                    self.error.setText("Unknown role")
+            else:
+                self.error.setText("Role not found for user")
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+
+        finally:
+            if 'conn' in locals() and conn.is_connected():
+                conn.close()
+            
+    def gotoadmincashierscreen(self, user): #to user screen
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(user)     
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotocashierscreen(self, user): #To cashier screen
+        widget.removeWidget(self)
+
+        menu = CashierScreen(user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        if event.key() == Qt.Key_Escape: 
+            event.ignore()
+     
+########################################################################
+########################################################################
+########################################################################
+########################################################################
+     
+                  
+class AdminCashierScreen(QDialog):
+    def __init__(self, user):
+        super(AdminCashierScreen, self).__init__()
+        self.user = user
+        loadUi("ui/admin_cashierscreen.ui",self)
+        ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+        #Redirect Functions
+        self.logoutbtn.clicked.connect(self.gotologin)
+        self.settingsbtn.clicked.connect(self.gotosettings) 
+        self.reportbtn.clicked.connect(self.gotosales) 
+    
+    def gotologin(self):
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1) 
+    
+    
+    def gotosettings(self): #to settings screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotosales(self): #to user setting screen
+        widget.removeWidget(self)
+
+        sales= ReportScreen(self.user)     
+        widget.addWidget(sales)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    
+    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        if event.key() == Qt.Key_Escape:
+            event.ignore()                  
+
+class AddNewUserScreen(QDialog):
+    def __init__(self, user):
+        super(AddNewUserScreen, self).__init__()
+        self.user = user
+        loadUi("ui/add_new_userscreen.ui", self)
+        self.insertbtn.clicked.connect(self.register)
+        self.backbtn.clicked.connect(self.backfunction)
+
+        # create a button group for the radio buttons
+        self.roleButtonGroup = QButtonGroup()
+        self.roleButtonGroup.addButton(self.adminbtn)
+        self.roleButtonGroup.addButton(self.cashierbtn)
+
+        # connect the button group's buttonClicked signal to a slot
+        self.roleButtonGroup.buttonClicked.connect(self.handleRoleSelection)
+
+    def handleRoleSelection(self, radioButton):
+        # get the selected radio button's text
+        selected_role = radioButton.text()
+        # do something with the selected role, such as storing it in a variable
+        print("Selected Role:", selected_role)
+
+        #To Insert or Register a new data to Employee Table
+    def register(self):
+        name = self.namefield.text()
+        username = self.usernamefield.text()
+        password = self.passwordfield.text()
+        if len(name) == 0 or len(username) == 0 or len(password) == 0:
+            self.error.setText("Please fill in all necessary fields, they cannot be null!")
+        elif not self.adminbtn.isChecked() and not self.cashierbtn.isChecked():
+            self.error.setText("Please select a role.")
+        else:
+            role = "admin" if self.adminbtn.isChecked() else "cashier" if self.cashierbtn.isChecked() else None
+            user_info = [name, role, username, password]
+            try:
+                #establish the connection inside the try function
+                conn = mysql.connector.connect(
+                    host="127.0.0.1",
+                    user="root",
+                    passwd="WFZximct1!",
+                    database="seproject_db",
+                    autocommit=True)
+                cur = conn.cursor()
+                cur.execute("INSERT INTO Employee (name, role, username, password) "
+                            "VALUES (%s, %s, %s, %s)", user_info)
+                self.error.setText("")
+                QMessageBox.information(self, "Success", "Successfully Encoded!.")
+                self.namefield.clear()
+                self.usernamefield.clear()
+                self.passwordfield.clear()
+        
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+
+            finally:
+                if 'conn' in locals() and conn.is_connected():
+                    conn.close()
+
+    def backfunction(self):
+        widget.removeWidget(self)
+        
+        back = UserScreenEditMode(self.user)
+        widget.addWidget(back)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def keyPressEvent(self, event):    #To ignore close event by "ESC" key
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+            
+class AdminProfScreen(QDialog):
+    def __init__(self, user):
+        super(AdminProfScreen, self).__init__()
+        self.user = user
+        loadUi("ui/adminprofilescreen.ui",self)
+        ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        self.image.setPixmap(QPixmap('icons/placeholder.jpg'))  
+        #######################################################
+        self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
+        self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  #Pixmap for the second sidebar in settings screen.
+        self.usersIcon.setPixmap(QPixmap('icons/users.png'))
+        #######################################################
+        #Redirect Functions
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.logoutbtn.clicked.connect(self.gotologin)
+        self.settingsbtn.clicked.connect(self.gotosettings)
+        self.usersbtn.clicked.connect(self.gotouserscreen)
+        self.reportbtn.clicked.connect(self.gotosales)
+        
+   
+        try:
+            query = f'SELECT name, role, username, password FROM employee WHERE username = \'' + user + "\'"  #base sa nakalogin na user mafefetch lahat ng data information ni user.
+            cur.execute(query)
+            user_info = cur.fetchone()
+
+            if user_info is not None:       #displaying all user info in the database.
+                name, role, username, password = user_info
+                self.boxlabel_name.setText(name)
+                self.boxlabel_role.setText(role)
+                self.boxlabel_username.setText(username)
+                self.password.setText(password)
+                self.password.setEchoMode(QtWidgets.QLineEdit.Password)
+            else:
+                print("User not found")
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+
+        finally:
+            if 'conn' in locals() and conn.is_connected():
+                conn.close()
+    
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotologin(self):
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotouserscreen(self): #to user screen
+        widget.removeWidget(self)
+        
+        userlist = UserScreen(self.user)     
+        widget.addWidget(userlist)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
+    
+    def gotosettings(self): #to user screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
+    def gotosales(self): #to user setting screen
+        widget.removeWidget(self)
+
+        sales= ReportScreen(self.user)     
+        widget.addWidget(sales)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
+        
+    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        if event.key() == Qt.Key_Escape:
+            event.ignore()            
+            
+class CashierScreen(QDialog):
+    def __init__(self, user):
+        super(CashierScreen, self).__init__()
+        self.user = user
+        loadUi("ui/cashierscreen.ui",self)
+        ######################################################
+        #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+        #Redirect Functions
+        self.logoutbtn.clicked.connect(self.gotologin)
+        self.settingsbtn.clicked.connect(self.gotosettings)  
+    
+    def gotologin(self):
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1) 
+    
+    
+    def gotosettings(self): #to user setting screen
+        widget.removeWidget(self)
+
+        settings = SettingScreenForCashier(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    
+    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        if event.key() == Qt.Key_Escape:
+            event.ignore()            
+
+class ReportScreen(QDialog):
+    def __init__(self, user):
+        super(ReportScreen, self).__init__()
+        self.user = user
+        loadUi("ui/reportscreen.ui",self)
+        ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+
+        #TableWidget
+        self.tableWidget.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
+        self.tableWidget.setColumnWidth(1, 200) # Table index 1, second column with 200 width pixel
+        self.tableWidget.setColumnWidth(2, 100) # Table index 2, three column with 100 width pixel
+        self.tableWidget.setColumnWidth(3, 160) # Table index 3, fourth column with 160 width pixel
+
+        self.displayEmployee()
+        
+        self.logoutbtn.clicked.connect(self.gotologin)     
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.settingsbtn.clicked.connect(self.gotosettings)
+
+
+    def displayEmployee(self):  #To load the data from database to the pyqt table
+        query = "SELECT * FROM Sales"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)  
+        
+        #To make the horizontal headers text aligned to the left of the table. 
+        for col in range(self.tableWidget.columnCount()):
+            header_item = self.tableWidget.horizontalHeaderItem(col)
+            if header_item is not None:
+                header_text = header_item.text()
+                header_item = QTableWidgetItem(header_text)
+                header_item.setTextAlignment(Qt.AlignLeft)
+                self.tableWidget.setHorizontalHeaderItem(col, header_item)
+        
+        #Table Design 
+        self.setStyleSheet("""
+            QTableWidget {
+                background-color: white; /* Set default background color */
+            }
+
+
+            QTableWidget::item:hover {
+                background-color: #FB9722; /* Set background color for header on hover */   
+            }
+
+            QHeaderView::section {
+                background-color: #FB9722; /* Set background color for header */
+                color: black; /* Set text color for header */
+                padding-left: 5px; /* Add padding to the left for better appearance */
+            }       
+        """)
+        
+        
+    def gotologin(self):  #Direct to the login screen if logout button is clicked.
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)    
+    
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotosettings(self): #to user screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+
+    def keyPressEvent(self, event):    #To ignore close event by "ESC" key
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+
+class SettingScreen(QDialog):
+    def __init__(self, user):
+        super(SettingScreen, self).__init__()
+        self.user = user
+        loadUi("ui/settingscreen.ui",self)
+        ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+        self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
+        self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  #Pixmap for the second sidebar in settings screen.
+        self.usersIcon.setPixmap(QPixmap('icons/users.png'))
+        #######################################################
+        #redirect functions
+        self.logoutbtn.clicked.connect(self.gotologin) 
+        self.usersbtn.clicked.connect(self.gotouserscreen) 
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.userprofbtn.clicked.connect(self.gotoadminprofscreen)
+        self.reportbtn.clicked.connect(self.gotosales)
+    
+        
+    def gotologin(self):
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)  
+        
+        
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1) 
+    
+    def gotosales(self): #to user setting screen
+        widget.removeWidget(self)
+
+        sales= ReportScreen(self.user)     
+        widget.addWidget(sales)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotoadminprofscreen(self): #to admin profile screen
+        widget.removeWidget(self)
+        
+        adminprof = AdminProfScreen(self.user)     
+        widget.addWidget(adminprof)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotouserscreen(self): #to user screen
+        widget.removeWidget(self)
+        
+        userlist = UserScreen(self.user)     
+        widget.addWidget(userlist)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+        
+    
+    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+
+class SettingScreenForCashier(QDialog):
+    def __init__(self, user):
+        super(SettingScreenForCashier, self).__init__()
+        self.user = user
+        loadUi("ui/settingscreenforcashier.ui",self)
+        ######################################################
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+        self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
+        self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  #Pixmap for the second sidebar in settings screen.
+        #######################################################
+        
+        #redirect button functions
+        self.logoutbtn.clicked.connect(self.gotologin) 
+        self.userprofbtn.clicked.connect(self.gotouserprofscreen) 
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+    
+    
+    def gotologin(self): #To login screen if logout button is clicked.
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)  
+        
+        
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = CashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1) 
+        
+        
+    def gotouserprofscreen(self): #to user profile screen
+        widget.removeWidget(self)
+        
+        userprof = UserProfScreen(self.user)     
+        widget.addWidget(userprof)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    
+    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen. (Close Event)
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+
+class UserScreen(QDialog):
+    def __init__(self, user):
+        super(UserScreen, self).__init__()
+        self.user = user
+        loadUi("ui/userscreen.ui",self)
+        ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+        self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
+        self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  #Pixmap for the second sidebar in settings screen.
+        self.usersIcon.setPixmap(QPixmap('icons/users.png'))
+        self.editIcon.setPixmap(QPixmap('icons/edit.png'))
+        #######################################################
+        #TableWidget
+        self.tableWidget.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
+        self.tableWidget.setColumnWidth(1, 200) # Table index 1, second column with 200 width pixel
+        self.tableWidget.setColumnWidth(2, 100) # Table index 2, three column with 100 width pixel
+        self.tableWidget.setColumnWidth(3, 160) # Table index 3, fourth column with 160 width pixel
+        self.tableWidget.setColumnWidth(4, 150) # Table index 4, fifth column with 150 width pixel
+        self.displayEmployee()
+        
+        self.logoutbtn.clicked.connect(self.gotologin)     
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.settingsbtn.clicked.connect(self.gotosettings)
+        self.userprofbtn.clicked.connect(self.gotoadminprofscreen)
+        self.editbtn.clicked.connect(self.gotouserscreenedit)
+        self.reportbtn.clicked.connect(self.gotosales)   
+        
+    def displayEmployee(self):  #To load the data from database to the pyqt table
+        query = "SELECT * FROM employee"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)  
+        
+        #To make the horizontal headers text aligned to the left of the table. 
+        for col in range(self.tableWidget.columnCount()):
+            header_item = self.tableWidget.horizontalHeaderItem(col)
+            if header_item is not None:
+                header_text = header_item.text()
+                header_item = QTableWidgetItem(header_text)
+                header_item.setTextAlignment(Qt.AlignLeft)
+                self.tableWidget.setHorizontalHeaderItem(col, header_item)
+        
+        #Table Design 
+        self.setStyleSheet("""
+            QTableWidget {
+                background-color: white; /* Set default background color */
+            }
+
+
+            QTableWidget::item:hover {
+                background-color: #FB9722; /* Set background color for header on hover */   
+            }
+
+            QHeaderView::section {
+                background-color: #FB9722; /* Set background color for header */
+                color: black; /* Set text color for header */
+                padding-left: 5px; /* Add padding to the left for better appearance */
+            }       
+        """)
+        
+        
+    def gotologin(self):  #Direct to the login screen if logout button is clicked.
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)    
+    
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotosettings(self): #to user screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotouserscreenedit(self): #to user screen
+        widget.removeWidget(self)
+
+        usersedit = UserScreenEditMode(self.user)     
+        widget.addWidget(usersedit)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotoadminprofscreen(self): #to admin profile screen
+        widget.removeWidget(self)
+        
+        adminprof = AdminProfScreen(self.user)     
+        widget.addWidget(adminprof)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
+    def gotosales(self): #to user setting screen
+        widget.removeWidget(self)
+
+        sales= ReportScreen(self.user)     
+        widget.addWidget(sales)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+            
+    def keyPressEvent(self, event):    #To ignore close event by "ESC" key
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+
+class UserScreenEditMode(QDialog):
+    def __init__(self, user):
+        super(UserScreenEditMode, self).__init__()
+        self.user = user
+        loadUi("ui/userscreen_edit.ui",self)
+        ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+        self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
+        self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  #Pixmap for the second sidebar in settings screen.
+        self.usersIcon.setPixmap(QPixmap('icons/users.png'))
+        #######################################################
+        #TableWidget
+        self.tableWidget.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
+        self.tableWidget.setColumnWidth(1, 200) # Table index 1, second column with 200 width pixel
+        self.tableWidget.setColumnWidth(2, 100) # Table index 2, three column with 100 width pixel
+        self.tableWidget.setColumnWidth(3, 160) # Table index 3, fourth column with 160 width pixel
+        self.tableWidget.setColumnWidth(4, 150) # Table index 4, fifth column with 150 width pixel
+        self.displayEmployee()
+        
+        self.logoutbtn.clicked.connect(self.gotologin)     
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.settingsbtn.clicked.connect(self.gotosettings)
+        self.userprofbtn.clicked.connect(self.gotoadminprofscreen)
+        self.backbtn.clicked.connect(self.gotouserscreen) 
+        self.dropbtn.clicked.connect(self.deleteEmployee)
+        self.addbtn.clicked.connect(self.gotoadduser)
+        self.reportbtn.clicked.connect(self.gotosales)
+        
+    def displayEmployee(self):  #To load the data from database to the pyqt table
+        query = "SELECT * FROM employee"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)  
+        
+        #To make the horizontal headers text aligned to the left of the table. 
+        for col in range(self.tableWidget.columnCount()):
+            header_item = self.tableWidget.horizontalHeaderItem(col)
+            if header_item is not None:
+                header_text = header_item.text()
+                header_item = QTableWidgetItem(header_text)
+                header_item.setTextAlignment(Qt.AlignLeft)
+                self.tableWidget.setHorizontalHeaderItem(col, header_item)
+        
+        #Table Design 
+        self.setStyleSheet("""
+            QTableWidget {
+                background-color: white; /* Set default background color */
+            }
+
+
+            QTableWidget::item:hover {
+                background-color: #FB9722; /* Set background color for header on hover */   
+            }
+
+            QHeaderView::section {
+                background-color: #FB9722; /* Set background color for header */
+                color: black; /* Set text color for header */
+                padding-left: 5px; /* Add padding to the left for better appearance */
+            }       
+        """)
+        
+
+    def deleteEmployee(self):
+        # Get the selected row index
+        row_index = self.tableWidget.currentRow()
+        # Check if there is a selected row
+        if row_index < 0:
+            return
+        selected_row_id = int(self.tableWidget.item(row_index, 0).text())
+
+        delete_query = "DELETE FROM Employee WHERE id = %s"
+        cur.execute(delete_query, (selected_row_id,))
+        conn.commit()
+        self.tableWidget.removeRow(row_index)
+
+
+    def gotologin(self):  #Direct to the login screen if logout button is clicked.
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)    
+    
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotosettings(self): #to user screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotoadminprofscreen(self): #to admin profile screen
+        widget.removeWidget(self)
+        
+        adminprof = AdminProfScreen(self.user)     
+        widget.addWidget(adminprof)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
+    def gotouserscreen(self): #to user screen
+        widget.removeWidget(self)
+        
+        userlist = UserScreen(self.user)     
+        widget.addWidget(userlist)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+    def gotoadduser(self): #to add a new user.
+        widget.removeWidget(self)
+        
+        newuser = AddNewUserScreen(self.user)     
+        widget.addWidget(newuser)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
+    def gotosales(self): #to user setting screen
+        widget.removeWidget(self)
+
+        sales= ReportScreen(self.user)     
+        widget.addWidget(sales)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+            
+
+    def keyPressEvent(self, event):    #To ignore close event by "ESC" key
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+
+class UserProfScreen(QDialog):
+    def __init__(self, user):
+        super(UserProfScreen, self).__init__()
+        self.user = user
+        loadUi("ui/userprofilescreen.ui",self)
+        ######################################################
+        #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        self.image.setPixmap(QPixmap('icons/placeholder.jpg'))  
+        #######################################################
+        #Pixmap for the second sidebar in settings screen.
+        self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
+        self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  
+        #######################################################
+        #Redirect Functions
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.logoutbtn.clicked.connect(self.gotologin)
+        self.settingsbtn.clicked.connect(self.gotosettings)
+        
+        try:
+            query = f'SELECT name, role, username, password FROM employee WHERE username = \'' + user + "\'"  #base sa nakalogin na user mafefetch lahat ng data information ni user.
+            cur.execute(query)
+            user_info = cur.fetchone()
+
+            if user_info is not None:       #displaying all user info in the database.
+                name, role, username, password = user_info
+                self.boxlabel_name.setText(name)
+                self.boxlabel_role.setText(role)
+                self.boxlabel_username.setText(username)
+                self.password.setText(password)
+                self.password.setEchoMode(QtWidgets.QLineEdit.Password)
+            else:
+                print("User not found")
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+
+        finally:
+            if 'conn' in locals() and conn.is_connected():
+                conn.close()
+    
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = CashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotologin(self):
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+    def gotosettings(self): #to user screen
+        widget.removeWidget(self)
+
+        settings = SettingScreenForCashier(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
+        
+    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+        
+
+#main
+app = QApplication(sys.argv)
+login = LoginScreen()
+widget = QtWidgets.QStackedWidget()
+widget.addWidget(login)
+widget.setFixedHeight(800)
+widget.setFixedWidth(1200)
+widget.show()
+try:
+    sys.exit(app.exec_())
+except:
+    print("Exiting")
