@@ -513,6 +513,7 @@ class UserScreen(QDialog):
         self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  #Pixmap for the second sidebar in settings screen.
         self.usersIcon.setPixmap(QPixmap('icons/users.png'))
         self.editIcon.setPixmap(QPixmap('icons/edit.png'))
+        
         #######################################################
         #TableWidget
         self.tableWidget.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
@@ -716,6 +717,12 @@ class UserScreenEditMode(QDialog):
         if row_index < 0:
             return
         selected_row_id = int(self.tableWidget.item(row_index, 0).text())
+        selected_username = self.tableWidget.item(row_index, 3).text()  # Assuming username is in column index 2
+
+        # Check if the user is trying to delete their own data
+        if selected_username == self.user:
+            QMessageBox.warning(self, "Warning", "You cannot delete your own data.")
+            return
 
         delete_query = "DELETE FROM Employee WHERE id = %s"
         cur.execute(delete_query, (selected_row_id,))
