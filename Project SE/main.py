@@ -122,7 +122,7 @@ class LoginScreen(QDialog):
 ########################################################################
 ########################################################################
      
-                  
+######################## ADMIN SCREENS ################################# 
 class AdminCashierScreen(QDialog):
     def __init__(self, user):
         super(AdminCashierScreen, self).__init__()
@@ -325,42 +325,7 @@ class AdminProfScreen(QDialog):
     def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
         if event.key() == Qt.Key_Escape:
             event.ignore()            
-            
-class CashierScreen(QDialog):
-    def __init__(self, user):
-        super(CashierScreen, self).__init__()
-        self.user = user
-        loadUi("ui/cashierscreen.ui",self)
-        ######################################################
-        #Pixmap for the pngs images within the sidebar.
-        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
-        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
-        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
-        #######################################################
-        #Redirect Functions
-        self.logoutbtn.clicked.connect(self.gotologin)
-        self.settingsbtn.clicked.connect(self.gotosettings)  
-    
-    def gotologin(self):
-        widget.removeWidget(self)
         
-        login = LoginScreen()
-        widget.addWidget(login)
-        widget.setCurrentIndex(widget.currentIndex()+1) 
-    
-    
-    def gotosettings(self): #to user setting screen
-        widget.removeWidget(self)
-
-        settings = SettingScreenForCashier(self.user)     
-        widget.addWidget(settings)
-        widget.setCurrentIndex(widget.currentIndex()+1)
-        
-    
-    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
-        if event.key() == Qt.Key_Escape:
-            event.ignore()            
-
 class ReportScreen(QDialog):
     def __init__(self, user):
         super(ReportScreen, self).__init__()
@@ -860,6 +825,44 @@ class UserScreenEditMode(QDialog):
         if event.key() == Qt.Key_Escape:
             event.ignore()
 
+
+
+######################## CASHIER SCREENS ############################### 
+class CashierScreen(QDialog):
+    def __init__(self, user):
+        super(CashierScreen, self).__init__()
+        self.user = user
+        loadUi("ui/cashierscreen.ui",self)
+        ######################################################
+        #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+        #Redirect Functions
+        self.logoutbtn.clicked.connect(self.gotologin)
+        self.settingsbtn.clicked.connect(self.gotosettings)  
+    
+    def gotologin(self):
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1) 
+    
+    
+    def gotosettings(self): #to user setting screen
+        widget.removeWidget(self)
+
+        settings = SettingScreenForCashier(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    
+    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        if event.key() == Qt.Key_Escape:
+            event.ignore()    
+
 class UserProfScreen(QDialog):
     def __init__(self, user):
         super(UserProfScreen, self).__init__()
@@ -929,6 +932,9 @@ class UserProfScreen(QDialog):
         if event.key() == Qt.Key_Escape:
             event.ignore()
         
+
+
+
 
 #main
 app = QApplication(sys.argv)
