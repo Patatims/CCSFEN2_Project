@@ -548,20 +548,20 @@ border-radius: 10px;  </string>
      <string>Daily Sales Report</string>
     </property>
    </widget>
-   <widget class="QLabel" name="listofsalelabel">
+   <widget class="QLabel" name="listofsale">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>220</y>
-      <width>151</width>
-      <height>31</height>
+      <x>150</x>
+      <y>210</y>
+      <width>201</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLabel#userlistlabel{
+     <string notr="true">QLabel#listofsale{
     color: #000000;
     font-family: 'Inter';
-    font-size: 20px;
+    font-size: 30px;
     font-weight: 500;
 }</string>
     </property>

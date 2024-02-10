@@ -83,14 +83,16 @@ class LoginScreen(QDialog):
             result_role = cur.fetchone()
             if result_role is not None:
                 role = result_role[0].strip()
-                if role == 'admin':  # if the user is an admin, go to user screen
-                    self.gotoadmincashierscreen(user)
-                elif role == 'cashier':
+                if role == 'admin' or role == 'Admin':  
+                    self.gotoadmincashierscreen(user)   # if the user is an admin, go to user screen
+                elif role == 'cashier' or role == 'Cashier': 
                     self.gotocashierscreen(user)  # if the user is a cashier, go to cashier screen
                 else:
                     self.error.setText("Unknown role")
+                    self.error.setStyleSheet("color: red")   # Turns the Qlabel text color to red so we can know that the displayed text is an error message.
             else:
                 self.error.setText("Role not found for user")
+                self.error.setStyleSheet("color: red")
 
         except mysql.connector.Error as err:
             print(f"Error: {err}")
@@ -326,6 +328,110 @@ class AdminProfScreen(QDialog):
         if event.key() == Qt.Key_Escape:
             event.ignore()            
         
+class PManagementScreen(QDialog):
+    def __init__(self, user):
+        super(PManagementScreen, self).__init__()
+        self.user = user
+        loadUi("ui/.ui",self)
+        ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+
+        #TableWidget
+        self.tableWidget.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
+        self.tableWidget.setColumnWidth(1, 200) # Table index 1, second column with 200 width pixel
+        self.tableWidget.setColumnWidth(2, 100) # Table index 2, three column with 100 width pixel
+        self.tableWidget.setColumnWidth(3, 160) # Table index 3, fourth column with 160 width pixel
+
+        self.displayProductList()
+        
+        self.logoutbtn.clicked.connect(self.gotologin)     
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.settingsbtn.clicked.connect(self.gotosettings)
+
+
+    def displayProductList(self):  #To load the data from database to the pyqt table
+        query = "SELECT * FROM Sales"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)  
+        
+        #To make the horizontal headers text aligned to the left of the table. 
+        for col in range(self.tableWidget.columnCount()):
+            header_item = self.tableWidget.horizontalHeaderItem(col)
+            if header_item is not None:
+                header_text = header_item.text()
+                header_item = QTableWidgetItem(header_text)
+                header_item.setTextAlignment(Qt.AlignLeft)
+                self.tableWidget.setHorizontalHeaderItem(col, header_item)
+        
+        #Table Design 
+        self.setStyleSheet("""
+            QTableWidget {
+                background-color: white; /* Set default background color */
+            }
+
+
+            QTableWidget::item:hover {
+                background-color: #FB9722; /* Set background color for header on hover */   
+            }
+
+            QHeaderView::section {
+                background-color: #FB9722; /* Set background color for header */
+                color: black; /* Set text color for header */
+                padding-left: 5px; /* Add padding to the left for better appearance */
+            }       
+        """)
+        
+        
+    def gotologin(self):  #Direct to the login screen if logout button is clicked.
+        widget.removeWidget(self)
+            
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)    
+    
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotosettings(self): #to user screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+
+    def keyPressEvent(self, event):    #To ignore close event by "ESC" key
+        if event.key() == Qt.Key_Escape:
+            event.ignore()       
+        
+        
 class ReportScreen(QDialog):
     def __init__(self, user):
         super(ReportScreen, self).__init__()
@@ -346,14 +452,14 @@ class ReportScreen(QDialog):
         self.tableWidget.setColumnWidth(2, 100) # Table index 2, three column with 100 width pixel
         self.tableWidget.setColumnWidth(3, 160) # Table index 3, fourth column with 160 width pixel
 
-        self.displayEmployee()
+        self.displaySales()
         
         self.logoutbtn.clicked.connect(self.gotologin)     
         self.menubtn.clicked.connect(self.gotocashierscreen)
         self.settingsbtn.clicked.connect(self.gotosettings)
 
 
-    def displayEmployee(self):  #To load the data from database to the pyqt table
+    def displaySales(self):  #To load the data from database to the pyqt table
         query = "SELECT * FROM Sales"
         cur.execute(query)
         rows = cur.fetchall()
@@ -709,7 +815,6 @@ class UserScreenEditMode(QDialog):
             }       
         """)
         
-
     def deleteEmployee(self):
         # Get the selected row index
         row_index = self.tableWidget.currentRow()
@@ -717,7 +822,7 @@ class UserScreenEditMode(QDialog):
         if row_index < 0:
             return
         selected_row_id = int(self.tableWidget.item(row_index, 0).text())
-        selected_username = self.tableWidget.item(row_index, 3).text()  # Assuming username is in column index 2
+        selected_username = self.tableWidget.item(row_index, 3).text()  #  username is in column index 3
 
         # Check if the user is trying to delete their own data
         if selected_username == self.user:
