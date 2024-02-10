@@ -202,7 +202,7 @@ class AddNewUserScreen(QDialog):
         elif not self.adminbtn.isChecked() and not self.cashierbtn.isChecked():
             self.error.setText("Please select a role.")
         else:
-            role = "admin" if self.adminbtn.isChecked() else "cashier" if self.cashierbtn.isChecked() else None
+            role = "Admin" if self.adminbtn.isChecked() else "Cashier" if self.cashierbtn.isChecked() else None
             user_info = [name, role, username, password]
             try:
                 #establish the connection inside the try function
@@ -484,7 +484,7 @@ class ReportScreen(QDialog):
 
 
     def displaySales(self):  #To load the data from database to the pyqt table
-        query = "SELECT id, customername, totalPrice, orderType FROM Sales"
+        query = "SELECT id, name, totalPrice, orderType FROM Sales"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
