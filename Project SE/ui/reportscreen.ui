@@ -615,17 +615,17 @@ border-radius: 10px;  </string>
     </column>
     <column>
      <property name="text">
-      <string>Date</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
       <string>Customer</string>
      </property>
     </column>
     <column>
      <property name="text">
       <string>Amount</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Type of Order</string>
      </property>
     </column>
    </widget>
@@ -657,7 +657,7 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>Delete</string>
+     <string>Void</string>
     </property>
    </widget>
    <widget class="QPushButton" name="viewbtn">

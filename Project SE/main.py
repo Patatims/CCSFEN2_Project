@@ -53,7 +53,7 @@ class LoginScreen(QDialog):
                     database="seproject_db")
                 cur = conn.cursor()
 
-                query = 'SELECT password FROM employee WHERE username = \'' + user + "\'"
+                query = 'SELECT password FROM employee WHERE username = \'' + user + "\'"    #a query to check the the password of the user if matches to the username data.
                 cur.execute(query,)
 
                 result_pass = cur.fetchone()
@@ -80,8 +80,8 @@ class LoginScreen(QDialog):
             query = 'SELECT role FROM employee WHERE username = \'' + user + "\'"
             cur.execute(query)
 
-            result_role = cur.fetchone()
-            if result_role is not None:
+            result_role = cur.fetchone()    
+            if result_role is not None:                 
                 role = result_role[0].strip()
                 if role == 'admin' or role == 'Admin':  
                     self.gotoadmincashierscreen(user)   # if the user is an admin, go to user screen
@@ -356,7 +356,7 @@ class PManagementScreen(QDialog):
 
 
     def displayProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT * FROM Sales"
+        query = "SELECT * FROM Product"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -457,10 +457,34 @@ class ReportScreen(QDialog):
         self.logoutbtn.clicked.connect(self.gotologin)     
         self.menubtn.clicked.connect(self.gotocashierscreen)
         self.settingsbtn.clicked.connect(self.gotosettings)
+        self.voidbtn.clicked.connect(self.deleteSales)
+
+
+    def deleteSales(self):
+        # Get the selected row index
+        row_index = self.tableWidget.currentRow()
+        # Check if there is a selected row
+        if row_index < 0:
+            return
+        selected_row_id = int(self.tableWidget.item(row_index, 0).text())
+
+        try:
+            delete_query1 = "DELETE FROM Transaction WHERE salesID = %s"
+            cur.execute(delete_query1, (selected_row_id,))
+            conn.commit()
+
+            delete_query2 = "DELETE FROM Sales WHERE id = %s"
+            cur.execute(delete_query2, (selected_row_id,))
+            conn.commit()
+            
+            self.tableWidget.removeRow(row_index)     
+            
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")         
 
 
     def displaySales(self):  #To load the data from database to the pyqt table
-        query = "SELECT * FROM Sales"
+        query = "SELECT id, customername, totalPrice, orderType FROM Sales"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -507,7 +531,7 @@ class ReportScreen(QDialog):
                 padding-left: 5px; /* Add padding to the left for better appearance */
             }       
         """)
-        
+      
         
     def gotologin(self):  #Direct to the login screen if logout button is clicked.
         widget.removeWidget(self)
