@@ -371,7 +371,7 @@ class HomeScreen(QDialog):
         self.reportbtn.clicked.connect(self.gotosales) 
 
         
-        self.displayEmployee()
+        self.displayTopSellingProduct()
         
         try:
             query = f"SELECT SUM(Sales.totalPrice) AS total_sales FROM Sales WHERE DATE(Sales.date) = CURDATE()"
@@ -386,10 +386,36 @@ class HomeScreen(QDialog):
 
         except mysql.connector.Error as err:
             print(f"Error: {err}")
+            
+        try:
+            query = f"SELECT\
+                    COUNT(*) AS totalSales \
+                    FROM Sales \
+                    WHERE DATE(date) = CURDATE()\
+                    "
+    
+            cur.execute(query)
+            totalsale = cur.fetchone()
+
+            if totalsale is not None:
+                totaldailysale = totalsale[0]  # Extract the total sale value from the tuple
+                self.boxlabel_sale.setText(str(totaldailysale))  # Convert to string before setting as label text
+            else:
+                print("error")
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
     
     
-    def displayEmployee(self):  #To load the data from database to the pyqt table
-        query = "SELECT name, role FROM employee"
+    def displayTopSellingProduct(self):  #To load the data from database to the pyqt table
+        query = "SELECT productName, totalQuantitySold \
+                FROM ( SELECT P.name AS productName, SUM(T.quantity) AS totalQuantitySold \
+                FROM Transaction T \
+                JOIN Product P ON T.productID = P.id \
+                GROUP BY T.productID \
+                ORDER BY totalQuantitySold \
+                DESC LIMIT 5 ) AS topSoldProducts"
+            
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)

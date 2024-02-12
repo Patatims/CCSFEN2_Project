@@ -775,7 +775,7 @@ border: 1px solid rgba(0, 0, 0, 0.3);  </string>
    <widget class="QDateEdit" name="dateEdit">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>250</x>
       <y>190</y>
       <width>231</width>
       <height>41</height>

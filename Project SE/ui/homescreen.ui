@@ -494,7 +494,7 @@ border: 1px solid rgba(0, 0, 0, 0.3);  </string>
     </property>
     <property name="styleSheet">
      <string notr="true">
-    color: #000000;
+    color: #FB9722;
     font-family: 'Inter';
     font-size: 20px;
     font-weight: 500;
@@ -531,7 +531,7 @@ border: 1px solid rgba(0, 0, 0, 0.3);  </string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="titlebar_2">
+   <widget class="QLabel" name="borderbox">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -549,7 +549,7 @@ border-radius: 5px;   </string>
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="titlebar_3">
+   <widget class="QLabel" name="borderbox_2">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -578,7 +578,7 @@ border-radius: 5px;   </string>
     </property>
     <property name="styleSheet">
      <string notr="true">QLabel{
-    color: #000000;
+    color: #FB9722;
     font-family: 'Inter';
     font-size: 28px;
     font-weight: 500;
@@ -591,7 +591,7 @@ border-radius: 5px;   </string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="titlebar_4">
+   <widget class="QLabel" name="borderbox_3">
     <property name="geometry">
      <rect>
       <x>520</x>
@@ -614,20 +614,20 @@ border-radius: 5px;    </string>
      <rect>
       <x>530</x>
       <y>480</y>
-      <width>201</width>
+      <width>221</width>
       <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">
-    color: #000000;
+    color: #FB9722;
     font-family: 'Inter';
     font-size: 20px;
     font-weight: 500;
 </string>
     </property>
     <property name="text">
-     <string>Current Employees</string>
+     <string>Top Selling Products</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -749,7 +749,7 @@ border-radius: 5px;    </string>
     </attribute>
     <column>
      <property name="text">
-      <string>Name</string>
+      <string>Product Name</string>
      </property>
      <property name="font">
       <font>
@@ -767,7 +767,7 @@ border-radius: 5px;    </string>
     </column>
     <column>
      <property name="text">
-      <string>Role</string>
+      <string>No. of Sold Items</string>
      </property>
      <property name="font">
       <font>
@@ -785,7 +785,30 @@ border-radius: 5px;    </string>
      </property>
     </column>
    </widget>
-   <zorder>titlebar_3</zorder>
+   <widget class="QLabel" name="boxlabel_sale">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>290</y>
+      <width>341</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">	color: #FB9722;
+    font-family: 'Inter';
+    font-size: 36px;
+    font-weight: 500;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <zorder>borderbox_2</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
    <zorder>title</zorder>
@@ -802,14 +825,15 @@ border-radius: 5px;    </string>
    <zorder>reportIcon</zorder>
    <zorder>menuIcon</zorder>
    <zorder>date</zorder>
-   <zorder>titlebar_2</zorder>
+   <zorder>borderbox</zorder>
    <zorder>totalLabel</zorder>
-   <zorder>titlebar_4</zorder>
+   <zorder>borderbox_3</zorder>
    <zorder>currentEmployee</zorder>
    <zorder>boxlabel_total</zorder>
    <zorder>dailyIncome</zorder>
    <zorder>peso</zorder>
    <zorder>tableWidget</zorder>
+   <zorder>boxlabel_sale</zorder>
   </widget>
  </widget>
  <resources>
