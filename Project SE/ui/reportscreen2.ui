@@ -689,31 +689,6 @@ QPushButton:pressed {
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="boxlabel_date">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>190</y>
-      <width>271</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel{
-	padding-left: 3px;
-    color: #FB9722;
-    font-family: 'Inter';
-    font-size: 31px;
-    font-weight: 500;
-}</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="titlebar_2">
     <property name="geometry">
      <rect>
@@ -751,7 +726,7 @@ border: 1px solid rgba(0, 0, 0, 0.3);  </string>
    <widget class="QLabel" name="totalLabel">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>160</x>
       <y>630</y>
       <width>111</width>
       <height>41</height>
@@ -775,9 +750,78 @@ border: 1px solid rgba(0, 0, 0, 0.3);  </string>
    <widget class="QLabel" name="boxlabel_total">
     <property name="geometry">
      <rect>
+      <x>870</x>
+      <y>630</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+	padding-left: 2px;
+    color: #000000;
+    font-family: 'Inter';
+    font-size: 24px;
+    font-weight: 500;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QDateEdit" name="dateEdit">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>190</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">	padding-left: 3px;
+    color: #FB9722;
+    font-family: 'Inter';
+    font-size: 31px;
+    font-weight: 500;
+</string>
+    </property>
+    <property name="time">
+     <time>
+      <hour>0</hour>
+      <minute>0</minute>
+      <second>0</second>
+     </time>
+    </property>
+    <property name="currentSection">
+     <enum>QDateTimeEdit::YearSection</enum>
+    </property>
+    <property name="displayFormat">
+     <string>yyyy-MM-dd</string>
+    </property>
+    <property name="calendarPopup">
+     <bool>true</bool>
+    </property>
+    <property name="timeSpec">
+     <enum>Qt::TimeZone</enum>
+    </property>
+    <property name="date">
+     <date>
+      <year>2024</year>
+      <month>2</month>
+      <day>10</day>
+     </date>
+    </property>
+   </widget>
+   <widget class="QLabel" name="peso">
+    <property name="geometry">
+     <rect>
       <x>840</x>
       <y>630</y>
-      <width>271</width>
+      <width>31</width>
       <height>41</height>
      </rect>
     </property>
@@ -790,7 +834,7 @@ border: 1px solid rgba(0, 0, 0, 0.3);  </string>
 }</string>
     </property>
     <property name="text">
-     <string/>
+     <string>₱</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

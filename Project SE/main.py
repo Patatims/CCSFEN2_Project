@@ -9,6 +9,8 @@ import mysql.connector
 from mysql.connector.errors import *
 import warnings
 
+from datetime import datetime 
+
 # Suppress DeprecationWarnings globally
 warnings.simplefilter("ignore", category=DeprecationWarning)
 
@@ -351,7 +353,7 @@ class HomeScreen(QDialog):
         self.user = user
         loadUi("ui/homescreen.ui",self)
         
-        
+
         ######################################################
         self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
@@ -367,6 +369,48 @@ class HomeScreen(QDialog):
         self.logoutbtn.clicked.connect(self.gotologin)
         self.settingsbtn.clicked.connect(self.gotosettings) 
         self.reportbtn.clicked.connect(self.gotosales) 
+
+        
+        self.displayEmployee()
+        
+        try:
+            query = f"SELECT SUM(Sales.totalPrice) AS total_sales FROM Sales WHERE DATE(Sales.date) = CURDATE()"
+            cur.execute(query)
+            totalsale = cur.fetchone()
+
+            if totalsale is not None:
+                totaldailysale = totalsale[0]  # Extract the total sale value from the tuple
+                self.boxlabel_total.setText(str(totaldailysale))  # Convert to string before setting as label text
+            else:
+                print("error")
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+    
+    
+    def displayEmployee(self):  #To load the data from database to the pyqt table
+        query = "SELECT name, role FROM employee"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+        
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+
+        
     
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
@@ -695,54 +739,97 @@ class ReportScreen2(QDialog):
         self.settingsbtn.clicked.connect(self.gotosettings)
         self.salesbtn.clicked.connect(self.gotosales)
 
-    def displaydailySales(self):  #To load the data from database to the pyqt table
-        query = "SELECT id, date, name, employeeID, totalPrice FROM Sales"
-        cur.execute(query)
-        rows = cur.fetchall()
-        row_count = len(rows)
-
-        # Check if there are any rows
-        if row_count == 0:
-            return
-
-        column_count = len(rows[0])
-
-        # Resize the table widget to fit the data
-        self.tableWidget.setRowCount(row_count)
-        self.tableWidget.setColumnCount(column_count)
-
-        # Set the data into the table widget
-        for row in range(row_count):
-            for col in range(column_count):
-                item = QTableWidgetItem(str(rows[row][col]))
-                self.tableWidget.setItem(row, col, item)  
         
-        #To make the horizontal headers text aligned to the left of the table. 
-        for col in range(self.tableWidget.columnCount()):
-            header_item = self.tableWidget.horizontalHeaderItem(col)
-            if header_item is not None:
-                header_text = header_item.text()
-                header_item = QTableWidgetItem(header_text)
-                header_item.setTextAlignment(Qt.AlignLeft)
-                self.tableWidget.setHorizontalHeaderItem(col, header_item)
+        # Set up QDateEdit widget
+        self.dateEdit.setDate(QDate.currentDate())
+        self.dateEdit.dateChanged.connect(self.displaydailySales)
+        self.displaydailySales()
+   
+    
+    
+    def displaydailySales(self):
         
-        #Table Design 
-        self.setStyleSheet("""
-            QTableWidget {
-                background-color: white; /* Set default background color */
-            }
+        selected_date = self.dateEdit.date().toString(Qt.ISODate)
+        
+        try:
+            query = f"SELECT Sales.id, Sales.date, Sales.name, Employee.name, Sales.totalPrice " \
+                    f"FROM Sales " \
+                    f"JOIN Employee ON Sales.employeeID = Employee.id " \
+                    f"WHERE DATE(Sales.date) = '{selected_date}'"
+            
+            
+            cur.execute(query)
+            rows = cur.fetchall()
+            row_count = len(rows)
 
 
-            QTableWidget::item:hover {
-                background-color: #FB9722; /* Set background color for header on hover */   
-            }
+            
+            # Check if there are any rows
+            if row_count == 0:
+                return
 
-            QHeaderView::section {
-                background-color: #FB9722; /* Set background color for header */
-                color: black; /* Set text color for header */
-                padding-left: 5px; /* Add padding to the left for better appearance */
-            }       
-        """)
+            column_count = len(rows[0])
+
+            # Resize the table widget to fit the data
+            self.tableWidget.setRowCount(row_count)
+            self.tableWidget.setColumnCount(column_count)
+
+            # Set the data into the table widget
+            for row in range(row_count):
+                for col in range(column_count):
+                    item = QTableWidgetItem(str(rows[row][col]))
+                    self.tableWidget.setItem(row, col, item)  
+
+            #To make the horizontal headers text aligned to the left of the table. 
+            for col in range(self.tableWidget.columnCount()):
+                header_item = self.tableWidget.horizontalHeaderItem(col)
+                if header_item is not None:
+                    header_text = header_item.text()
+                    header_item = QTableWidgetItem(header_text)
+                    header_item.setTextAlignment(Qt.AlignLeft)
+                    self.tableWidget.setHorizontalHeaderItem(col, header_item)
+
+            #Table Design 
+            self.setStyleSheet("""
+                QTableWidget {
+                    background-color: white; /* Set default background color */
+                }
+
+
+                QTableWidget::item:hover {
+                    background-color: #FB9722; /* Set background color for header on hover */   
+                }
+
+                QHeaderView::section {
+                    background-color: #FB9722; /* Set background color for header */
+                    color: black; /* Set text color for header */
+                    padding-left: 5px; /* Add padding to the left for better appearance */
+                }       
+            """)
+            
+            conn.commit()
+            
+            self.tableWidget.update()
+            
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+    
+        try:
+            query = f"SELECT SUM(Sales.totalPrice) AS total_sales FROM Sales WHERE DATE(Sales.date) = '{selected_date}'"
+            cur.execute(query)
+            totalsale = cur.fetchone()
+
+            if totalsale is not None:
+                totaldailysale = totalsale[0]  # Extract the total sale value from the tuple
+                self.boxlabel_total.setText(str(totaldailysale))  # Convert to string before setting as label text
+            else:
+                print("error")
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+
+        
+      
       
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
