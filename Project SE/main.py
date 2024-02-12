@@ -84,7 +84,7 @@ class LoginScreen(QDialog):
             if result_role is not None:                 
                 role = result_role[0].strip()
                 if role == 'admin' or role == 'Admin':  
-                    self.gotoadmincashierscreen(user)   # if the user is an admin, go to user screen
+                    self.gotohomescreen(user)   # if the user is an admin, go to user screen
                 elif role == 'cashier' or role == 'Cashier': 
                     self.gotocashierscreen(user)  # if the user is a cashier, go to cashier screen
                 else:
@@ -101,11 +101,11 @@ class LoginScreen(QDialog):
             if 'conn' in locals() and conn.is_connected():
                 conn.close()
             
-    def gotoadmincashierscreen(self, user): #to user screen
+    def gotohomescreen(self, user): #to home profile screen
         widget.removeWidget(self)
-
-        menu = AdminCashierScreen(user)     
-        widget.addWidget(menu)
+        
+        home = HomeScreen(user)     
+        widget.addWidget(home)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
     def gotocashierscreen(self, user): #To cashier screen
@@ -140,6 +140,7 @@ class AdminCashierScreen(QDialog):
         #######################################################
         #Redirect Functions
         self.logoutbtn.clicked.connect(self.gotologin)
+        self.homebtn.clicked.connect(self.gotohome)
         self.settingsbtn.clicked.connect(self.gotosettings) 
         self.reportbtn.clicked.connect(self.gotosales) 
     
@@ -149,7 +150,15 @@ class AdminCashierScreen(QDialog):
         login = LoginScreen()
         widget.addWidget(login)
         widget.setCurrentIndex(widget.currentIndex()+1) 
-    
+
+
+    def gotohome(self): #to home profile screen
+        widget.removeWidget(self)
+        
+        home = HomeScreen(self.user)     
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+            
     
     def gotosettings(self): #to settings screen
         widget.removeWidget(self)
@@ -161,7 +170,7 @@ class AdminCashierScreen(QDialog):
     def gotosales(self): #to user setting screen
         widget.removeWidget(self)
 
-        sales= ReportScreen(self.user)     
+        sales= ReportScreen1(self.user)     
         widget.addWidget(sales)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
@@ -259,6 +268,7 @@ class AdminProfScreen(QDialog):
         #######################################################
         #Redirect Functions
         self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.homebtn.clicked.connect(self.gotohome)
         self.logoutbtn.clicked.connect(self.gotologin)
         self.settingsbtn.clicked.connect(self.gotosettings)
         self.usersbtn.clicked.connect(self.gotouserscreen)
@@ -293,7 +303,14 @@ class AdminProfScreen(QDialog):
         menu = AdminCashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
+
+    def gotohome(self): #to home profile screen
+        widget.removeWidget(self)
         
+        home = HomeScreen(self.user)     
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
     def gotologin(self):
         widget.removeWidget(self)
         
@@ -319,7 +336,7 @@ class AdminProfScreen(QDialog):
     def gotosales(self): #to user setting screen
         widget.removeWidget(self)
 
-        sales= ReportScreen(self.user)     
+        sales= ReportScreen1(self.user)     
         widget.addWidget(sales)
         widget.setCurrentIndex(widget.currentIndex()+1)
     
@@ -327,7 +344,66 @@ class AdminProfScreen(QDialog):
     def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
         if event.key() == Qt.Key_Escape:
             event.ignore()            
+
+class HomeScreen(QDialog):
+    def __init__(self, user):
+        super(HomeScreen, self).__init__()
+        self.user = user
+        loadUi("ui/homescreen.ui",self)
         
+        
+        ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+        
+        
+        #Redirect Functions
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.logoutbtn.clicked.connect(self.gotologin)
+        self.settingsbtn.clicked.connect(self.gotosettings) 
+        self.reportbtn.clicked.connect(self.gotosales) 
+    
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)     
+    
+    def gotologin(self):
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1) 
+    
+    
+    def gotosettings(self): #to settings screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    def gotosales(self): #to user setting screen
+        widget.removeWidget(self)
+
+        sales= ReportScreen1(self.user)     
+        widget.addWidget(sales)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+    
+    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        if event.key() == Qt.Key_Escape:
+            event.ignore()      
+
+
+
 class PManagementScreen(QDialog):
     def __init__(self, user):
         super(PManagementScreen, self).__init__()
@@ -352,6 +428,7 @@ class PManagementScreen(QDialog):
         
         self.logoutbtn.clicked.connect(self.gotologin)     
         self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.homebtn.clicked.connect(self.gotohome)
         self.settingsbtn.clicked.connect(self.gotosettings)
 
 
@@ -412,13 +489,23 @@ class PManagementScreen(QDialog):
         widget.addWidget(login)
         widget.setCurrentIndex(widget.currentIndex()+1)    
     
+    
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
         menu = AdminCashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
+
+
+    def gotohome(self): #to home profile screen
+        widget.removeWidget(self)
         
+        home = HomeScreen(self.user)     
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+  
     def gotosettings(self): #to user screen
         widget.removeWidget(self)
 
@@ -432,9 +519,9 @@ class PManagementScreen(QDialog):
             event.ignore()       
         
         
-class ReportScreen(QDialog):
+class ReportScreen1(QDialog):
     def __init__(self, user):
-        super(ReportScreen, self).__init__()
+        super(ReportScreen1, self).__init__()
         self.user = user
         loadUi("ui/reportscreen.ui",self)
         ######################################################
@@ -456,7 +543,9 @@ class ReportScreen(QDialog):
         
         self.logoutbtn.clicked.connect(self.gotologin)     
         self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.homebtn.clicked.connect(self.gotohome)
         self.settingsbtn.clicked.connect(self.gotosettings)
+        self.DSRbtn.clicked.connect(self.gotodailysale)
         self.voidbtn.clicked.connect(self.deleteSales)
 
 
@@ -533,13 +622,6 @@ class ReportScreen(QDialog):
         """)
       
         
-    def gotologin(self):  #Direct to the login screen if logout button is clicked.
-        widget.removeWidget(self)
-        
-        login = LoginScreen()
-        widget.addWidget(login)
-        widget.setCurrentIndex(widget.currentIndex()+1)    
-    
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
@@ -547,6 +629,153 @@ class ReportScreen(QDialog):
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
+        
+    def gotodailysale(self): #To daily sale report screen.
+        widget.removeWidget(self)
+
+
+        menu = ReportScreen2(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)    
+        
+        
+    def gotohome(self): #to home profile screen
+        widget.removeWidget(self)
+        
+        home = HomeScreen(self.user)     
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex()+1) 
+        
+    def gotologin(self):  #Direct to the login screen if logout button is clicked.
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)    
+    
+        
+    def gotosettings(self): #to user screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+
+    def keyPressEvent(self, event):    #To ignore close event by "ESC" key
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+
+class ReportScreen2(QDialog):
+    def __init__(self, user):
+        super(ReportScreen2, self).__init__()
+        self.user = user
+        loadUi("ui/reportscreen2.ui",self)
+        ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+
+        #TableWidget
+        self.tableWidget.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
+        self.tableWidget.setColumnWidth(1, 200) # Table index 1, second column with 200 width pixel
+        self.tableWidget.setColumnWidth(2, 120) # Table index 2, three column with 100 width pixel
+        self.tableWidget.setColumnWidth(3, 160) # Table index 3, fourth column with 160 width pixel
+        self.tableWidget.setColumnWidth(4, 120) # Table index 3, fourth column with 160 width pixel
+
+        self.displaydailySales()
+        
+        self.logoutbtn.clicked.connect(self.gotologin)     
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.homebtn.clicked.connect(self.gotohome)
+        self.settingsbtn.clicked.connect(self.gotosettings)
+        self.salesbtn.clicked.connect(self.gotosales)
+
+    def displaydailySales(self):  #To load the data from database to the pyqt table
+        query = "SELECT id, date, name, employeeID, totalPrice FROM Sales"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)  
+        
+        #To make the horizontal headers text aligned to the left of the table. 
+        for col in range(self.tableWidget.columnCount()):
+            header_item = self.tableWidget.horizontalHeaderItem(col)
+            if header_item is not None:
+                header_text = header_item.text()
+                header_item = QTableWidgetItem(header_text)
+                header_item.setTextAlignment(Qt.AlignLeft)
+                self.tableWidget.setHorizontalHeaderItem(col, header_item)
+        
+        #Table Design 
+        self.setStyleSheet("""
+            QTableWidget {
+                background-color: white; /* Set default background color */
+            }
+
+
+            QTableWidget::item:hover {
+                background-color: #FB9722; /* Set background color for header on hover */   
+            }
+
+            QHeaderView::section {
+                background-color: #FB9722; /* Set background color for header */
+                color: black; /* Set text color for header */
+                padding-left: 5px; /* Add padding to the left for better appearance */
+            }       
+        """)
+      
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+ 
+ 
+    def gotohome(self): #to home profile screen
+        widget.removeWidget(self)
+        
+        home = HomeScreen(self.user)     
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex()+1) 
+        
+     
+    def gotologin(self):  #Direct to the login screen if logout button is clicked.
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)    
+    
+        
+    def gotosales(self): #to Report-Sale screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        sales= ReportScreen1(self.user)     
+        widget.addWidget(sales)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+
     def gotosettings(self): #to user screen
         widget.removeWidget(self)
 
@@ -564,6 +793,8 @@ class SettingScreen(QDialog):
         super(SettingScreen, self).__init__()
         self.user = user
         loadUi("ui/settingscreen.ui",self)
+        
+        
         ######################################################
         self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
@@ -576,14 +807,39 @@ class SettingScreen(QDialog):
         self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  #Pixmap for the second sidebar in settings screen.
         self.usersIcon.setPixmap(QPixmap('icons/users.png'))
         #######################################################
-        #redirect functions
-        self.logoutbtn.clicked.connect(self.gotologin) 
-        self.usersbtn.clicked.connect(self.gotouserscreen) 
-        self.menubtn.clicked.connect(self.gotocashierscreen)
-        self.userprofbtn.clicked.connect(self.gotoadminprofscreen)
-        self.reportbtn.clicked.connect(self.gotosales)
-    
         
+        
+        #redirect functions
+        self.userprofbtn.clicked.connect(self.gotoadminprofscreen)
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.homebtn.clicked.connect(self.gotohome)
+        self.logoutbtn.clicked.connect(self.gotologin) 
+        self.reportbtn.clicked.connect(self.gotosales)
+        self.usersbtn.clicked.connect(self.gotouserscreen) 
+ 
+
+    def gotoadminprofscreen(self): #to admin profile screen
+        widget.removeWidget(self)
+        
+        adminprof = AdminProfScreen(self.user)     
+        widget.addWidget(adminprof)
+        widget.setCurrentIndex(widget.currentIndex()+1)   
+
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1) 
+        
+    def gotohome(self): #to home profile screen
+        widget.removeWidget(self)
+        
+        home = HomeScreen(self.user)     
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+ 
     def gotologin(self):
         widget.removeWidget(self)
         
@@ -591,27 +847,14 @@ class SettingScreen(QDialog):
         widget.addWidget(login)
         widget.setCurrentIndex(widget.currentIndex()+1)  
         
-        
-    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
-        widget.removeWidget(self)
-
-        menu = AdminCashierScreen(self.user)
-        widget.addWidget(menu)
-        widget.setCurrentIndex(widget.currentIndex()+1) 
     
-    def gotosales(self): #to user setting screen
+    def gotosales(self): #to Report sales setting screen
         widget.removeWidget(self)
 
-        sales= ReportScreen(self.user)     
+        sales= ReportScreen1(self.user)     
         widget.addWidget(sales)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
-    def gotoadminprofscreen(self): #to admin profile screen
-        widget.removeWidget(self)
-        
-        adminprof = AdminProfScreen(self.user)     
-        widget.addWidget(adminprof)
-        widget.setCurrentIndex(widget.currentIndex()+1)
         
     def gotouserscreen(self): #to user screen
         widget.removeWidget(self)
@@ -748,7 +991,7 @@ class UserScreen(QDialog):
     def gotosales(self): #to user setting screen
         widget.removeWidget(self)
 
-        sales= ReportScreen(self.user)     
+        sales= ReportScreen1(self.user)     
         widget.addWidget(sales)
         widget.setCurrentIndex(widget.currentIndex()+1)
             
@@ -780,15 +1023,10 @@ class UserScreenEditMode(QDialog):
         self.tableWidget.setColumnWidth(3, 160) # Table index 3, fourth column with 160 width pixel
         self.tableWidget.setColumnWidth(4, 150) # Table index 4, fifth column with 150 width pixel
         self.displayEmployee()
-        
-        self.logoutbtn.clicked.connect(self.gotologin)     
-        self.menubtn.clicked.connect(self.gotocashierscreen)
-        self.settingsbtn.clicked.connect(self.gotosettings)
-        self.userprofbtn.clicked.connect(self.gotoadminprofscreen)
+         
         self.backbtn.clicked.connect(self.gotouserscreen) 
         self.dropbtn.clicked.connect(self.deleteEmployee)
         self.addbtn.clicked.connect(self.gotoadduser)
-        self.reportbtn.clicked.connect(self.gotosales)
         
     def displayEmployee(self):  #To load the data from database to the pyqt table
         query = "SELECT * FROM employee"
@@ -838,7 +1076,15 @@ class UserScreenEditMode(QDialog):
                 padding-left: 5px; /* Add padding to the left for better appearance */
             }       
         """)
+
+
+    def gotoadduser(self): #to add a new user.
+        widget.removeWidget(self)
         
+        newuser = AddNewUserScreen(self.user)     
+        widget.addWidget(newuser)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
     def deleteEmployee(self):
         # Get the selected row index
         row_index = self.tableWidget.currentRow()
@@ -857,57 +1103,15 @@ class UserScreenEditMode(QDialog):
         cur.execute(delete_query, (selected_row_id,))
         conn.commit()
         self.tableWidget.removeRow(row_index)
-
-
-    def gotologin(self):  #Direct to the login screen if logout button is clicked.
-        widget.removeWidget(self)
         
-        login = LoginScreen()
-        widget.addWidget(login)
-        widget.setCurrentIndex(widget.currentIndex()+1)    
-    
-    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
-        widget.removeWidget(self)
-
-        menu = AdminCashierScreen(self.user)
-        widget.addWidget(menu)
-        widget.setCurrentIndex(widget.currentIndex()+1)
         
-    def gotosettings(self): #to user screen
-        widget.removeWidget(self)
-
-        settings = SettingScreen(self.user)     
-        widget.addWidget(settings)
-        widget.setCurrentIndex(widget.currentIndex()+1)
-        
-    def gotoadminprofscreen(self): #to admin profile screen
-        widget.removeWidget(self)
-        
-        adminprof = AdminProfScreen(self.user)     
-        widget.addWidget(adminprof)
-        widget.setCurrentIndex(widget.currentIndex()+1)
-    
     def gotouserscreen(self): #to user screen
         widget.removeWidget(self)
         
         userlist = UserScreen(self.user)     
         widget.addWidget(userlist)
         widget.setCurrentIndex(widget.currentIndex()+1)
-
-    def gotoadduser(self): #to add a new user.
-        widget.removeWidget(self)
-        
-        newuser = AddNewUserScreen(self.user)     
-        widget.addWidget(newuser)
-        widget.setCurrentIndex(widget.currentIndex()+1)
-    
-    def gotosales(self): #to user setting screen
-        widget.removeWidget(self)
-
-        sales= ReportScreen(self.user)     
-        widget.addWidget(sales)
-        widget.setCurrentIndex(widget.currentIndex()+1)
-            
+  
 
     def keyPressEvent(self, event):    #To ignore close event by "ESC" key
         if event.key() == Qt.Key_Escape:
