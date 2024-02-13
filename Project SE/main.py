@@ -9,7 +9,6 @@ import mysql.connector
 from mysql.connector.errors import *
 import warnings
 
-from datetime import datetime 
 
 # Suppress DeprecationWarnings globally
 warnings.simplefilter("ignore", category=DeprecationWarning)
