@@ -260,7 +260,9 @@ class AddNewUserScreen(QDialog):
 class AddNewProductScreen(QDialog):
     def __init__(self, user):
         super(AddNewProductScreen, self).__init__()
+        
         self.user = user
+        
         loadUi("ui/add_new_product.ui", self)
         self.insertbtn.clicked.connect(self.addproduct)
         self.backbtn.clicked.connect(self.backfunction)
@@ -897,7 +899,7 @@ class PManagementScreen(QDialog):
     def gotoaddproduct(self): 
         widget.removeWidget(self)
             
-        aproduct = AddNewProductScreen()
+        aproduct = AddNewProductScreen(self.user)
         widget.addWidget(aproduct)
         widget.setCurrentIndex(widget.currentIndex()+1)        
 
