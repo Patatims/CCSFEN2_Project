@@ -248,6 +248,106 @@ class AddNewUserScreen(QDialog):
     def keyPressEvent(self, event):    #To ignore close event by "ESC" key
         if event.key() == Qt.Key_Escape:
             event.ignore()
+
+
+class AddNewProductScreen(QDialog):
+    def __init__(self, user):
+        super(AddNewProductScreen, self).__init__()
+        self.user = user
+        loadUi("ui/add_new_product.ui", self)
+        self.insertbtn.clicked.connect(self.addproduct)
+        self.backbtn.clicked.connect(self.backfunction)
+
+        # create a button group for the radio buttons
+        self.roleButtonGroup = QButtonGroup()
+        self.roleButtonGroup.addButton(self.lugawbtn)
+        self.roleButtonGroup.addButton(self.mamibtn)
+        self.roleButtonGroup.addButton(self.maindishbtn)
+        self.roleButtonGroup.addButton(self.dessertsbtn)
+        self.roleButtonGroup.addButton(self.beveragesbtn)
+        self.roleButtonGroup.addButton(self.extrasbtn)
+
+        # connect the button group's buttonClicked signal to a slot
+        self.roleButtonGroup.buttonClicked.connect(self.handleCategorySelection)
+
+    def handleCategorySelection(self, radioButton):
+        # get the selected radio button's text
+        selected_category = radioButton.text()
+        # do something with the selected role, such as storing it in a variable
+        print("Selected Category:", selected_category)
+
+        #To Insert or Register a new data to Employee Table
+    def addproduct(self):
+        try:
+            productname = self.pnamefield.text()
+            price = self.pricefield.text()
+
+            if len(productname) == 0 or len(price) == 0:
+                self.error.setText("Please fill in all necessary fields")
+            elif not self.lugawbtn.isChecked() and not \
+                    self.mamibtn.isChecked() and not \
+                    self.maindishbtn.isChecked() and not \
+                    self.dessertsbtn.isChecked() and not \
+                    self.beveragesbtn.isChecked() and not \
+                    self.extrasbtn.isChecked():
+                    self.error.setText("Please select a category for the product.")
+
+            else:
+                category = "1" if self.lugawbtn.isChecked() else \
+                        "2" if self.mamibtn.isChecked() else \
+                        "3" if self.maindishbtn.isChecked() else \
+                        "4" if self.dessertsbtn.isChecked() else \
+                        "5" if self.beveragesbtn.isChecked() else \
+                        "6" if self.extrasbtn.isChecked() else None
+
+                product_data = [productname, price, category]
+
+                # Establish the database connection
+                conn = mysql.connector.connect(
+                    host="127.0.0.1",
+                    user="root",
+                    passwd="WFZximct1!",
+                    database="seproject_db",
+                    autocommit=True)
+                cur = conn.cursor()
+
+                # Execute the SQL query
+                cur.execute("INSERT INTO Product (name, price, categoryID) "
+                            "VALUES (%s, %s, %s)", product_data)
+
+                # Clear any previous error messages
+                self.error.setText("")
+
+                # Show success message
+                QMessageBox.information(self, "Success", "Successfully Encoded!.")
+
+                # Clear input fields
+                self.pnamefield.clear()
+                self.pricefield.clear()
+
+        except mysql.connector.Error as err:
+            # Print the error to the console
+            print(f"Error: {err}")
+
+            # Display error message to the user
+            self.error.setText("An error occurred while inserting the product.")
+
+        finally:
+            # Close the database connection
+            if 'conn' in locals() and conn.is_connected():
+                conn.close()
+
+    def backfunction(self):
+        widget.removeWidget(self)
+        
+        back = PManagementScreen(self.user)
+        widget.addWidget(back)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def keyPressEvent(self, event):    #To ignore close event by "ESC" key
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+
             
 class AdminProfScreen(QDialog):
     def __init__(self, user):
@@ -367,7 +467,8 @@ class HomeScreen(QDialog):
         self.menubtn.clicked.connect(self.gotocashierscreen)
         self.logoutbtn.clicked.connect(self.gotologin)
         self.settingsbtn.clicked.connect(self.gotosettings) 
-        self.reportbtn.clicked.connect(self.gotosales) 
+        self.reportbtn.clicked.connect(self.gotosales)
+        self.p_managementbtn.clicked.connect(self.gotopmanagement) 
 
         
         self.displayTopSellingProduct()
@@ -451,6 +552,12 @@ class HomeScreen(QDialog):
         widget.addWidget(login)
         widget.setCurrentIndex(widget.currentIndex()+1) 
     
+    def gotopmanagement(self):
+        widget.removeWidget(self)
+
+        product = PManagementScreen(self.user)     
+        widget.addWidget(product)
+        widget.setCurrentIndex(widget.currentIndex()+1)
     
     def gotosettings(self): #to settings screen
         widget.removeWidget(self)
@@ -477,7 +584,7 @@ class PManagementScreen(QDialog):
     def __init__(self, user):
         super(PManagementScreen, self).__init__()
         self.user = user
-        loadUi("ui/.ui",self)
+        loadUi("ui/pmanagementscreen.ui",self)
         ######################################################
         self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
@@ -487,22 +594,27 @@ class PManagementScreen(QDialog):
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
 
-        #TableWidget
-        self.tableWidget.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
-        self.tableWidget.setColumnWidth(1, 200) # Table index 1, second column with 200 width pixel
-        self.tableWidget.setColumnWidth(2, 100) # Table index 2, three column with 100 width pixel
-        self.tableWidget.setColumnWidth(3, 160) # Table index 3, fourth column with 160 width pixel
 
-        self.displayProductList()
+        self.displayAllProductList()
         
+        self.allbtn.clicked.connect(self.displayAllProductList)
+        self.lugawbtn.clicked.connect(self.displayLugawProductList)
+        self.mamibtn.clicked.connect(self.displayMamiProductList)
+        self.maindishbtn.clicked.connect(self.displayMainDishProductList)
+        self.dessertsbtn.clicked.connect(self.displayDessertsProductList)
+        self.beveragesbtn.clicked.connect(self.displayBeveragesProductList)
+        self.extrasbtn.clicked.connect(self.displayExtrasProductList)
+        
+        self.addbtn.clicked.connect(self.gotoaddproduct)  
         self.logoutbtn.clicked.connect(self.gotologin)     
         self.menubtn.clicked.connect(self.gotocashierscreen)
         self.homebtn.clicked.connect(self.gotohome)
         self.settingsbtn.clicked.connect(self.gotosettings)
+        self.deletebtn.clicked.connect(self.deleteProduct)
 
 
-    def displayProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT * FROM Product"
+    def displayAllProductList(self):  #To load the data from database to the pyqt table
+        query = "SELECT * FROM Product ORDER BY categoryiD ASC"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -550,7 +662,165 @@ class PManagementScreen(QDialog):
             }       
         """)
         
+    def displayLugawProductList(self):  #To load the data from database to the pyqt table
+        query = "SELECT * FROM Product WHERE categoryID = 1"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)  
+                
+    def displayMamiProductList(self):  #To load the data from database to the pyqt table
+        query = "SELECT * FROM Product WHERE categoryID = 2"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+
+    def displayMainDishProductList(self):  #To load the data from database to the pyqt table
+        query = "SELECT * FROM Product WHERE categoryID = 3"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+
+    def displayDessertsProductList(self):  #To load the data from database to the pyqt table
+        query = "SELECT * FROM Product WHERE categoryID = 4"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+
+
+    def displayBeveragesProductList(self):  #To load the data from database to the pyqt table
+        query = "SELECT * FROM Product WHERE categoryID = 5"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)        
+
+    def displayExtrasProductList(self):  #To load the data from database to the pyqt table
+        query = "SELECT * FROM Product WHERE categoryID = 6"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)        
+
+    def deleteProduct(self):
         
+        # Get the selected row index
+        row_index = self.tableWidget.currentRow()
+        # Check if there is a selected row
+        if row_index < 0:
+            return
+        selected_row_id = str(self.tableWidget.item(row_index, 0).text())
+        
+        try:
+            delete_query = "DELETE FROM Product WHERE id = %s"
+            cur.execute(delete_query, (selected_row_id,))
+            conn.commit()
+            
+            self.tableWidget.removeRow(row_index)  
+            
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")         
+
+    def gotoaddproduct(self): 
+        widget.removeWidget(self)
+            
+        aproduct = AddNewProductScreen()
+        widget.addWidget(aproduct)
+        widget.setCurrentIndex(widget.currentIndex()+1)        
+
     def gotologin(self):  #Direct to the login screen if logout button is clicked.
         widget.removeWidget(self)
             
@@ -1190,12 +1460,6 @@ class UserScreenEditMode(QDialog):
         """)
 
 
-    def gotoadduser(self): #to add a new user.
-        widget.removeWidget(self)
-        
-        newuser = AddNewUserScreen(self.user)     
-        widget.addWidget(newuser)
-        widget.setCurrentIndex(widget.currentIndex()+1)
 
     def deleteEmployee(self):
         # Get the selected row index
@@ -1215,6 +1479,14 @@ class UserScreenEditMode(QDialog):
         cur.execute(delete_query, (selected_row_id,))
         conn.commit()
         self.tableWidget.removeRow(row_index)
+
+
+    def gotoadduser(self): #to add a new user.
+        widget.removeWidget(self)
+        
+        newuser = AddNewUserScreen(self.user)     
+        widget.addWidget(newuser)
+        widget.setCurrentIndex(widget.currentIndex()+1)
         
         
     def gotouserscreen(self): #to user screen
