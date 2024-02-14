@@ -504,8 +504,8 @@ border-radius: 10px;  </string>
    <widget class="QLabel" name="listofsale">
     <property name="geometry">
      <rect>
-      <x>158</x>
-      <y>210</y>
+      <x>159</x>
+      <y>200</y>
       <width>221</width>
       <height>51</height>
      </rect>
@@ -529,7 +529,7 @@ border-radius: 10px;  </string>
     <property name="geometry">
      <rect>
       <x>160</x>
-      <y>260</y>
+      <y>280</y>
       <width>951</width>
       <height>391</height>
      </rect>
@@ -571,7 +571,10 @@ border-radius: 10px;  </string>
      <number>100</number>
     </attribute>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>150</number>
+     <number>220</number>
+    </attribute>
+    <attribute name="horizontalHeaderHighlightSections">
+     <bool>false</bool>
     </attribute>
     <attribute name="horizontalHeaderStretchLastSection">
      <bool>true</bool>
@@ -604,7 +607,7 @@ border-radius: 10px;  </string>
     <property name="geometry">
      <rect>
       <x>160</x>
-      <y>690</y>
+      <y>700</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -634,8 +637,8 @@ QPushButton:pressed {
    <widget class="QLabel" name="listofsale_2">
     <property name="geometry">
      <rect>
-      <x>158</x>
-      <y>98</y>
+      <x>159</x>
+      <y>90</y>
       <width>271</width>
       <height>41</height>
      </rect>
@@ -659,7 +662,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>960</x>
-      <y>690</y>
+      <y>700</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -880,10 +883,10 @@ background-color: rgba(255, 167, 25, 0.1);
    <widget class="QPushButton" name="updatebtn">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>690</y>
-      <width>151</width>
-      <height>41</height>
+      <x>170</x>
+      <y>250</y>
+      <width>91</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -891,10 +894,10 @@ background-color: rgba(255, 167, 25, 0.1);
 	color: #FFFFFF;
     background-color: #FB9722;
     border: 1px solid #888888;
-    border-radius: 20px;
+    border-radius: 5px;
 	font-family: 'Inter';
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 500;
 }
 QPushButton:hover {
 	background-color: rgb(255, 167, 25);
@@ -905,7 +908,7 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>Update</string>
+     <string>UPDATE</string>
     </property>
    </widget>
    <widget class="Line" name="line">
@@ -958,6 +961,87 @@ background-color: rgba(255, 167, 25, 0.1);
     </property>
     <property name="text">
      <string>All</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="pricefield">
+    <property name="geometry">
+     <rect>
+      <x>515</x>
+      <y>250</y>
+      <width>171</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{
+	padding-left: 20px;
+    border-radius: 10px;
+    border: 1px solid rgb(234, 112, 0);  
+    background-color: rgba(255, 255, 255, 240);
+    font-family: 'Roboto';
+	font-size: 13px;
+	font-weight: 400;
+}</string>
+    </property>
+    <property name="placeholderText">
+     <string>Price</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="pnamefield">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>250</y>
+      <width>241</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{
+	padding-left: 15px;
+    border-radius: 10px;
+    border: 1px solid rgb(234, 112, 0);  
+    background-color: rgba(255, 255, 255, 240);
+    font-family: 'Roboto';
+	font-size: 13px;
+	font-weight: 400;
+}</string>
+    </property>
+    <property name="placeholderText">
+     <string>Product Name</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>525</x>
+      <y>252</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+    </property>
+    <property name="text">
+     <string>₱</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="error">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>250</y>
+      <width>401</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color: rgb(255, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

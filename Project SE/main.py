@@ -144,6 +144,7 @@ class AdminCashierScreen(QDialog):
         self.homebtn.clicked.connect(self.gotohome)
         self.settingsbtn.clicked.connect(self.gotosettings) 
         self.reportbtn.clicked.connect(self.gotosales) 
+        self.p_managementbtn.clicked.connect(self.gotopmanagement)
     
     def gotologin(self):
         widget.removeWidget(self)
@@ -160,6 +161,12 @@ class AdminCashierScreen(QDialog):
         widget.addWidget(home)
         widget.setCurrentIndex(widget.currentIndex()+1)
             
+    def gotopmanagement(self):
+        widget.removeWidget(self)
+
+        product = PManagementScreen(self.user)     
+        widget.addWidget(product)
+        widget.setCurrentIndex(widget.currentIndex()+1)   
     
     def gotosettings(self): #to settings screen
         widget.removeWidget(self)
@@ -371,9 +378,11 @@ class AdminProfScreen(QDialog):
         self.menubtn.clicked.connect(self.gotocashierscreen)
         self.homebtn.clicked.connect(self.gotohome)
         self.logoutbtn.clicked.connect(self.gotologin)
+        self.p_managementbtn.clicked.connect(self.gotopmanagement)
         self.settingsbtn.clicked.connect(self.gotosettings)
         self.usersbtn.clicked.connect(self.gotouserscreen)
         self.reportbtn.clicked.connect(self.gotosales)
+        
         
    
         try:
@@ -418,7 +427,16 @@ class AdminProfScreen(QDialog):
         login = LoginScreen()
         widget.addWidget(login)
         widget.setCurrentIndex(widget.currentIndex()+1)
-        
+
+
+    def gotopmanagement(self):
+        widget.removeWidget(self)
+
+        product = PManagementScreen(self.user)     
+        widget.addWidget(product)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+
     def gotouserscreen(self): #to user screen
         widget.removeWidget(self)
         
@@ -452,7 +470,6 @@ class HomeScreen(QDialog):
         self.user = user
         loadUi("ui/homescreen.ui",self)
         
-
         ######################################################
         self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
@@ -593,7 +610,11 @@ class PManagementScreen(QDialog):
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
-
+        
+        self.tableWidget.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
+        self.tableWidget.setColumnWidth(1, 250) # Table index 1, second column with 200 width pixel
+        
+        
 
         self.displayAllProductList()
         
@@ -605,12 +626,16 @@ class PManagementScreen(QDialog):
         self.beveragesbtn.clicked.connect(self.displayBeveragesProductList)
         self.extrasbtn.clicked.connect(self.displayExtrasProductList)
         
-        self.addbtn.clicked.connect(self.gotoaddproduct)  
+         
         self.logoutbtn.clicked.connect(self.gotologin)     
         self.menubtn.clicked.connect(self.gotocashierscreen)
         self.homebtn.clicked.connect(self.gotohome)
+        self.reportbtn.clicked.connect(self.gotosales)
         self.settingsbtn.clicked.connect(self.gotosettings)
+        
+        self.addbtn.clicked.connect(self.gotoaddproduct) 
         self.deletebtn.clicked.connect(self.deleteProduct)
+        self.updatebtn.clicked.connect(self.updateProduct)
 
 
     def displayAllProductList(self):  #To load the data from database to the pyqt table
@@ -649,6 +674,7 @@ class PManagementScreen(QDialog):
             QTableWidget {
                 background-color: white; /* Set default background color */
             }
+            
 
 
             QTableWidget::item:hover {
@@ -656,6 +682,9 @@ class PManagementScreen(QDialog):
             }
 
             QHeaderView::section {
+                font-family:'Inter';
+                font-size: 13px;
+                font-weight: bold;
                 background-color: #FB9722; /* Set background color for header */
                 color: black; /* Set text color for header */
                 padding-left: 5px; /* Add padding to the left for better appearance */
@@ -814,6 +843,57 @@ class PManagementScreen(QDialog):
         except mysql.connector.Error as err:
             print(f"Error: {err}")         
 
+
+    def updateProduct(self):
+            try:
+                row_index = self.tableWidget.currentRow()
+                if row_index < 0:
+                    return
+
+                selected_row_id = str(self.tableWidget.item(row_index, 0).text())
+
+                new_productname = self.pnamefield.text() or None
+                new_price = self.pricefield.text() or None
+               
+
+               
+                if all(x is None for x in [new_productname, new_price]):
+                    self.error.setText("At least one field must be filled before clicking the update.")
+                else:
+                    query = "UPDATE Product SET"
+                    params = []
+
+                    if new_productname:
+                        query += " name = %s,"
+                        params.append(new_productname)
+                    if new_price:
+                        query += " price = %s,"
+                        params.append(new_price)
+                    
+
+                    query = query.rstrip(',') + " WHERE id = %s"
+                    params.append(selected_row_id)
+                    
+                    self.error.setText("")
+                    self.pnamefield.clear()
+                    self.pricefield.clear()
+                    
+                    cur.execute(query, tuple(params))
+                    conn.commit()
+
+                    for i, value in enumerate([new_productname, new_price]):
+                        if value:
+                            self.tableWidget.setItem(row_index, i + 1, QTableWidgetItem(value))
+                            
+
+            except Exception as e:
+                if e.errno == 1062:
+                    self.error.setText ("The product name is already exist" )
+                elif e.errno == 1366:
+                    self.error.setText ("Incorrect decimal value for pricing")
+                else:
+                    print("An error occurred:", e)
+
     def gotoaddproduct(self): 
         widget.removeWidget(self)
             
@@ -851,6 +931,13 @@ class PManagementScreen(QDialog):
         settings = SettingScreen(self.user)     
         widget.addWidget(settings)
         widget.setCurrentIndex(widget.currentIndex()+1)
+
+    def gotosales(self): #to user setting screen
+        widget.removeWidget(self)
+
+        sales= ReportScreen1(self.user)     
+        widget.addWidget(sales)
+        widget.setCurrentIndex(widget.currentIndex()+1)
         
 
     def keyPressEvent(self, event):    #To ignore close event by "ESC" key
@@ -863,13 +950,16 @@ class ReportScreen1(QDialog):
         super(ReportScreen1, self).__init__()
         self.user = user
         loadUi("ui/reportscreen.ui",self)
+        
         ######################################################
+        
         self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
         self.reportIcon.setPixmap(QPixmap('icons/report.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        
         #######################################################
 
         #TableWidget
@@ -883,8 +973,11 @@ class ReportScreen1(QDialog):
         self.logoutbtn.clicked.connect(self.gotologin)     
         self.menubtn.clicked.connect(self.gotocashierscreen)
         self.homebtn.clicked.connect(self.gotohome)
+        self.p_managementbtn.clicked.connect(self.gotopmanagement)
         self.settingsbtn.clicked.connect(self.gotosettings)
         self.DSRbtn.clicked.connect(self.gotodailysale)
+        
+        
         self.voidbtn.clicked.connect(self.deleteSales)
 
 
@@ -947,6 +1040,7 @@ class ReportScreen1(QDialog):
             QTableWidget {
                 background-color: white; /* Set default background color */
             }
+            
 
 
             QTableWidget::item:hover {
@@ -954,6 +1048,9 @@ class ReportScreen1(QDialog):
             }
 
             QHeaderView::section {
+                font-family:'Inter';
+                font-size: 13px;
+                font-weight: bold;
                 background-color: #FB9722; /* Set background color for header */
                 color: black; /* Set text color for header */
                 padding-left: 5px; /* Add padding to the left for better appearance */
@@ -967,7 +1064,15 @@ class ReportScreen1(QDialog):
         menu = AdminCashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
-        
+
+
+    def gotopmanagement(self):
+        widget.removeWidget(self)
+
+        product = PManagementScreen(self.user)     
+        widget.addWidget(product)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
         
     def gotodailysale(self): #To daily sale report screen.
         widget.removeWidget(self)
@@ -1033,7 +1138,7 @@ class ReportScreen2(QDialog):
         self.homebtn.clicked.connect(self.gotohome)
         self.settingsbtn.clicked.connect(self.gotosettings)
         self.salesbtn.clicked.connect(self.gotosales)
-
+        self.p_managementbtn.clicked.connect(self.gotopmanagement)
         
         # Set up QDateEdit widget
         self.dateEdit.setDate(QDate.currentDate())
@@ -1058,7 +1163,6 @@ class ReportScreen2(QDialog):
             row_count = len(rows)
 
 
-            
             # Check if there are any rows
             if row_count == 0:
                 return
@@ -1086,21 +1190,25 @@ class ReportScreen2(QDialog):
 
             #Table Design 
             self.setStyleSheet("""
-                QTableWidget {
-                    background-color: white; /* Set default background color */
-                }
+            QTableWidget {
+                background-color: white; /* Set default background color */
+            }
+            
 
 
-                QTableWidget::item:hover {
-                    background-color: #FB9722; /* Set background color for header on hover */   
-                }
+            QTableWidget::item:hover {
+                background-color: #FB9722; /* Set background color for header on hover */   
+            }
 
-                QHeaderView::section {
-                    background-color: #FB9722; /* Set background color for header */
-                    color: black; /* Set text color for header */
-                    padding-left: 5px; /* Add padding to the left for better appearance */
-                }       
-            """)
+            QHeaderView::section {
+                font-family:'Inter';
+                font-size: 13px;
+                font-weight: bold;
+                background-color: #FB9722; /* Set background color for header */
+                color: black; /* Set text color for header */
+                padding-left: 5px; /* Add padding to the left for better appearance */
+            }       
+        """)
             
             conn.commit()
             
@@ -1148,7 +1256,14 @@ class ReportScreen2(QDialog):
         login = LoginScreen()
         widget.addWidget(login)
         widget.setCurrentIndex(widget.currentIndex()+1)    
-    
+
+    def gotopmanagement(self):
+        widget.removeWidget(self)
+
+        product = PManagementScreen(self.user)     
+        widget.addWidget(product)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
         
     def gotosales(self): #to Report-Sale screen if menu button is clicked.
         widget.removeWidget(self)
@@ -1198,6 +1313,7 @@ class SettingScreen(QDialog):
         self.logoutbtn.clicked.connect(self.gotologin) 
         self.reportbtn.clicked.connect(self.gotosales)
         self.usersbtn.clicked.connect(self.gotouserscreen) 
+        self.p_managementbtn.clicked.connect(self.gotopmanagement)
  
 
     def gotoadminprofscreen(self): #to admin profile screen
@@ -1229,7 +1345,15 @@ class SettingScreen(QDialog):
         widget.addWidget(login)
         widget.setCurrentIndex(widget.currentIndex()+1)  
         
-    
+        
+    def gotopmanagement(self):
+        widget.removeWidget(self)
+
+        product = PManagementScreen(self.user)     
+        widget.addWidget(product)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+
     def gotosales(self): #to Report sales setting screen
         widget.removeWidget(self)
 
@@ -1280,6 +1404,8 @@ class UserScreen(QDialog):
         
         self.logoutbtn.clicked.connect(self.gotologin)     
         self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.homebtn.clicked.connect(self.gotohome)
+        self.p_managementbtn.clicked.connect(self.gotopmanagement) 
         self.settingsbtn.clicked.connect(self.gotosettings)
         self.userprofbtn.clicked.connect(self.gotoadminprofscreen)
         self.editbtn.clicked.connect(self.gotouserscreenedit)
@@ -1321,47 +1447,21 @@ class UserScreen(QDialog):
             QTableWidget {
                 background-color: white; /* Set default background color */
             }
-
+            
 
             QTableWidget::item:hover {
                 background-color: #FB9722; /* Set background color for header on hover */   
             }
 
             QHeaderView::section {
+                font-family:'Inter';
+                font-size: 13px;
+                font-weight: bold;
                 background-color: #FB9722; /* Set background color for header */
                 color: black; /* Set text color for header */
                 padding-left: 5px; /* Add padding to the left for better appearance */
             }       
         """)
-        
-        
-    def gotologin(self):  #Direct to the login screen if logout button is clicked.
-        widget.removeWidget(self)
-        
-        login = LoginScreen()
-        widget.addWidget(login)
-        widget.setCurrentIndex(widget.currentIndex()+1)    
-    
-    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
-        widget.removeWidget(self)
-
-        menu = AdminCashierScreen(self.user)
-        widget.addWidget(menu)
-        widget.setCurrentIndex(widget.currentIndex()+1)
-        
-    def gotosettings(self): #to user screen
-        widget.removeWidget(self)
-
-        settings = SettingScreen(self.user)     
-        widget.addWidget(settings)
-        widget.setCurrentIndex(widget.currentIndex()+1)
-        
-    def gotouserscreenedit(self): #to user screen
-        widget.removeWidget(self)
-
-        usersedit = UserScreenEditMode(self.user)     
-        widget.addWidget(usersedit)
-        widget.setCurrentIndex(widget.currentIndex()+1)
         
     def gotoadminprofscreen(self): #to admin profile screen
         widget.removeWidget(self)
@@ -1369,6 +1469,55 @@ class UserScreen(QDialog):
         adminprof = AdminProfScreen(self.user)     
         widget.addWidget(adminprof)
         widget.setCurrentIndex(widget.currentIndex()+1)
+        
+              
+    def gotologin(self):  #Direct to the login screen if logout button is clicked.
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)    
+    
+    
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+
+    def gotohome(self):
+        widget.removeWidget(self)
+
+        home = HomeScreen(self.user)     
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+
+    def gotopmanagement(self):
+        widget.removeWidget(self)
+
+        product = PManagementScreen(self.user)     
+        widget.addWidget(product)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+
+    def gotosettings(self): #to user screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+        
+    def gotouserscreenedit(self): #to user screen
+        widget.removeWidget(self)
+
+        usersedit = UserScreenEditMode(self.user)     
+        widget.addWidget(usersedit)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
     
     def gotosales(self): #to user setting screen
         widget.removeWidget(self)
@@ -1377,9 +1526,11 @@ class UserScreen(QDialog):
         widget.addWidget(sales)
         widget.setCurrentIndex(widget.currentIndex()+1)
             
+            
     def keyPressEvent(self, event):    #To ignore close event by "ESC" key
         if event.key() == Qt.Key_Escape:
             event.ignore()
+
 
 class UserScreenEditMode(QDialog):
     def __init__(self, user):
@@ -1446,6 +1597,7 @@ class UserScreenEditMode(QDialog):
             QTableWidget {
                 background-color: white; /* Set default background color */
             }
+            
 
 
             QTableWidget::item:hover {
@@ -1453,6 +1605,9 @@ class UserScreenEditMode(QDialog):
             }
 
             QHeaderView::section {
+                font-family:'Inter';
+                font-size: 13px;
+                font-weight: bold;
                 background-color: #FB9722; /* Set background color for header */
                 color: black; /* Set text color for header */
                 padding-left: 5px; /* Add padding to the left for better appearance */
