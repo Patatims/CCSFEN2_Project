@@ -581,8 +581,8 @@ background-color: rgba(255, 167, 25, 0.1);
    <widget class="QLabel" name="listofsale">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>210</y>
+      <x>160</x>
+      <y>220</y>
       <width>201</width>
       <height>51</height>
      </rect>
@@ -591,7 +591,7 @@ background-color: rgba(255, 167, 25, 0.1);
      <string notr="true">QLabel#listofsale{
     color: #000000;
     font-family: 'Inter';
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 500;
 }</string>
     </property>
@@ -610,6 +610,12 @@ background-color: rgba(255, 167, 25, 0.1);
       <width>951</width>
       <height>391</height>
      </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::WinPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
     </property>
     <property name="alternatingRowColors">
      <bool>true</bool>

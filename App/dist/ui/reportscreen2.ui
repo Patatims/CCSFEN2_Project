@@ -611,6 +611,12 @@ background-color: rgba(255, 167, 25, 0.1);
       <height>351</height>
      </rect>
     </property>
+    <property name="frameShape">
+     <enum>QFrame::WinPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
     <property name="alternatingRowColors">
      <bool>true</bool>
     </property>
@@ -730,7 +736,10 @@ QPushButton:pressed {
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(255, 255, 255);
-border: 1px solid rgba(0, 0, 0, 0.3);  </string>
+border: 2px solid rgba(0, 0, 0, 1);  </string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::WinPanel</enum>
     </property>
     <property name="text">
      <string/>
@@ -747,7 +756,7 @@ border: 1px solid rgba(0, 0, 0, 0.3);  </string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(255, 255, 255);
-border: 1px solid rgba(0, 0, 0, 0.3);  </string>
+border: 2px solid rgba(0, 0, 0, 1);  </string>
     </property>
     <property name="text">
      <string/>
