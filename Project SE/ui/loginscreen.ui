@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>799</height>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,7 +58,7 @@ rgb(242, 242, 242)
    </property>
    <property name="styleSheet">
     <string notr="true">QLineEdit#userfield {
-	padding-left: 25px;
+	padding-left: 35px;
     border-radius: 10px;
     border: 1px solid rgb(234, 112, 0);  
     background-color: rgba(255, 255, 255, 240);
@@ -69,7 +69,7 @@ rgb(242, 242, 242)
 </string>
    </property>
    <property name="placeholderText">
-    <string>| Username</string>
+    <string>Username</string>
    </property>
    <property name="cursorMoveStyle">
     <enum>Qt::LogicalMoveStyle</enum>
@@ -89,7 +89,7 @@ rgb(242, 242, 242)
    </property>
    <property name="styleSheet">
     <string notr="true">QLineEdit#passwordfield {
-	padding-left: 25px;
+	padding-left: 35px;
     border-radius: 10px;
     border: 1px solid rgb(234, 112, 0);  
     background-color: rgba(255, 255, 255, 240);
@@ -106,7 +106,7 @@ rgb(242, 242, 242)
     <enum>QLineEdit::Password</enum>
    </property>
    <property name="placeholderText">
-    <string>| Password</string>
+    <string>Password</string>
    </property>
    <property name="clearButtonEnabled">
     <bool>true</bool>
@@ -127,8 +127,7 @@ rgb(242, 242, 242)
     background-color: #FB9722;
     width: 85%;
     height: 40px;
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    border: 1px solid #888888;
+	border: 1px solid #888888;
     border-radius: 10px;
 	font-family: 'montserrat', sans-serif;
     font-size: 19px;
@@ -156,11 +155,11 @@ QPushButton:pressed {
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">Line#navline{
-border:  1 solid #FF8A00;
-background-color: rgb(255, 138, 0);
-}
+    <string notr="true">border:2px solid #FB9722 ;
 </string>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Plain</enum>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
@@ -242,7 +241,97 @@ color: rgb(255, 0, 0);</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QLabel" name="username_icon">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>335</y>
+     <width>18</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>18</width>
+     <height>18</height>
+    </size>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../resource.qrc">:/icon/icons/username.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>453</x>
+     <y>330</y>
+     <width>16</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_2">
+   <property name="geometry">
+    <rect>
+     <x>453</x>
+     <y>400</y>
+     <width>16</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="password_icon">
+   <property name="geometry">
+    <rect>
+     <x>438</x>
+     <y>402</y>
+     <width>20</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>25</width>
+     <height>25</height>
+    </size>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../resource.qrc">:/icon/icons/password.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

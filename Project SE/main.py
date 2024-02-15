@@ -27,7 +27,7 @@ conn = mysql.connector.connect(
 cur = conn.cursor()
 
 ########################################################################
-########################################################################
+
 ################# Starting page with Login Screen  #####################
 
 
@@ -36,9 +36,21 @@ class LoginScreen(QDialog):
         super(LoginScreen, self).__init__()
         loadUi("ui/loginscreen.ui", self)
         self.passwordfield.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.loginbtn.clicked.connect(self.login)
-        self.userfield.returnPressed.connect(self.login)  ###Key event
+        
+########################################################################       
+        self.username_icon.setPixmap(QPixmap('icons/username.png'))
+        self.password_icon.setPixmap(QPixmap('icons/password.png'))
+        
+########################################################################       
+
+        self.loginbtn.clicked.connect(self.login)  
+        
+########################################################################
+
+        self.userfield.returnPressed.connect(self.login)  ### "Enter" key event
         self.passwordfield.returnPressed.connect(self.login)  ### Para gumana yung Enter key as click to the loginbtn
+        
+########################################################################
 
     def login(self):
         user = self.userfield.text()
@@ -133,7 +145,7 @@ class AdminCashierScreen(QDialog):
         loadUi("ui/admin_cashierscreen.ui",self)
         ######################################################
         self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
-        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.menuIcon.setPixmap(QPixmap('icons/menu2.png'))
         self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
         self.reportIcon.setPixmap(QPixmap('icons/report.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
@@ -264,7 +276,7 @@ class AddNewProductScreen(QDialog):
         self.user = user
         
         loadUi("ui/add_new_product.ui", self)
-        self.insertbtn.clicked.connect(self.addproduct)
+        self.insertbtn.clicked.connect(self.addProduct)
         self.backbtn.clicked.connect(self.backfunction)
 
         # create a button group for the radio buttons
@@ -286,7 +298,7 @@ class AddNewProductScreen(QDialog):
         print("Selected Category:", selected_category)
 
         #To Insert or Register a new data to Employee Table
-    def addproduct(self):
+    def addProduct(self):
         try:
             productname = self.pnamefield.text()
             price = self.pricefield.text()
@@ -368,7 +380,7 @@ class AdminProfScreen(QDialog):
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
         self.reportIcon.setPixmap(QPixmap('icons/report.png'))
-        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         self.image.setPixmap(QPixmap('icons/placeholder.jpg'))  
         #######################################################
@@ -473,7 +485,7 @@ class HomeScreen(QDialog):
         loadUi("ui/homescreen.ui",self)
         
         ######################################################
-        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
+        self.homeIcon.setPixmap(QPixmap('icons/home2.png'))    #Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
         self.reportIcon.setPixmap(QPixmap('icons/report.png'))
@@ -607,11 +619,13 @@ class PManagementScreen(QDialog):
         ######################################################
         self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
-        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/pmanagement2.png'))
         self.reportIcon.setPixmap(QPixmap('icons/report.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
+
+        
         
         self.tableWidget.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
         self.tableWidget.setColumnWidth(1, 250) # Table index 1, second column with 200 width pixel
@@ -958,7 +972,7 @@ class ReportScreen1(QDialog):
         self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
-        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report2.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         
@@ -1121,7 +1135,7 @@ class ReportScreen2(QDialog):
         self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
-        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report2.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
@@ -1299,7 +1313,7 @@ class SettingScreen(QDialog):
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
         self.reportIcon.setPixmap(QPixmap('icons/report.png'))
-        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
         self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
@@ -1387,7 +1401,7 @@ class UserScreen(QDialog):
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
         self.reportIcon.setPixmap(QPixmap('icons/report.png'))
-        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
         self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
@@ -1544,7 +1558,7 @@ class UserScreenEditMode(QDialog):
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
         self.reportIcon.setPixmap(QPixmap('icons/report.png'))
-        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
         self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
@@ -1668,7 +1682,7 @@ class CashierScreen(QDialog):
         loadUi("ui/cashierscreen.ui",self)
         ######################################################
         #Pixmap for the pngs images within the sidebar.
-        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.menuIcon.setPixmap(QPixmap('icons/menu2.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
@@ -1703,7 +1717,7 @@ class SettingScreenForCashier(QDialog):
         loadUi("ui/settingscreenforcashier.ui",self)
         ######################################################
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
-        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
         self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
@@ -1752,7 +1766,7 @@ class UserProfScreen(QDialog):
         ######################################################
         #Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
-        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         self.image.setPixmap(QPixmap('icons/placeholder.jpg'))  
         #######################################################

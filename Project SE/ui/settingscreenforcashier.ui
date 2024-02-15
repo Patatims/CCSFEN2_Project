@@ -162,21 +162,27 @@ border-radius: 5px;  </string>
    <widget class="QPushButton" name="logoutbtn">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>740</y>
-      <width>71</width>
-      <height>41</height>
+      <x>5</x>
+      <y>750</y>
+      <width>101</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton#logoutbtn{
+     <string notr="true">QPushButton{
     color: rgba(0,0,0, 0.5);
     font-family: 'Roboto';
     font-size: 12px;
     font-weight: 500;
 	border:none;
 }
-</string>
+
+QPushButton:hover{
+color: #FB9722;
+border: 2px solid #FB9722;
+border-radius: 8px;
+background-color: rgba(255, 167, 25, 0.1);
+}</string>
     </property>
     <property name="text">
      <string>Logout</string>
@@ -185,15 +191,15 @@ border-radius: 5px;  </string>
    <widget class="QPushButton" name="settingsbtn">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>620</y>
-      <width>75</width>
-      <height>23</height>
+      <x>5</x>
+      <y>616</y>
+      <width>101</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton#settingsbtn{
-    color: rgba(0,0,0, 0.5);
+     <string notr="true">QPushButton{
+  	color: #FB9722;
     font-family: 'Roboto';
     font-size: 12px;
     font-weight: 500;
@@ -215,14 +221,20 @@ border-radius: 5px;  </string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton#menubtn{
+     <string notr="true">QPushButton{
     color: rgba(0,0,0, 0.5);
     font-family: 'Roboto';
     font-size: 12px;
     font-weight: 500;
 	border:none;
 }
-</string>
+
+QPushButton:hover{
+color: #FB9722;
+border: 2px solid #FB9722;
+border-radius: 8px;
+background-color: rgba(255, 167, 25, 0.1);
+}</string>
     </property>
     <property name="text">
      <string>Menu</string>
@@ -303,7 +315,7 @@ border-radius: 5px;  </string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../resource.qrc">:/icon/icons/settings.png</pixmap>
+     <pixmap resource="../resource.qrc">:/icon/icons/settings2.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -315,7 +327,7 @@ border-radius: 5px;  </string>
    <widget class="QLabel" name="logoutIcon">
     <property name="geometry">
      <rect>
-      <x>39</x>
+      <x>38</x>
       <y>715</y>
       <width>35</width>
       <height>35</height>
@@ -451,6 +463,43 @@ QPushButton:hover{text-decoration: underline;}</string>
      <string>Appearance</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>570</y>
+      <width>91</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+	background-color: rgba(255, 167, 25, 0.1);
+	border: 2px solid #FB9722;
+	border-radius: 8px;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>sidebar</zorder>
+   <zorder>titlebar</zorder>
+   <zorder>whitebg</zorder>
+   <zorder>title</zorder>
+   <zorder>settings</zorder>
+   <zorder>userprofIcon</zorder>
+   <zorder>logoutbtn</zorder>
+   <zorder>menubtn</zorder>
+   <zorder>menuIcon</zorder>
+   <zorder>logoutIcon</zorder>
+   <zorder>userprofbtn</zorder>
+   <zorder>editbtn</zorder>
+   <zorder>appearanceIcon</zorder>
+   <zorder>appearancebtn</zorder>
+   <zorder>label_2</zorder>
+   <zorder>settingIcon</zorder>
+   <zorder>settingsbtn</zorder>
   </widget>
  </widget>
  <resources>
