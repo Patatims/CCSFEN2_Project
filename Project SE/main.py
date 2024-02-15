@@ -1610,7 +1610,7 @@ class UserScreenEditMode(QDialog):
             QMessageBox.warning(self, "Warning", "You cannot delete your own data.")
             return
 
-        delete_query = "DELETE FROM Employee WHERE id = %s"
+        delete_query = "DELETE FROM Employee WHERE id =? "
         cur.execute(delete_query, (selected_row_id,))
         conn.commit()
         self.tableWidget.removeRow(row_index)
