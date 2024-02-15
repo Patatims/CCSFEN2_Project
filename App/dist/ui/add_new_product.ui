@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QWidget" name="bgwidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1200</width>
+     <height>800</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>30</y>
+      <width>521</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: #FB9722;
+font-family:&quot;Inter&quot;;
+font-size:52px;
+font-weight:500;
+</string>
+    </property>
+    <property name="text">
+     <string>Add a new Product:</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="error">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>470</y>
+      <width>431</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color: rgb(255, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="backbtn">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>540</y>
+      <width>181</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	color: #FFFFFF;
+    background-color: #FB9722;
+    border: 1px solid #888888;
+    border-radius: 20px;
+	font-family: 'Inter';
+    font-size: 22px;
+    font-weight: 500;
+}
+QPushButton:hover {
+	background-color: rgb(255, 167, 25);
+}
+
+QPushButton:pressed {
+ 	background-color: #FB9722;
+}</string>
+    </property>
+    <property name="text">
+     <string>Back</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="insertbtn">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>540</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	color: #FFFFFF;
+    background-color: #FB9722;
+    border: 1px solid #888888;
+    border-radius: 20px;
+	font-family: 'Inter';
+    font-size: 19px;
+    font-weight: 500;
+}
+QPushButton:hover {
+	background-color: rgb(255, 167, 25);
+}
+
+QPushButton:pressed {
+ 	background-color: #FB9722;
+}</string>
+    </property>
+    <property name="text">
+     <string>Insert to database</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="pricefield">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>380</y>
+      <width>321</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{
+	padding-left: 25px;
+    border-radius: 10px;
+    border: 1px solid rgb(234, 112, 0);  
+    background-color: rgba(255, 255, 255, 240);
+    font-family: 'Roboto';
+	font-size: 17px;
+	font-weight: 400;
+}
+
+</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>250</y>
+      <width>141</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color: #000000;
+    font-family: 'Inter';
+    font-size: 18px;
+    font-weight: 500;
+}</string>
+    </property>
+    <property name="text">
+     <string>Product Name:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>350</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color: #000000;
+    font-family: 'Inter';
+    font-size: 18px;
+    font-weight: 500;
+}</string>
+    </property>
+    <property name="text">
+     <string>Price:</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>150</y>
+      <width>701</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-radius: 10px;
+border: 1px solid rgb(234, 112, 0);  
+background-color: rgba(255, 255, 255, 240);
+font-family: 'Roboto';
+font-size: 17px;
+font-weight: 400;
+
+</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QRadioButton" name="lugawbtn">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>15</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-family:&quot;Roboto&quot;;
+font-size:19px;
+font-weight: 400;
+border:none;</string>
+     </property>
+     <property name="text">
+      <string>Lugaw</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="mamibtn">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>15</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-family:&quot;Roboto&quot;;
+font-size:19px;
+font-weight: 400;
+border:none;</string>
+     </property>
+     <property name="text">
+      <string>Mami</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="maindishbtn">
+     <property name="geometry">
+      <rect>
+       <x>225</x>
+       <y>15</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-family:&quot;Roboto&quot;;
+font-size:19px;
+font-weight: 400;
+border:none;</string>
+     </property>
+     <property name="text">
+      <string>Main Dish</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="dessertsbtn">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>15</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-family:&quot;Roboto&quot;;
+font-size:19px;
+font-weight: 400;
+border:none;</string>
+     </property>
+     <property name="text">
+      <string>Desserts</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="beveragesbtn">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>15</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-family:&quot;Roboto&quot;;
+font-size:19px;
+font-weight: 400;
+border:none;</string>
+     </property>
+     <property name="text">
+      <string>Beverages</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="extrasbtn">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>15</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-family:&quot;Roboto&quot;;
+font-size:19px;
+font-weight: 400;
+border:none;</string>
+     </property>
+     <property name="text">
+      <string>Extras</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>110</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color: #000000;
+    font-family: 'Inter';
+    font-size: 24px;
+    font-weight: 500;
+}</string>
+    </property>
+    <property name="text">
+     <string>Categories:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="pnamefield">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>280</y>
+      <width>321</width>
+      <height>46</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{
+	padding-left: 25px;
+    border-radius: 10px;
+    border: 1px solid rgb(234, 112, 0);  
+    background-color: rgba(255, 255, 255, 240);
+    font-family: 'Roboto';
+	font-size: 17px;
+	font-weight: 400;
+}
+</string>
+    </property>
+    <property name="placeholderText">
+     <string/>
+    </property>
+    <property name="cursorMoveStyle">
+     <enum>Qt::LogicalMoveStyle</enum>
+    </property>
+    <property name="clearButtonEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="Line" name="navline">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>720</y>
+      <width>1021</width>
+      <height>3</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">Line#navline{
+border:  1 solid #FF8A00;
+background-color: rgb(255, 138, 0);
+}
+</string>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

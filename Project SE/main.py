@@ -211,6 +211,7 @@ class AddNewUserScreen(QDialog):
                 cur = conn.cursor()
                 cur.execute("INSERT INTO Employee (name, role, username, password) "
                             "VALUES (?, ?, ?, ?)", user_info)
+                conn.commit()
                 self.error.setText("")
                 QMessageBox.information(self, "Success", "Successfully Encoded!.")
                 self.namefield.clear()
@@ -220,6 +221,7 @@ class AddNewUserScreen(QDialog):
                 print("Error:", e)
             finally:
                 conn.close()
+                
 
     def backfunction(self):
         widget.removeWidget(self)
@@ -642,7 +644,7 @@ class PManagementScreen(QDialog):
         """)
         
     def displayLugawProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 1"
+        query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 1"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
