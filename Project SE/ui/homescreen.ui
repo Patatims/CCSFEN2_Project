@@ -820,9 +820,9 @@ border-radius: 5px;    </string>
    <widget class="QLabel" name="boxlabel_sale">
     <property name="geometry">
      <rect>
-      <x>390</x>
+      <x>560</x>
       <y>290</y>
-      <width>341</width>
+      <width>191</width>
       <height>81</height>
      </rect>
     </property>
@@ -873,6 +873,30 @@ border-radius: 5px;    </string>
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="totalLabel_2">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>310</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color: #00000;
+    font-family: 'Inter';
+    font-size: 28px;
+    font-weight: 500;
+}</string>
+    </property>
+    <property name="text">
+     <string>No. of Sale:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
    <zorder>borderbox_2</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
@@ -901,6 +925,7 @@ border-radius: 5px;    </string>
    <zorder>homeIcon</zorder>
    <zorder>homebtn</zorder>
    <zorder>Time</zorder>
+   <zorder>totalLabel_2</zorder>
   </widget>
  </widget>
  <resources>

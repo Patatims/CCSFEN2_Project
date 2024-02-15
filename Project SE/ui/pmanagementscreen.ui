@@ -627,7 +627,7 @@ background-color: rgba(255, 167, 25, 0.1);
     </column>
     <column>
      <property name="text">
-      <string>Category ID</string>
+      <string>Status</string>
      </property>
     </column>
    </widget>
@@ -1058,8 +1058,8 @@ background-color: rgba(255, 167, 25, 0.1);
    <widget class="QLabel" name="error">
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>250</y>
+      <x>390</x>
+      <y>215</y>
       <width>401</width>
       <height>21</height>
      </rect>
@@ -1091,6 +1091,41 @@ color: rgb(255, 0, 0);</string>
     <property name="text">
      <string/>
     </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>249</y>
+      <width>271</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QComboBox{
+	padding-left: 20px;
+    border-radius: 10px;
+    border: 1px solid rgb(234, 112, 0);  
+    background-color: rgba(255, 255, 255, 240);
+    font-family: 'Inter';
+	font-size: 14px;
+	font-weight: 500;
+	color: rgba(0, 0, 0, 75);
+}</string>
+    </property>
+    <property name="frame">
+     <bool>true</bool>
+    </property>
+    <item>
+     <property name="text">
+      <string>Available</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Unavailable</string>
+     </property>
+    </item>
    </widget>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
@@ -1127,6 +1162,7 @@ color: rgb(255, 0, 0);</string>
    <zorder>label_2</zorder>
    <zorder>p_mIcon</zorder>
    <zorder>p_managementbtn</zorder>
+   <zorder>comboBox</zorder>
   </widget>
  </widget>
  <resources>

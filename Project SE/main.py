@@ -5,8 +5,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-import mysql.connector
-from mysql.connector.errors import *
+import sqlite3
+from sqlite3 import Error
 import warnings
 
 
@@ -17,13 +17,8 @@ warnings.simplefilter("ignore", category=DeprecationWarning)
 ########################################################################
 ########################################################################
 
-conn = mysql.connector.connect(
-    host="127.0.0.1",
-    user="root",
-    passwd="WFZximct1!",                   #MYSQL connection
-    database="seproject_db",
-    autocommit=True ) 
-    
+# Connect to SQLite database
+conn = sqlite3.connect('projectse_db.db')
 cur = conn.cursor()
 
 ########################################################################
@@ -37,6 +32,7 @@ class LoginScreen(QDialog):
         loadUi("ui/loginscreen.ui", self)
         self.passwordfield.setEchoMode(QtWidgets.QLineEdit.Password)
         
+        
 ########################################################################       
         self.username_icon.setPixmap(QPixmap('icons/username.png'))
         self.password_icon.setPixmap(QPixmap('icons/password.png'))
@@ -44,14 +40,10 @@ class LoginScreen(QDialog):
 ########################################################################       
 
         self.loginbtn.clicked.connect(self.login)  
-        
-########################################################################
-
         self.userfield.returnPressed.connect(self.login)  ### "Enter" key event
         self.passwordfield.returnPressed.connect(self.login)  ### Para gumana yung Enter key as click to the loginbtn
         
 ########################################################################
-
     def login(self):
         user = self.userfield.text()
         password = self.passwordfield.text()
@@ -59,16 +51,8 @@ class LoginScreen(QDialog):
             self.error.setText("Please input all fields.")
         else:
             try:
-                conn = mysql.connector.connect(
-                    host="127.0.0.1",
-                    user="root",
-                    passwd="WFZximct1!",
-                    database="seproject_db")
-                cur = conn.cursor()
-
-                query = 'SELECT password FROM employee WHERE username = \'' + user + "\'"    #a query to check the the password of the user if matches to the username data.
-                cur.execute(query,)
-
+                query = 'SELECT password FROM employee WHERE username = ?'
+                cur.execute(query, (user,))
                 result_pass = cur.fetchone()
                 if result_pass is not None and result_pass[0].strip() == password:
                     self.error.setText("Success!")
@@ -81,58 +65,46 @@ class LoginScreen(QDialog):
                     self.passwordfield.clear()
                     self.error.setText("Invalid username or password")
 
-            except mysql.connector.Error as err:
+            except sqlite3.Error as err:
                 print(f"Error: {err}")
-
-            finally:
-                if 'conn' in locals() and conn.is_connected():
-                    conn.close()
 
     def redirect_based_on_role(self, user):  # redirect based on employee's role after login
         try:
-            query = 'SELECT role FROM employee WHERE username = \'' + user + "\'"
-            cur.execute(query)
-
-            result_role = cur.fetchone()    
-            if result_role is not None:                 
+            query = 'SELECT role FROM employee WHERE username = ?'
+            cur.execute(query, (user,))
+            result_role = cur.fetchone()
+            if result_role is not None:
                 role = result_role[0].strip()
-                if role == 'admin' or role == 'Admin':  
-                    self.gotohomescreen(user)   # if the user is an admin, go to user screen
-                elif role == 'cashier' or role == 'Cashier': 
+                if role == 'Admin':  # if the user is an admin, go to user screen
+                    self.gotohomescreen(user)
+                elif role == 'Cashier':
                     self.gotocashierscreen(user)  # if the user is a cashier, go to cashier screen
                 else:
+                    self.error.setStyleSheet("color: red")
                     self.error.setText("Unknown role")
-                    self.error.setStyleSheet("color: red")   # Turns the Qlabel text color to red so we can know that the displayed text is an error message.
             else:
-                self.error.setText("Role not found for user")
                 self.error.setStyleSheet("color: red")
+                self.error.setText("Role not found for user")
 
-        except mysql.connector.Error as err:
+        except sqlite3.Error as err:
             print(f"Error: {err}")
 
-        finally:
-            if 'conn' in locals() and conn.is_connected():
-                conn.close()
-            
-    def gotohomescreen(self, user): #to home profile screen
+    def gotohomescreen(self, user):
         widget.removeWidget(self)
-        
-        home = HomeScreen(user)     
+        home = HomeScreen(user)
         widget.addWidget(home)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
-    def gotocashierscreen(self, user): #To cashier screen
+    def gotocashierscreen(self, user):
         widget.removeWidget(self)
-
         menu = MenuScreen(user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
-    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+    def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape: 
             event.ignore()
-     
-########################################################################
+            
 ########################################################################
 ########################################################################
 
@@ -199,6 +171,8 @@ class AdminMenuScreen(QDialog):
         if event.key() == Qt.Key_Escape:
             event.ignore()                  
 
+import sqlite3
+
 class AddNewUserScreen(QDialog):
     def __init__(self, user):
         super(AddNewUserScreen, self).__init__()
@@ -221,7 +195,6 @@ class AddNewUserScreen(QDialog):
         # do something with the selected role, such as storing it in a variable
         print("Selected Role:", selected_role)
 
-        #To Insert or Register a new data to Employee Table
     def register(self):
         name = self.namefield.text()
         username = self.usernamefield.text()
@@ -234,37 +207,27 @@ class AddNewUserScreen(QDialog):
             role = "Admin" if self.adminbtn.isChecked() else "Cashier" if self.cashierbtn.isChecked() else None
             user_info = [name, role, username, password]
             try:
-                #establish the connection inside the try function
-                conn = mysql.connector.connect(
-                    host="127.0.0.1",
-                    user="root",
-                    passwd="WFZximct1!",
-                    database="seproject_db",
-                    autocommit=True)
+                conn = sqlite3.connect('projectse_db.db')
                 cur = conn.cursor()
                 cur.execute("INSERT INTO Employee (name, role, username, password) "
-                            "VALUES (%s, %s, %s, %s)", user_info)
+                            "VALUES (?, ?, ?, ?)", user_info)
                 self.error.setText("")
                 QMessageBox.information(self, "Success", "Successfully Encoded!.")
                 self.namefield.clear()
                 self.usernamefield.clear()
                 self.passwordfield.clear()
-        
-            except mysql.connector.Error as err:
-                print(f"Error: {err}")
-
+            except sqlite3.Error as e:
+                print("Error:", e)
             finally:
-                if 'conn' in locals() and conn.is_connected():
-                    conn.close()
+                conn.close()
 
     def backfunction(self):
         widget.removeWidget(self)
-        
         back = UserScreenEditMode(self.user)
         widget.addWidget(back)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
-    def keyPressEvent(self, event):    #To ignore close event by "ESC" key
+    def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             event.ignore()
 
@@ -272,9 +235,7 @@ class AddNewUserScreen(QDialog):
 class AddNewProductScreen(QDialog):
     def __init__(self, user):
         super(AddNewProductScreen, self).__init__()
-        
         self.user = user
-        
         loadUi("ui/add_new_product.ui", self)
         self.insertbtn.clicked.connect(self.addProduct)
         self.backbtn.clicked.connect(self.backfunction)
@@ -297,7 +258,6 @@ class AddNewProductScreen(QDialog):
         # do something with the selected role, such as storing it in a variable
         print("Selected Category:", selected_category)
 
-        #To Insert or Register a new data to Employee Table
     def addProduct(self):
         try:
             productname = self.pnamefield.text()
@@ -311,7 +271,7 @@ class AddNewProductScreen(QDialog):
                     self.dessertsbtn.isChecked() and not \
                     self.beveragesbtn.isChecked() and not \
                     self.extrasbtn.isChecked():
-                    self.error.setText("Please select a category for the product.")
+                self.error.setText("Please select a category for the product.")
 
             else:
                 category = "1" if self.lugawbtn.isChecked() else \
@@ -323,60 +283,43 @@ class AddNewProductScreen(QDialog):
 
                 product_data = [productname, price, category]
 
-                # Establish the database connection
-                conn = mysql.connector.connect(
-                    host="127.0.0.1",
-                    user="root",
-                    passwd="WFZximct1!",
-                    database="seproject_db",
-                    autocommit=True)
+                conn = sqlite3.connect('projectse_db.db')
                 cur = conn.cursor()
 
-                # Execute the SQL query
                 cur.execute("INSERT INTO Product (name, price, categoryID) "
-                            "VALUES (%s, %s, %s)", product_data)
-
-                # Clear any previous error messages
+                            "VALUES (?, ?, ?)", product_data)
+                conn.commit()
                 self.error.setText("")
 
-                # Show success message
                 QMessageBox.information(self, "Success", "Successfully Encoded!.")
 
-                # Clear input fields
                 self.pnamefield.clear()
                 self.pricefield.clear()
 
-        except mysql.connector.Error as err:
-            # Print the error to the console
-            print(f"Error: {err}")
-
-            # Display error message to the user
-            self.error.setText("An error occurred while inserting the product.")
-
+        except sqlite3.Error as e:
+            print("Error:", e)
         finally:
-            # Close the database connection
-            if 'conn' in locals() and conn.is_connected():
+            if 'conn' in locals():
                 conn.close()
 
     def backfunction(self):
         widget.removeWidget(self)
-        
         back = PManagementScreen(self.user)
         widget.addWidget(back)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
-    def keyPressEvent(self, event):    #To ignore close event by "ESC" key
+    def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             event.ignore()
 
-            
+
 class AdminProfScreen(QDialog):
     def __init__(self, user):
         super(AdminProfScreen, self).__init__()
         self.user = user
-        loadUi("ui/adminprofilescreen.ui",self)
+        loadUi("ui/adminprofilescreen.ui", self)
         ######################################################
-        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    #Pixmap for the pngs images within the sidebar.
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    # Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
         self.reportIcon.setPixmap(QPixmap('icons/report.png'))
@@ -385,10 +328,10 @@ class AdminProfScreen(QDialog):
         self.image.setPixmap(QPixmap('icons/placeholder.jpg'))  
         #######################################################
         self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
-        self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  #Pixmap for the second sidebar in settings screen.
+        self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  # Pixmap for the second sidebar in settings screen.
         self.usersIcon.setPixmap(QPixmap('icons/users.png'))
         #######################################################
-        #Redirect Functions
+        # Redirect Functions
         self.menubtn.clicked.connect(self.gotocashierscreen)
         self.homebtn.clicked.connect(self.gotohome)
         self.logoutbtn.clicked.connect(self.gotologin)
@@ -396,15 +339,16 @@ class AdminProfScreen(QDialog):
         self.settingsbtn.clicked.connect(self.gotosettings)
         self.usersbtn.clicked.connect(self.gotouserscreen)
         self.reportbtn.clicked.connect(self.gotosales)
-        
-        
-   
+
         try:
-            query = f'SELECT name, role, username, password FROM employee WHERE username = \'' + user + "\'"  #base sa nakalogin na user mafefetch lahat ng data information ni user.
-            cur.execute(query)
+            conn = sqlite3.connect('projectse_db.db')
+            cur = conn.cursor()
+
+            query = f'SELECT name, role, username, password FROM employee WHERE username = ?'
+            cur.execute(query, (user,))
             user_info = cur.fetchone()
 
-            if user_info is not None:       #displaying all user info in the database.
+            if user_info is not None:
                 name, role, username, password = user_info
                 self.boxlabel_name.setText(name)
                 self.boxlabel_role.setText(role)
@@ -414,69 +358,66 @@ class AdminProfScreen(QDialog):
             else:
                 print("User not found")
 
-        except mysql.connector.Error as err:
+        except sqlite3.Error as err:
             print(f"Error: {err}")
 
         finally:
-            if 'conn' in locals() and conn.is_connected():
+            if 'conn' in locals():
                 conn.close()
-    
-    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+
+    def gotocashierscreen(self):  # To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
         menu = AdminMenuScreen(self.user)
         widget.addWidget(menu)
-        widget.setCurrentIndex(widget.currentIndex()+1)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
 
-    def gotohome(self): #to home profile screen
+    def gotohome(self):  # To home profile screen
         widget.removeWidget(self)
-        
-        home = HomeScreen(self.user)     
+
+        home = HomeScreen(self.user)
         widget.addWidget(home)
-        widget.setCurrentIndex(widget.currentIndex()+1)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def gotologin(self):
         widget.removeWidget(self)
-        
+
         login = LoginScreen()
         widget.addWidget(login)
-        widget.setCurrentIndex(widget.currentIndex()+1)
-
+        widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def gotopmanagement(self):
         widget.removeWidget(self)
 
-        product = PManagementScreen(self.user)     
+        product = PManagementScreen(self.user)
         widget.addWidget(product)
-        widget.setCurrentIndex(widget.currentIndex()+1)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
 
-
-    def gotouserscreen(self): #to user screen
+    def gotouserscreen(self):  # To user screen
         widget.removeWidget(self)
-        
-        userlist = UserScreen(self.user)     
+
+        userlist = UserScreen(self.user)
         widget.addWidget(userlist)
-        widget.setCurrentIndex(widget.currentIndex()+1)
-    
-    
-    def gotosettings(self): #to user screen
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotosettings(self):  # To user screen
         widget.removeWidget(self)
 
-        settings = SettingScreen(self.user)     
+        settings = SettingScreen(self.user)
         widget.addWidget(settings)
-        widget.setCurrentIndex(widget.currentIndex()+1)
-    
-    def gotosales(self): #to user setting screen
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotosales(self):  # To user setting screen
         widget.removeWidget(self)
 
-        sales= ReportScreen1(self.user)     
+        sales = ReportScreen1(self.user)
         widget.addWidget(sales)
-        widget.setCurrentIndex(widget.currentIndex()+1)
-    
-        
-    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def keyPressEvent(self, event):  # To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
         if event.key() == Qt.Key_Escape:
-            event.ignore()            
+            event.ignore()
+
 
 class HomeScreen(QDialog):
     def __init__(self, user):
@@ -505,7 +446,7 @@ class HomeScreen(QDialog):
         self.displayTopSellingProduct()
         
         try:
-            query = f"SELECT SUM(Sales.totalPrice) AS total_sales FROM Sales WHERE DATE(Sales.date) = CURDATE()"
+            query = f"SELECT SUM(Sales.totalPrice) AS total_sales FROM Sales WHERE DATE(Sales.date) = DATE('now')"
             cur.execute(query)
             totalsale = cur.fetchone()
 
@@ -515,16 +456,11 @@ class HomeScreen(QDialog):
             else:
                 print("error")
 
-        except mysql.connector.Error as err:
+        except Error as err:
             print(f"Error: {err}")
             
         try:
-            query = f"SELECT\
-                    COUNT(*) AS totalSales \
-                    FROM Sales \
-                    WHERE DATE(date) = CURDATE()\
-                    "
-    
+            query = f"SELECT COUNT(*) AS totalSales FROM Sales  WHERE DATE(date) = DATE('now') "
             cur.execute(query)
             totalsale = cur.fetchone()
 
@@ -534,19 +470,18 @@ class HomeScreen(QDialog):
             else:
                 print("error")
 
-        except mysql.connector.Error as err:
+        except Error as err:
             print(f"Error: {err}")
     
     
     def displayTopSellingProduct(self):  #To load the data from database to the pyqt table
         query = "SELECT productName, totalQuantitySold \
                 FROM ( SELECT P.name AS productName, SUM(T.quantity) AS totalQuantitySold \
-                FROM Transaction T \
+                FROM \"Transaction\" T \
                 JOIN Product P ON T.productID = P.id \
                 GROUP BY T.productID \
                 ORDER BY totalQuantitySold \
                 DESC LIMIT 5 ) AS topSoldProducts"
-            
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -566,7 +501,6 @@ class HomeScreen(QDialog):
             for col in range(column_count):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
-
         
     
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
@@ -655,7 +589,7 @@ class PManagementScreen(QDialog):
 
 
     def displayAllProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT * FROM Product ORDER BY categoryiD ASC"
+        query = "SELECT id, name, price, status FROM Product ORDER BY categoryID ASC"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -708,7 +642,7 @@ class PManagementScreen(QDialog):
         """)
         
     def displayLugawProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT * FROM Product WHERE categoryID = 1"
+        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 1"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -730,7 +664,7 @@ class PManagementScreen(QDialog):
                 self.tableWidget.setItem(row, col, item)  
                 
     def displayMamiProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT * FROM Product WHERE categoryID = 2"
+        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 2"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -752,7 +686,7 @@ class PManagementScreen(QDialog):
                 self.tableWidget.setItem(row, col, item)
 
     def displayMainDishProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT * FROM Product WHERE categoryID = 3"
+        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 3"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -774,7 +708,7 @@ class PManagementScreen(QDialog):
                 self.tableWidget.setItem(row, col, item)
 
     def displayDessertsProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT * FROM Product WHERE categoryID = 4"
+        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 4"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -797,7 +731,7 @@ class PManagementScreen(QDialog):
 
 
     def displayBeveragesProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT * FROM Product WHERE categoryID = 5"
+        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 5"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -819,7 +753,7 @@ class PManagementScreen(QDialog):
                 self.tableWidget.setItem(row, col, item)        
 
     def displayExtrasProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT * FROM Product WHERE categoryID = 6"
+        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 6"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -850,18 +784,21 @@ class PManagementScreen(QDialog):
         selected_row_id = str(self.tableWidget.item(row_index, 0).text())
         
         try:
-            delete_query = "DELETE FROM Product WHERE id = %s"
+            delete_query = "DELETE FROM Product WHERE id = ?"
             cur.execute(delete_query, (selected_row_id,))
             conn.commit()
             
             self.tableWidget.removeRow(row_index)  
             
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")         
+        except sqlite3.Error as err:
+            print(f"Error: {err}")        
 
 
     def updateProduct(self):
             try:
+                conn = sqlite3.connect('projectse_db.db')
+                cur = conn.cursor()
+                
                 row_index = self.tableWidget.currentRow()
                 if row_index < 0:
                     return
@@ -880,14 +817,14 @@ class PManagementScreen(QDialog):
                     params = []
 
                     if new_productname:
-                        query += " name = %s,"
+                        query += " name = ?,"
                         params.append(new_productname)
                     if new_price:
-                        query += " price = %s,"
+                        query += " price = ?,"
                         params.append(new_price)
                     
 
-                    query = query.rstrip(',') + " WHERE id = %s"
+                    query = query.rstrip(',') + " WHERE id = ?"
                     params.append(selected_row_id)
                     
                     self.error.setText("")
@@ -909,7 +846,12 @@ class PManagementScreen(QDialog):
                     self.error.setText ("Incorrect decimal value for pricing")
                 else:
                     print("An error occurred:", e)
-
+                    
+            finally:
+                if conn is locals():
+                    conn.close()
+                    
+                    
     def gotoaddproduct(self): 
         widget.removeWidget(self)
             
@@ -998,80 +940,96 @@ class ReportScreen1(QDialog):
 
 
     def deleteSales(self):
-        # Get the selected row index
-        row_index = self.tableWidget.currentRow()
-        # Check if there is a selected row
-        if row_index < 0:
-            return
-        selected_row_id = int(self.tableWidget.item(row_index, 0).text())
-
         try:
-            delete_query1 = "DELETE FROM Transaction WHERE salesID = %s"
+            conn = sqlite3.connect('projectse_db.db')
+            cur = conn.cursor()
+
+            # Get the selected row index
+            row_index = self.tableWidget.currentRow()
+            # Check if there is a selected row
+            if row_index < 0:
+                return
+            selected_row_id = int(self.tableWidget.item(row_index, 0).text())
+
+            delete_query1 = "DELETE FROM \"Transaction\" WHERE salesID = ?"
             cur.execute(delete_query1, (selected_row_id,))
             conn.commit()
 
-            delete_query2 = "DELETE FROM Sales WHERE id = %s"
+            delete_query2 = "DELETE FROM Sales WHERE id = ?"
             cur.execute(delete_query2, (selected_row_id,))
             conn.commit()
-            
-            self.tableWidget.removeRow(row_index)     
-            
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")         
+
+            self.tableWidget.removeRow(row_index)
+
+        except sqlite3.Error as err:
+            print(f"Error: {err}")
+
+        finally:
+            if 'conn' in locals():
+                conn.close()
 
 
-    def displaySales(self):  #To load the data from database to the pyqt table
-        query = "SELECT id, name, totalPrice, orderType FROM Sales"
-        cur.execute(query)
-        rows = cur.fetchall()
-        row_count = len(rows)
+    def displaySales(self):  # To load the data from database to the pyqt table
+        try:
+            conn = sqlite3.connect('projectse_db.db')
+            cur = conn.cursor()
 
-        # Check if there are any rows
-        if row_count == 0:
-            return
+            query = "SELECT id, name, totalPrice, orderType FROM Sales"
+            cur.execute(query)
+            rows = cur.fetchall()
+            row_count = len(rows)
 
-        column_count = len(rows[0])
+            # Check if there are any rows
+            if row_count == 0:
+                return
 
-        # Resize the table widget to fit the data
-        self.tableWidget.setRowCount(row_count)
-        self.tableWidget.setColumnCount(column_count)
+            column_count = len(rows[0])
 
-        # Set the data into the table widget
-        for row in range(row_count):
-            for col in range(column_count):
-                item = QTableWidgetItem(str(rows[row][col]))
-                self.tableWidget.setItem(row, col, item)  
-        
-        #To make the horizontal headers text aligned to the left of the table. 
-        for col in range(self.tableWidget.columnCount()):
-            header_item = self.tableWidget.horizontalHeaderItem(col)
-            if header_item is not None:
-                header_text = header_item.text()
-                header_item = QTableWidgetItem(header_text)
-                header_item.setTextAlignment(Qt.AlignLeft)
-                self.tableWidget.setHorizontalHeaderItem(col, header_item)
-        
-        #Table Design 
-        self.setStyleSheet("""
-            QTableWidget {
-                background-color: white; /* Set default background color */
-            }
-            
+            # Resize the table widget to fit the data
+            self.tableWidget.setRowCount(row_count)
+            self.tableWidget.setColumnCount(column_count)
 
+            # Set the data into the table widget
+            for row in range(row_count):
+                for col in range(column_count):
+                    item = QTableWidgetItem(str(rows[row][col]))
+                    self.tableWidget.setItem(row, col, item)  
 
-            QTableWidget::item:hover {
-                background-color: #FB9722; /* Set background color for header on hover */   
-            }
+            # To make the horizontal headers text aligned to the left of the table. 
+            for col in range(self.tableWidget.columnCount()):
+                header_item = self.tableWidget.horizontalHeaderItem(col)
+                if header_item is not None:
+                    header_text = header_item.text()
+                    header_item = QTableWidgetItem(header_text)
+                    header_item.setTextAlignment(Qt.AlignLeft)
+                    self.tableWidget.setHorizontalHeaderItem(col, header_item)
 
-            QHeaderView::section {
-                font-family:'Inter';
-                font-size: 13px;
-                font-weight: bold;
-                background-color: #FB9722; /* Set background color for header */
-                color: black; /* Set text color for header */
-                padding-left: 5px; /* Add padding to the left for better appearance */
-            }       
-        """)
+            # Table Design 
+            self.setStyleSheet("""
+                QTableWidget {
+                    background-color: white; /* Set default background color */
+                }
+                
+                QTableWidget::item:hover {
+                    background-color: #FB9722; /* Set background color for header on hover */   
+                }
+                
+                QHeaderView::section {
+                    font-family:'Inter';
+                    font-size: 13px;
+                    font-weight: bold;
+                    background-color: #FB9722; /* Set background color for header */
+                    color: black; /* Set text color for header */
+                    padding-left: 5px; /* Add padding to the left for better appearance */
+                }       
+            """)
+
+        except sqlite3.Error as err:
+            print(f"Error: {err}")
+
+        finally:
+            if 'conn' in locals():
+                conn.close()
       
         
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
@@ -1164,20 +1122,21 @@ class ReportScreen2(QDialog):
     
     
     def displaydailySales(self):
-        
+
         selected_date = self.dateEdit.date().toString(Qt.ISODate)
-        
+
         try:
+            conn = sqlite3.connect('projectse_db.db')
+            cur = conn.cursor()
+
             query = f"SELECT Sales.id, Sales.date, Sales.name, Employee.name, Sales.totalPrice " \
                     f"FROM Sales " \
                     f"JOIN Employee ON Sales.employeeID = Employee.id " \
                     f"WHERE DATE(Sales.date) = '{selected_date}'"
-            
-            
+
             cur.execute(query)
             rows = cur.fetchall()
             row_count = len(rows)
-
 
             # Check if there are any rows
             if row_count == 0:
@@ -1193,9 +1152,9 @@ class ReportScreen2(QDialog):
             for row in range(row_count):
                 for col in range(column_count):
                     item = QTableWidgetItem(str(rows[row][col]))
-                    self.tableWidget.setItem(row, col, item)  
+                    self.tableWidget.setItem(row, col, item)
 
-            #To make the horizontal headers text aligned to the left of the table. 
+            # To make the horizontal headers text aligned to the left of the table.
             for col in range(self.tableWidget.columnCount()):
                 header_item = self.tableWidget.horizontalHeaderItem(col)
                 if header_item is not None:
@@ -1204,36 +1163,38 @@ class ReportScreen2(QDialog):
                     header_item.setTextAlignment(Qt.AlignLeft)
                     self.tableWidget.setHorizontalHeaderItem(col, header_item)
 
-            #Table Design 
+            # Table Design
             self.setStyleSheet("""
-            QTableWidget {
-                background-color: white; /* Set default background color */
-            }
-            
+                QTableWidget {
+                    background-color: white; /* Set default background color */
+                }
 
+                QTableWidget::item:hover {
+                    background-color: #FB9722; /* Set background color for header on hover */   
+                }
 
-            QTableWidget::item:hover {
-                background-color: #FB9722; /* Set background color for header on hover */   
-            }
+                QHeaderView::section {
+                    font-family:'Inter';
+                    font-size: 13px;
+                    font-weight: bold;
+                    background-color: #FB9722; /* Set background color for header */
+                    color: black; /* Set text color for header */
+                    padding-left: 5px; /* Add padding to the left for better appearance */
+                }       
+            """)
 
-            QHeaderView::section {
-                font-family:'Inter';
-                font-size: 13px;
-                font-weight: bold;
-                background-color: #FB9722; /* Set background color for header */
-                color: black; /* Set text color for header */
-                padding-left: 5px; /* Add padding to the left for better appearance */
-            }       
-        """)
-            
             conn.commit()
-            
-            self.tableWidget.update()
-            
-        except mysql.connector.Error as err:
+
+        except sqlite3.Error as err:
             print(f"Error: {err}")
-    
+
+            if 'conn' in locals():
+                conn.close()
+
         try:
+            conn = sqlite3.connect('projectse_db.db')
+            cur = conn.cursor()
+
             query = f"SELECT SUM(Sales.totalPrice) AS total_sales FROM Sales WHERE DATE(Sales.date) = '{selected_date}'"
             cur.execute(query)
             totalsale = cur.fetchone()
@@ -1244,10 +1205,11 @@ class ReportScreen2(QDialog):
             else:
                 print("error")
 
-        except mysql.connector.Error as err:
+            conn.commit()
+
+        except sqlite3.Error as err:
             print(f"Error: {err}")
 
-        
       
       
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
@@ -1780,7 +1742,10 @@ class UserProfScreen(QDialog):
         self.settingsbtn.clicked.connect(self.gotosettings)
         
         try:
-            query = f'SELECT name, role, username, password FROM employee WHERE username = \'' + user + "\'"  #base sa nakalogin na user mafefetch lahat ng data information ni user.
+            conn = sqlite3.connect('projectse_db.db')
+            cur = conn.cursor()
+            
+            query = 'SELECT name, role, username, password FROM employee WHERE username = \'' + user + "\'"  #base sa nakalogin na user mafefetch lahat ng data information ni user.
             cur.execute(query)
             user_info = cur.fetchone()
 
@@ -1794,13 +1759,13 @@ class UserProfScreen(QDialog):
             else:
                 print("User not found")
 
-        except mysql.connector.Error as err:
+        except sqlite3.Error as err:
             print(f"Error: {err}")
 
         finally:
-            if 'conn' in locals() and conn.is_connected():
+            if conn:
                 conn.close()
-    
+
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
