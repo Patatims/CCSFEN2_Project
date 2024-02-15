@@ -789,7 +789,7 @@ border: 1px solid rgba(0, 0, 0, 0.3);  </string>
     <property name="styleSheet">
      <string notr="true">QLabel{
 	padding-left: 2px;
-    color: #000000;
+    color: #FB9722;
     font-family: 'Inter';
     font-size: 24px;
     font-weight: 500;

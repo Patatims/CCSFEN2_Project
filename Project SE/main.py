@@ -446,7 +446,7 @@ class HomeScreen(QDialog):
         self.displayTopSellingProduct()
         
         try:
-            query = f"SELECT SUM(Sales.totalPrice) AS total_sales FROM Sales WHERE DATE(Sales.date) = DATE('now')"
+            query = f"SELECT printf('%.2f', SUM(Sales.totalPrice)) AS total_sales FROM Sales WHERE DATE(Sales.date)"
             cur.execute(query)
             totalsale = cur.fetchone()
 
@@ -460,7 +460,7 @@ class HomeScreen(QDialog):
             print(f"Error: {err}")
             
         try:
-            query = f"SELECT COUNT(*) AS totalSales FROM Sales  WHERE DATE(date) = DATE('now') "
+            query = f"SELECT COUNT(*) AS totalSales FROM Sales  WHERE DATE(date)"
             cur.execute(query)
             totalsale = cur.fetchone()
 
@@ -589,7 +589,7 @@ class PManagementScreen(QDialog):
 
 
     def displayAllProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT id, name, price, status FROM Product ORDER BY categoryID ASC"
+        query = "SELECT id, name, printf('%.2f', price), status FROM Product ORDER BY categoryID ASC"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -664,7 +664,7 @@ class PManagementScreen(QDialog):
                 self.tableWidget.setItem(row, col, item)  
                 
     def displayMamiProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 2"
+        query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 2"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -686,7 +686,7 @@ class PManagementScreen(QDialog):
                 self.tableWidget.setItem(row, col, item)
 
     def displayMainDishProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 3"
+        query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 3"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -708,7 +708,7 @@ class PManagementScreen(QDialog):
                 self.tableWidget.setItem(row, col, item)
 
     def displayDessertsProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 4"
+        query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 4"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -731,7 +731,7 @@ class PManagementScreen(QDialog):
 
 
     def displayBeveragesProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 5"
+        query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 5"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -753,7 +753,7 @@ class PManagementScreen(QDialog):
                 self.tableWidget.setItem(row, col, item)        
 
     def displayExtrasProductList(self):  #To load the data from database to the pyqt table
-        query = "SELECT id, name, price, status FROM Product WHERE categoryID = 6"
+        query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 6"
         cur.execute(query)
         rows = cur.fetchall()
         row_count = len(rows)
@@ -974,7 +974,7 @@ class ReportScreen1(QDialog):
             conn = sqlite3.connect('projectse_db.db')
             cur = conn.cursor()
 
-            query = "SELECT id, name, totalPrice, orderType FROM Sales"
+            query = "SELECT id, name, printf('%.2f', Totalprice), orderType FROM Sales"
             cur.execute(query)
             rows = cur.fetchall()
             row_count = len(rows)
@@ -1129,7 +1129,7 @@ class ReportScreen2(QDialog):
             conn = sqlite3.connect('projectse_db.db')
             cur = conn.cursor()
 
-            query = f"SELECT Sales.id, Sales.date, Sales.name, Employee.name, Sales.totalPrice " \
+            query = f"SELECT Sales.id, Sales.date, Sales.name, Employee.name, printf('%.2f', Sales.Totalprice)" \
                     f"FROM Sales " \
                     f"JOIN Employee ON Sales.employeeID = Employee.id " \
                     f"WHERE DATE(Sales.date) = '{selected_date}'"
@@ -1195,7 +1195,7 @@ class ReportScreen2(QDialog):
             conn = sqlite3.connect('projectse_db.db')
             cur = conn.cursor()
 
-            query = f"SELECT SUM(Sales.totalPrice) AS total_sales FROM Sales WHERE DATE(Sales.date) = '{selected_date}'"
+            query = f"SELECT printf('%.2f', SUM(Sales.totalPrice)) AS total_sales FROM Sales WHERE DATE(Sales.date) = '{selected_date}'"
             cur.execute(query)
             totalsale = cur.fetchone()
 
