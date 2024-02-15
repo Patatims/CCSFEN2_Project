@@ -124,7 +124,7 @@ class LoginScreen(QDialog):
     def gotocashierscreen(self, user): #To cashier screen
         widget.removeWidget(self)
 
-        menu = CashierScreen(user)
+        menu = MenuScreen(user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
@@ -138,9 +138,9 @@ class LoginScreen(QDialog):
 
      
 ######################## ADMIN SCREENS ################################# 
-class AdminCashierScreen(QDialog):
+class AdminMenuScreen(QDialog):
     def __init__(self, user):
-        super(AdminCashierScreen, self).__init__()
+        super(AdminMenuScreen, self).__init__()
         self.user = user
         loadUi("ui/admin_cashierscreen.ui",self)
         ######################################################
@@ -424,7 +424,7 @@ class AdminProfScreen(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminCashierScreen(self.user)
+        menu = AdminMenuScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
 
@@ -572,7 +572,7 @@ class HomeScreen(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminCashierScreen(self.user)
+        menu = AdminMenuScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)     
     
@@ -650,7 +650,7 @@ class PManagementScreen(QDialog):
         self.settingsbtn.clicked.connect(self.gotosettings)
         
         self.addbtn.clicked.connect(self.gotoaddproduct) 
-        self.deletebtn.clicked.connect(self.deleteProduct)
+        self.deletebtn.clicked.connect(self.removeProduct)
         self.updatebtn.clicked.connect(self.updateProduct)
 
 
@@ -840,7 +840,7 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)        
 
-    def deleteProduct(self):
+    def removeProduct(self):
         
         # Get the selected row index
         row_index = self.tableWidget.currentRow()
@@ -928,7 +928,7 @@ class PManagementScreen(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminCashierScreen(self.user)
+        menu = AdminMenuScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
 
@@ -1077,7 +1077,7 @@ class ReportScreen1(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminCashierScreen(self.user)
+        menu = AdminMenuScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
 
@@ -1253,7 +1253,7 @@ class ReportScreen2(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminCashierScreen(self.user)
+        menu = AdminMenuScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
  
@@ -1342,7 +1342,7 @@ class SettingScreen(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminCashierScreen(self.user)
+        menu = AdminMenuScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1) 
         
@@ -1498,7 +1498,7 @@ class UserScreen(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminCashierScreen(self.user)
+        menu = AdminMenuScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
 
@@ -1675,9 +1675,9 @@ class UserScreenEditMode(QDialog):
 
 
 ######################## CASHIER SCREENS ############################### 
-class CashierScreen(QDialog):
+class MenuScreen(QDialog):
     def __init__(self, user):
-        super(CashierScreen, self).__init__()
+        super(MenuScreen, self).__init__()
         self.user = user
         loadUi("ui/cashierscreen.ui",self)
         ######################################################
@@ -1741,7 +1741,7 @@ class SettingScreenForCashier(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = CashierScreen(self.user)
+        menu = MenuScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1) 
         
@@ -1804,7 +1804,7 @@ class UserProfScreen(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = CashierScreen(self.user)
+        menu = MenuScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
