@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
+    <width>1201</width>
     <height>801</height>
    </rect>
   </property>
@@ -69,8 +69,8 @@ border: 1px solid rgba(0, 0, 0, 0.3);  </string>
      <rect>
       <x>160</x>
       <y>110</y>
-      <width>511</width>
-      <height>51</height>
+      <width>291</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -95,7 +95,7 @@ border-radius: 10px;  </string>
      <string notr="true">QLabel#title{
 	color: #FB9722;
     font-family: Sacramento;
-    font-size: 52px;
+    font-size: 58px;
     font-weight: 400;
     padding-bottom: 5px;
     text-align: center;
@@ -537,16 +537,24 @@ background-color: rgba(255, 167, 25, 0.1);
       <x>180</x>
       <y>120</y>
       <width>71</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-    color: rgba(0,0,0, 1);
+    color: #000000;;
     font-family: 'Roboto';
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 500;
 	border:none;
+}
+
+QPushButton:hover{
+color: #FB9722;
+background-color: #FB9722;
+border: 2px solid #FB9722;
+border-radius: 8px;
+background-color: rgba(255, 167, 25, 0.1);
 }
 </string>
     </property>
@@ -560,17 +568,25 @@ background-color: rgba(255, 167, 25, 0.1);
       <x>260</x>
       <y>120</y>
       <width>151</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-    color: rgba(0,0,0, 1);
+	color: #FB9722;
+	background-color: rgba(255, 167, 25, 0.1);
+	border: 2px solid #FB9722;
     font-family: 'Roboto';
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 500;
-	border:none;
-	text-decoration:underline;
+	border-radius:8px;
+}
+
+QPushButton:hover{
+color: #FB9722;
+border: 2px solid #FB9722;
+border-radius: 8px;
+background-color: rgba(255, 167, 25, 0.1);
 }
 </string>
     </property>
@@ -610,6 +626,20 @@ background-color: rgba(255, 167, 25, 0.1);
       <width>951</width>
       <height>351</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">::item:hover {
+    background-color: #FB9722; 
+}
+QTableWidget#tableWidget QHeaderView::section {
+	font-family: 'Inter';
+	font-size: 16px;
+	font-weight: bold;
+	background-color: #FB9722; 
+	color: black; 
+	padding-left: 5px;
+}       
+</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::WinPanel</enum>
@@ -698,7 +728,7 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>Print</string>
+     <string>Export</string>
     </property>
    </widget>
    <widget class="QLabel" name="date">
@@ -899,10 +929,58 @@ border: 2px solid rgba(0, 0, 0, 1);  </string>
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="title_3">
+    <property name="geometry">
+     <rect>
+      <x>-1</x>
+      <y>11</y>
+      <width>1201</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+color: rgba(0, 0, 0, 100);
+    font-family: Sacramento;
+    font-size: 58px;
+    font-weight: 400;
+    padding-bottom: 5px;
+    text-align: center;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Oriental Dua Restaurant</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="whitebgshadow">
+    <property name="geometry">
+     <rect>
+      <x>161</x>
+      <y>111</y>
+      <width>291</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, .3);
+
+border-radius: 10px;  </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>whitebgshadow</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
    <zorder>whitebg</zorder>
-   <zorder>title</zorder>
    <zorder>logoutIcon</zorder>
    <zorder>logoutbtn</zorder>
    <zorder>settingsbtn</zorder>
@@ -928,6 +1006,8 @@ border: 2px solid rgba(0, 0, 0, 1);  </string>
    <zorder>label_2</zorder>
    <zorder>reportIcon</zorder>
    <zorder>reportbtn</zorder>
+   <zorder>title_3</zorder>
+   <zorder>title</zorder>
   </widget>
  </widget>
  <resources>

@@ -1,5 +1,15 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/beverages.png</file>
+    <file>icons/desserts.png</file>
+    <file>icons/extra.png</file>
+    <file>icons/lugaw.png</file>
+    <file>icons/maindish.png</file>
+    <file>icons/mami.png</file>
+    <file>icons/view.png</file>
+    <file>icons/hide.png</file>
+    <file>icons/cresume.png</file>
+    <file>icons/resume.png</file>
     <file>icons/24-hours.png</file>
     <file>icons/badge.png</file>
     <file>icons/coca-leaves.png</file>

@@ -94,7 +94,7 @@ border-radius: 5px;  </string>
      <string notr="true">QLabel#title{
 	color: #FB9722;
     font-family: Sacramento;
-    font-size: 52px;
+    font-size: 58px;
     font-weight: 400;
     padding-bottom: 5px;
     text-align: center;
@@ -123,7 +123,7 @@ border-radius: 5px;  </string>
      <string notr="true">QLabel#settings{
     color: #000000;
     font-family: 'Roboto';
-    font-size: 22px;
+    font-size: 23px;
     font-weight: 500;
 }</string>
     </property>
@@ -144,10 +144,10 @@ border-radius: 5px;  </string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLabel#userlistlabel{
+     <string notr="true">QLabel{
     color: #000000;
     font-family: 'Inter';
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 500;
 }</string>
     </property>
@@ -279,10 +279,30 @@ border-radius: 5px;  </string>
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>190</y>
+      <y>180</y>
       <width>661</width>
       <height>431</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">::item:hover {
+    background-color: #FB9722; 
+}
+QTableWidget#tableWidget QHeaderView::section {
+	font-family: 'Inter';
+	font-size: 15px;
+	font-weight: bold;
+	background-color: #FB9722; 
+	color: black; 
+	padding-left: 5px;
+}       
+</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::WinPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
     </property>
     <property name="editTriggers">
      <set>QAbstractItemView::NoEditTriggers</set>
@@ -708,7 +728,7 @@ background-color: rgba(255, 167, 25, 0.1);
      <rect>
       <x>180</x>
       <y>280</y>
-      <width>131</width>
+      <width>121</width>
       <height>31</height>
      </rect>
     </property>
@@ -858,12 +878,82 @@ background-color: rgba(255, 167, 25, 0.1);
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="whitebg_2">
+    <property name="geometry">
+     <rect>
+      <x>361</x>
+      <y>81</y>
+      <width>821</width>
+      <height>701</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, 100);
+border-radius: 5px;  </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="title_3">
+    <property name="geometry">
+     <rect>
+      <x>-1</x>
+      <y>11</y>
+      <width>1201</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+color: rgba(0, 0, 0, 80);
+    font-family: Sacramento;
+    font-size: 58px;
+    font-weight: 400;
+    padding-bottom: 5px;
+    text-align: center;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Oriental Dua Restaurant</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="userlistlabelshadow">
+    <property name="geometry">
+     <rect>
+      <x>381</x>
+      <y>111</y>
+      <width>171</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+	color: rgba(0, 0, 0, .4);
+    font-family: 'Inter';
+    font-size: 32px;
+    font-weight: 500;
+}</string>
+    </property>
+    <property name="text">
+     <string>User List:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <zorder>whitebg_2</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
    <zorder>whitebg</zorder>
-   <zorder>title</zorder>
    <zorder>settings</zorder>
-   <zorder>userlistlabel</zorder>
    <zorder>userprofIcon</zorder>
    <zorder>appearanceIcon</zorder>
    <zorder>usersIcon</zorder>
@@ -886,6 +976,10 @@ background-color: rgba(255, 167, 25, 0.1);
    <zorder>label_5</zorder>
    <zorder>settingIcon</zorder>
    <zorder>settingsbtn</zorder>
+   <zorder>title_3</zorder>
+   <zorder>title</zorder>
+   <zorder>userlistlabelshadow</zorder>
+   <zorder>userlistlabel</zorder>
   </widget>
  </widget>
  <resources>

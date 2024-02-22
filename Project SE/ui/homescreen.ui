@@ -732,10 +732,18 @@ border-radius: 5px;    </string>
      <bool>true</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">QTableWidget#tableWidget QHeaderView::section {
+	font-family: 'Inter';
+	font-size: 16px;
+	font-weight: bold;
+	background-color: #FB9722; 
+	color: black; 
+	padding-left: 5px;
+}       
+</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::NoFrame</enum>
+     <enum>QFrame::WinPanel</enum>
     </property>
     <property name="frameShadow">
      <enum>QFrame::Plain</enum>
@@ -781,6 +789,9 @@ border-radius: 5px;    </string>
     </attribute>
     <attribute name="horizontalHeaderStretchLastSection">
      <bool>true</bool>
+    </attribute>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
     </attribute>
     <column>
      <property name="text">
@@ -1102,8 +1113,8 @@ border-radius: 5px;    </string>
    <widget class="QLabel" name="title_3">
     <property name="geometry">
      <rect>
-      <x>1</x>
-      <y>12</y>
+      <x>-1</x>
+      <y>11</y>
       <width>1201</width>
       <height>71</height>
      </rect>

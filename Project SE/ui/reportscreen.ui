@@ -69,8 +69,8 @@ border: 1px solid rgba(0, 0, 0, 0.3);  </string>
      <rect>
       <x>160</x>
       <y>110</y>
-      <width>511</width>
-      <height>51</height>
+      <width>291</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -537,17 +537,25 @@ background-color: rgba(255, 167, 25, 0.1);
       <x>180</x>
       <y>120</y>
       <width>71</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-    color: rgba(0,0,0, 1);
+	color: #FB9722;
+	background-color: rgba(255, 167, 25, 0.1);
+	border: 2px solid #FB9722;
     font-family: 'Roboto';
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 500;
-	border:none;
-	text-decoration:underline;
+	border-radius:8px;
+}
+
+QPushButton:hover{
+color: #FB9722;
+border: 2px solid #FB9722;
+border-radius: 8px;
+background-color: rgba(255, 167, 25, 0.1);
 }
 </string>
     </property>
@@ -558,19 +566,27 @@ background-color: rgba(255, 167, 25, 0.1);
    <widget class="QPushButton" name="DSRbtn">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>270</x>
       <y>120</y>
       <width>151</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-    color: rgba(0,0,0, 1);
+    color: #000000;;
     font-family: 'Roboto';
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 500;
 	border:none;
+}
+
+QPushButton:hover{
+color: #FB9722;
+background-color: #FB9722;
+border: 2px solid #FB9722;
+border-radius: 8px;
+background-color: rgba(255, 167, 25, 0.1);
 }
 </string>
     </property>
@@ -582,7 +598,7 @@ background-color: rgba(255, 167, 25, 0.1);
     <property name="geometry">
      <rect>
       <x>160</x>
-      <y>220</y>
+      <y>190</y>
       <width>201</width>
       <height>51</height>
      </rect>
@@ -606,10 +622,24 @@ background-color: rgba(255, 167, 25, 0.1);
     <property name="geometry">
      <rect>
       <x>160</x>
-      <y>280</y>
+      <y>250</y>
       <width>951</width>
       <height>391</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">::item:hover {
+    background-color: #FB9722; 
+}
+QTableWidget#tableWidget QHeaderView::section {
+	font-family: 'Inter';
+	font-size: 16px;
+	font-weight: bold;
+	background-color: #FB9722; 
+	color: black; 
+	padding-left: 5px;
+}       
+</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::WinPanel</enum>
@@ -665,37 +695,6 @@ background-color: rgba(255, 167, 25, 0.1);
      </property>
     </column>
    </widget>
-   <widget class="QPushButton" name="viewbtn">
-    <property name="geometry">
-     <rect>
-      <x>960</x>
-      <y>710</y>
-      <width>151</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton{
-	color: #FFFFFF;
-    background-color: #FB9722;
-    border: 1px solid #888888;
-    border-radius: 20px;
-	font-family: 'Inter';
-    font-size: 17px;
-    font-weight: 400;
-}
-QPushButton:hover {
-	background-color: rgb(255, 167, 25);
-}
-
-QPushButton:pressed {
- 	background-color: #FB9722;
-}</string>
-    </property>
-    <property name="text">
-     <string>View</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
@@ -719,7 +718,7 @@ QPushButton:pressed {
    <widget class="QLabel" name="title_3">
     <property name="geometry">
      <rect>
-      <x>1</x>
+      <x>-1</x>
       <y>11</y>
       <width>1201</width>
       <height>71</height>
@@ -746,6 +745,25 @@ color: rgba(0, 0, 0, 100);
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="whitebgshadow">
+    <property name="geometry">
+     <rect>
+      <x>161</x>
+      <y>111</y>
+      <width>291</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, .3);
+
+border-radius: 10px;  </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>whitebgshadow</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
    <zorder>whitebg</zorder>
@@ -763,7 +781,6 @@ color: rgba(0, 0, 0, 100);
    <zorder>DSRbtn</zorder>
    <zorder>listofsale</zorder>
    <zorder>tableWidget</zorder>
-   <zorder>viewbtn</zorder>
    <zorder>label_2</zorder>
    <zorder>reportIcon</zorder>
    <zorder>reportbtn</zorder>

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>796</height>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -94,7 +94,7 @@ border-radius: 5px;  </string>
      <string notr="true">QLabel#title{
 	color: #FB9722;
     font-family: Sacramento;
-    font-size: 52px;
+    font-size: 58px;
     font-weight: 400;
     padding-bottom: 5px;
     text-align: center;
@@ -123,7 +123,7 @@ border-radius: 5px;  </string>
      <string notr="true">QLabel#settings{
     color: #000000;
     font-family: 'Roboto';
-    font-size: 22px;
+    font-size: 23px;
     font-weight: 500;
 }</string>
     </property>
@@ -162,17 +162,17 @@ border-radius: 5px;  </string>
    <widget class="QPushButton" name="logoutbtn">
     <property name="geometry">
      <rect>
-      <x>5</x>
+      <x>15</x>
       <y>750</y>
-      <width>101</width>
+      <width>81</width>
       <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
     color: rgba(0,0,0, 0.5);
-    font-family: 'Roboto';
-    font-size: 12px;
+    font-family: 'Inter';
+    font-size: 13px;
     font-weight: 500;
 	border:none;
 }
@@ -186,142 +186,6 @@ background-color: rgba(255, 167, 25, 0.1);
     </property>
     <property name="text">
      <string>Logout</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="settingsbtn">
-    <property name="geometry">
-     <rect>
-      <x>5</x>
-      <y>616</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton{
-  	color: #FB9722;
-    font-family: 'Roboto';
-    font-size: 12px;
-    font-weight: 500;
-	border:none;
-}
-</string>
-    </property>
-    <property name="text">
-     <string>Settings</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="menubtn">
-    <property name="geometry">
-     <rect>
-      <x>5</x>
-      <y>150</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton{
-    color: rgba(0,0,0, 0.5);
-    font-family: 'Roboto';
-    font-size: 12px;
-    font-weight: 500;
-	border:none;
-}
-
-QPushButton:hover{
-color: #FB9722;
-border: 2px solid #FB9722;
-border-radius: 8px;
-background-color: rgba(255, 167, 25, 0.1);
-}</string>
-    </property>
-    <property name="text">
-     <string>Menu</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="menuIcon">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>120</y>
-      <width>30</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>30</width>
-      <height>30</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>35</width>
-      <height>35</height>
-     </size>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel#Pmanagementbtn{
-    color: rgba(0,0,0, 0.5);
-    font-family: 'Roboto';
-    font-size: 11px;
-    font-weight: 300;
-}</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap resource="../resource.qrc">:/icon/icons/menu.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="settingIcon">
-    <property name="geometry">
-     <rect>
-      <x>38</x>
-      <y>580</y>
-      <width>35</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>35</width>
-      <height>35</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>35</width>
-      <height>35</height>
-     </size>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel#Pmanagementbtn{
-    color: rgba(0,0,0, 0.5);
-    font-family: 'Roboto';
-    font-size: 11px;
-    font-weight: 300;
-}</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap resource="../resource.qrc">:/icon/icons/settings2.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="logoutIcon">
@@ -391,43 +255,20 @@ background-color: rgba(255, 167, 25, 0.1);
      <string>Users Profile</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="editbtn">
+   <widget class="QLabel" name="myprofile">
     <property name="geometry">
      <rect>
-      <x>1030</x>
-      <y>120</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border:none;</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>35</width>
-      <height>35</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QLabel" name="settings_2">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
+      <x>470</x>
       <y>110</y>
-      <width>161</width>
-      <height>51</height>
+      <width>171</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QLabel{
     color: #000000;
-    font-family: 'Roboto';
-    font-size: 38px;
-	font: 8pt &quot;Ravie&quot;;
+    font-family: 'Inter';
+    font-size: 34px;
     font-weight: bold;
 }</string>
     </property>
@@ -441,8 +282,8 @@ background-color: rgba(255, 167, 25, 0.1);
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>320</y>
+      <x>460</x>
+      <y>265</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -451,9 +292,8 @@ background-color: rgba(255, 167, 25, 0.1);
      <string notr="true">QLabel{
     color: #000000;
     font-family: &quot;Inter&quot;;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
-
 }</string>
     </property>
     <property name="text">
@@ -515,9 +355,9 @@ QPushButton:hover{text-decoration: underline;}</string>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>330</y>
-      <width>51</width>
+      <x>800</x>
+      <y>265</y>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -525,7 +365,7 @@ QPushButton:hover{text-decoration: underline;}</string>
      <string notr="true">QLabel{
     color: #000000;
     font-family: &quot;Inter&quot;;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
 
 }</string>
@@ -540,9 +380,9 @@ QPushButton:hover{text-decoration: underline;}</string>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>500</y>
-      <width>81</width>
+      <x>460</x>
+      <y>430</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -550,7 +390,7 @@ QPushButton:hover{text-decoration: underline;}</string>
      <string notr="true">QLabel{
     color: #000000;
     font-family: &quot;Inter&quot;;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
 
 }</string>
@@ -559,14 +399,14 @@ QPushButton:hover{text-decoration: underline;}</string>
      <string>Username:</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>530</y>
+      <x>820</x>
+      <y>430</y>
       <width>81</width>
       <height>21</height>
      </rect>
@@ -575,7 +415,7 @@ QPushButton:hover{text-decoration: underline;}</string>
      <string notr="true">QLabel{
     color: #000000;
     font-family: &quot;Inter&quot;;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
 
 }</string>
@@ -584,68 +424,75 @@ QPushButton:hover{text-decoration: underline;}</string>
      <string>Password:</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="boxlabel_name">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>200</y>
-      <width>171</width>
-      <height>20</height>
+      <x>460</x>
+      <y>290</y>
+      <width>211</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QLabel{
+border: 1px solid rgba(0, 0, 0, 1); 
+border-radius: 2px;
+background-color: rgb(247, 247, 247);
 padding-left: 5px;
-font-family: &quot;Inter&quot;;
-font-size: 12px;
-font-weight: 500;
+font-family: &quot;Roboto&quot;;
+font-size: 16px;
+font-weight: 400;
 }</string>
     </property>
     <property name="text">
-     <string/>
+     <string>John Mark Gimena</string>
     </property>
    </widget>
    <widget class="QLabel" name="boxlabel_role">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>230</y>
-      <width>171</width>
-      <height>20</height>
+      <x>820</x>
+      <y>290</y>
+      <width>211</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QLabel{
+border: 1px solid rgba(0, 0, 0, 1); 
+border-radius: 2px;
+background-color: rgb(247, 247, 247);
 padding-left: 5px;
-font-family: &quot;Inter&quot;;
-font-size: 12px;
-font-weight: 500;
+font-family: &quot;Roboto&quot;;
+font-size: 16px;
+font-weight: 400;
 }</string>
     </property>
     <property name="text">
-     <string/>
+     <string>Admin</string>
     </property>
    </widget>
    <widget class="QLabel" name="boxlabel_username">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>500</y>
-      <width>121</width>
-      <height>20</height>
+      <x>460</x>
+      <y>455</y>
+      <width>211</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QLabel{
+border: 1px solid rgba(0, 0, 0, 1); 
+border-radius: 2px;
+background-color: rgb(247, 247, 247);
 padding-left: 5px;
-background-color: #E7E7E7;
-border: 1px solid rgba(0, 0, 0, 0.3); 
-font-family: &quot;Inter&quot;;
-font-size: 12px;
-font-weight: 500;
+font-family: &quot;Roboto&quot;;
+font-size: 16px;
+font-weight: 400;
 }</string>
     </property>
     <property name="text">
@@ -655,20 +502,21 @@ font-weight: 500;
    <widget class="QLineEdit" name="password">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>530</y>
-      <width>121</width>
-      <height>20</height>
+      <x>820</x>
+      <y>455</y>
+      <width>211</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QLineEdit{
+border: 1px solid rgba(0, 0, 0, 1); 
+border-radius: 2px;
+background-color: rgb(247, 247, 247);
 padding-left: 5px;
-background-color: #E7E7E7;
-border: 1px solid rgba(0, 0, 0, 0.3); 
-font-family: &quot;Inter&quot;;
-font-size: 10px;
-font-weight: 500;
+font-family: &quot;Roboto&quot;;
+font-size: 16px;
+font-weight: 400;
 }</string>
     </property>
     <property name="echoMode">
@@ -678,13 +526,197 @@ font-weight: 500;
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="menuIcon">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>190</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>30</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>35</width>
+      <height>35</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel#Pmanagementbtn{
+    color: rgba(0,0,0, 0.5);
+    font-family: 'Roboto';
+    font-size: 11px;
+    font-weight: 300;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../resource.qrc">:/icon/icons/menu.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="homeIcon">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>110</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>30</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>35</width>
+      <height>35</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel#Pmanagementbtn{
+    color: rgba(0,0,0, 0.5);
+    font-family: 'Roboto';
+    font-size: 11px;
+    font-weight: 300;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../resource.qrc">:/icon/icons/home.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="homebtn">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>140</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+    color: rgba(0,0,0, 0.5);
+    font-family: 'Inter';
+    font-size: 13px;
+    font-weight: 500;
+	border:none;
+}
+
+QPushButton:hover{
+color: #FB9722;
+border: 2px solid #FB9722;
+border-radius: 8px;
+background-color: rgba(255, 167, 25, 0.1);
+}</string>
+    </property>
+    <property name="text">
+     <string>Home</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="menubtn">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>220</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+    color: rgba(0,0,0, 0.5);
+    font-family: 'Inter';
+    font-size: 13px;
+    font-weight: 500;
+	border:none;
+}
+
+QPushButton:hover{
+color: #FB9722;
+border: 2px solid #FB9722;
+border-radius: 8px;
+background-color: rgba(255, 167, 25, 0.1);
+}</string>
+    </property>
+    <property name="text">
+     <string>Menu</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="settingIcon">
+    <property name="geometry">
+     <rect>
+      <x>39</x>
+      <y>634</y>
+      <width>35</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>35</width>
+      <height>35</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>35</width>
+      <height>35</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel#Pmanagementbtn{
+    color: rgba(0,0,0, 0.5);
+    font-family: 'Roboto';
+    font-size: 11px;
+    font-weight: 300;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../resource.qrc">:/icon/icons/settings2.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>570</y>
-      <width>91</width>
-      <height>81</height>
+      <x>15</x>
+      <y>625</y>
+      <width>81</width>
+      <height>76</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -698,19 +730,327 @@ font-weight: 500;
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="settingsbtn">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>670</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+    color: #FB9722;;
+    font-family: 'Inter';
+    font-size: 13px;
+    font-weight: 500;
+	border:none;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Settings</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="whitebg_2">
+    <property name="geometry">
+     <rect>
+      <x>362</x>
+      <y>82</y>
+      <width>821</width>
+      <height>701</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, 100);
+border-radius: 5px;  </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="Line" name="navline">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>240</y>
+      <width>770</width>
+      <height>3</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:2px solid #FB9722 ;
+</string>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="navline_2">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>410</y>
+      <width>770</width>
+      <height>3</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:2px solid #FB9722 ;
+</string>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="myprofileshadow">
+    <property name="geometry">
+     <rect>
+      <x>472</x>
+      <y>111</y>
+      <width>171</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color:rgba(0,0,0, .4);
+    font-family: 'Inter';
+    font-size: 34px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>My Profile</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="title_3">
+    <property name="geometry">
+     <rect>
+      <x>-1</x>
+      <y>11</y>
+      <width>1201</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+color: rgba(0, 0, 0, 80);
+    font-family: Sacramento;
+    font-size: 58px;
+    font-weight: 400;
+    padding-bottom: 5px;
+    text-align: center;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Oriental Dua Restaurant</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="basicinfo">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>198</y>
+      <width>251</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color: #000000;
+    font-family: 'Inter';
+    font-size: 28px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>Basic Information:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="logininfoshadow">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>370</y>
+      <width>251</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color: #000000;
+    font-family: 'Inter';
+    font-size: 28px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>Login Information:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="basicinfoshadow">
+    <property name="geometry">
+     <rect>
+      <x>391</x>
+      <y>199</y>
+      <width>251</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color:rgba(0,0,0, .4);
+    font-family: 'Inter';
+    font-size: 28px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>Basic Information:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="logininfo">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>371</y>
+      <width>251</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color:rgba(0,0,0, .4);
+    font-family: 'Inter';
+    font-size: 28px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string>Login Information:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="profileimg">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>100</y>
+      <width>71</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color: #000000;
+    font-family: 'Inter';
+    font-size: 34px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../resource.qrc">:/icon/icons/cresume.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="viewpassword">
+    <property name="geometry">
+     <rect>
+      <x>1006</x>
+      <y>460</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color: #000000;
+    font-family: 'Inter';
+    font-size: 34px;
+    font-weight: bold;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../resource.qrc">:/icon/icons/view.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="editbtn">
+    <property name="geometry">
+     <rect>
+      <x>1006</x>
+      <y>460</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:none;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>35</width>
+      <height>35</height>
+     </size>
+    </property>
+   </widget>
+   <zorder>whitebg_2</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
    <zorder>whitebg</zorder>
-   <zorder>title</zorder>
    <zorder>settings</zorder>
    <zorder>userprofIcon</zorder>
    <zorder>logoutbtn</zorder>
-   <zorder>menubtn</zorder>
-   <zorder>menuIcon</zorder>
    <zorder>logoutIcon</zorder>
    <zorder>userprofbtn</zorder>
-   <zorder>editbtn</zorder>
-   <zorder>settings_2</zorder>
    <zorder>label</zorder>
    <zorder>appearanceIcon</zorder>
    <zorder>appearancebtn</zorder>
@@ -721,9 +1061,26 @@ font-weight: 500;
    <zorder>boxlabel_role</zorder>
    <zorder>boxlabel_username</zorder>
    <zorder>password</zorder>
+   <zorder>menuIcon</zorder>
+   <zorder>homeIcon</zorder>
+   <zorder>homebtn</zorder>
+   <zorder>menubtn</zorder>
    <zorder>label_5</zorder>
    <zorder>settingIcon</zorder>
    <zorder>settingsbtn</zorder>
+   <zorder>navline</zorder>
+   <zorder>navline_2</zorder>
+   <zorder>myprofileshadow</zorder>
+   <zorder>myprofile</zorder>
+   <zorder>title_3</zorder>
+   <zorder>title</zorder>
+   <zorder>basicinfo</zorder>
+   <zorder>logininfoshadow</zorder>
+   <zorder>basicinfoshadow</zorder>
+   <zorder>logininfo</zorder>
+   <zorder>profileimg</zorder>
+   <zorder>viewpassword</zorder>
+   <zorder>editbtn</zorder>
   </widget>
  </widget>
  <resources>

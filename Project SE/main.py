@@ -9,7 +9,7 @@ import sqlite3
 from sqlite3 import Error
 import warnings
 
-from datetime import *
+from datetime import date, time, timezone
 
 # Suppress DeprecationWarnings globally
 warnings.simplefilter("ignore", category=DeprecationWarning)
@@ -98,7 +98,7 @@ class LoginScreen(QDialog):
         
     def gotocashierscreen(self, user):
         widget.removeWidget(self)
-        menu = MenuScreen(user)
+        menu = CashierScreen(user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
@@ -135,8 +135,9 @@ class AdminCashierScreen(QDialog):
         self.tableWidget.setColumnWidth(1, 100) # Table index 1, second column with 200 width pixel  
         
         self.tableWidget2.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
-        self.tableWidget2.setColumnWidth(1, 140) 
+        self.tableWidget2.setColumnWidth(1, 135) 
         self.tableWidget2.setColumnWidth(2, 100) 
+        
     
         self.lugawbtn.clicked.connect(self.displayLugawProductList)
         self.mamibtn.clicked.connect(self.displayMamiProductList)
@@ -144,10 +145,6 @@ class AdminCashierScreen(QDialog):
         self.dessertsbtn.clicked.connect(self.displayDessertsProductList)
         self.beveragesbtn.clicked.connect(self.displayBeveragesProductList)
         self.extrasbtn.clicked.connect(self.displayExtrasProductList)
-    
-        # A function whenever a row is selected on the menu is transffered into the sale invoice
-        self.tableWidget.itemSelectionChanged.disconnect()
-        self.tableWidget2.itemChanged.disconnect()
 
         # Connect signals
         self.tableWidget.itemSelectionChanged.connect(self.addSelectedProductToInvoice)
@@ -188,6 +185,13 @@ class AdminCashierScreen(QDialog):
                 self.tableWidget2.setItem(row_position, 2, QTableWidgetItem(str(price)))  # Amount (ProductPrice)
                 self.tableWidget2.setItem(row_position, 3, QTableWidgetItem(product_id))  # ProductID
             
+                for row in range(self.tableWidget2.rowCount()):
+                    for column in range(self.tableWidget2.columnCount()):
+                        item = self.tableWidget2.item(row, column)
+                        if item is not None:
+                            item.setFont(QFont("Roboto", 10))  # Set font size
+                            item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+            
     def findExistingProductRow(self, product_id):
         # Search for the product ID in TableWidget2
         for row in range(self.tableWidget2.rowCount()):
@@ -200,8 +204,6 @@ class AdminCashierScreen(QDialog):
         return None
 
 
-    
-    
     def updateAmount(self, item):
         # Calculate the amount based on the quantity entered
         if item.column() == 0:  # Quantity column
@@ -216,7 +218,9 @@ class AdminCashierScreen(QDialog):
                 amount_item.setText("{:.2f}".format(amount))  # Update the amount
 
     def displayLugawProductList(self):  #To load the data from database to the pyqt table
+       
         self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/lugaw.png'))
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 1 AND status = 'Available'"
         cur.execute(query)
@@ -237,10 +241,20 @@ class AdminCashierScreen(QDialog):
         for row in range(row_count):
             for col in range(column_count):
                 item = QTableWidgetItem(str(rows[row][col]))
-                self.tableWidget.setItem(row, col, item)  
+                self.tableWidget.setItem(row, col, item)
+                
+        
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
     
     def displayMamiProductList(self):  #To load the data from database to the pyqt table
+        
         self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/mami.png'))
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 2 AND status = 'Available'"
         cur.execute(query)
@@ -262,10 +276,18 @@ class AdminCashierScreen(QDialog):
             for col in range(column_count):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
-    
+
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
     
     def displayMainDishProductList(self):  #To load the data from database to the pyqt table
+        
         self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/maindish.png'))
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 3 AND status = 'Available'"
         cur.execute(query)
@@ -287,9 +309,18 @@ class AdminCashierScreen(QDialog):
             for col in range(column_count):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
+      
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
 
     def displayDessertsProductList(self):  #To load the data from database to the pyqt table
+        
         self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/desserts.png'))
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 4 AND status = 'Available'"
         cur.execute(query)
@@ -312,9 +343,17 @@ class AdminCashierScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
 
-
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
+                    
     def displayBeveragesProductList(self):  #To load the data from database to the pyqt table
+        
         self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/beverages.png'))
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 5 AND status = 'Available'"
         cur.execute(query)
@@ -337,8 +376,17 @@ class AdminCashierScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)        
 
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
+                    
     def displayExtrasProductList(self):  #To load the data from database to the pyqt table
+       
         self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/extra.png'))
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 6 AND status = 'Available'"
         cur.execute(query)
@@ -359,8 +407,15 @@ class AdminCashierScreen(QDialog):
         for row in range(row_count):
             for col in range(column_count):
                 item = QTableWidgetItem(str(rows[row][col]))
-                self.tableWidget.setItem(row, col, item)        
-    
+                self.tableWidget.setItem(row, col, item)      
+                  
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
+                     
     def clearTableWidgetSelection(self):
         self.tableWidget.clearSelection()
     
@@ -561,7 +616,7 @@ class AdminProfScreen(QDialog):
         self.reportIcon.setPixmap(QPixmap('icons/report.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
-        self.image.setPixmap(QPixmap('icons/placeholder.jpg'))  
+        self.profileimg.setPixmap(QPixmap('icons/cresume.png'))  
         #######################################################
         self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
         self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  # Pixmap for the second sidebar in settings screen.
@@ -579,18 +634,19 @@ class AdminProfScreen(QDialog):
         try:
             conn = sqlite3.connect('projectse_db.db')
             cur = conn.cursor()
-
-            query = f'SELECT name, role, username, password FROM employee WHERE username = ?'
-            cur.execute(query, (user,))
+            
+            query = 'SELECT name, role, username, password FROM employee WHERE username = \'' + user + "\'"  #base sa nakalogin na user mafefetch lahat ng data information ni user.
+            cur.execute(query)
             user_info = cur.fetchone()
 
-            if user_info is not None:
+            if user_info is not None:       #displaying all user info in the database.
                 name, role, username, password = user_info
                 self.boxlabel_name.setText(name)
                 self.boxlabel_role.setText(role)
                 self.boxlabel_username.setText(username)
                 self.password.setText(password)
                 self.password.setEchoMode(QtWidgets.QLineEdit.Password)
+                self.viewpassword.setPixmap(QPixmap('icons/view.png')) 
             else:
                 print("User not found")
 
@@ -598,8 +654,20 @@ class AdminProfScreen(QDialog):
             print(f"Error: {err}")
 
         finally:
-            if 'conn' in locals():
+            if conn:
                 conn.close()
+                
+        self.editbtn.clicked.connect(self.toggle_echo_mode)
+        
+    def toggle_echo_mode(self):
+        # Toggle the echo mode of the password field between Normal and Password
+        if self.password.echoMode() == QLineEdit.Normal:
+            self.password.setEchoMode(QLineEdit.Password)
+            self.viewpassword.setPixmap(QPixmap('icons/view.png'))  
+        else:
+            self.password.setEchoMode(QLineEdit.Normal)
+            self.viewpassword.setPixmap(QPixmap('icons/hide.png')) 
+            
 
     def gotocashierscreen(self):  # To cashier screen if menu button is clicked.
         widget.removeWidget(self)
@@ -694,8 +762,10 @@ class HomeScreen(QDialog):
         # Initial update of the time label function
         self.update_time_label()
         
+        current_date = date.today()
+        
         try:
-            query = f"SELECT printf('%.2f', SUM(Sales.totalPrice)) AS total_sales FROM Sales WHERE DATE(Sales.date)"
+            query = f"SELECT printf('%.2f', SUM(Sales.totalPrice)) AS total_sales FROM Sales WHERE DATE(Sales.date) = '{current_date}'"
             cur.execute(query)
             totalsale = cur.fetchone()
 
@@ -703,24 +773,24 @@ class HomeScreen(QDialog):
                 totaldailysale = totalsale[0]  # Extract the total sale value from the tuple
                 self.boxlabel_total.setText(str(totaldailysale))  # Convert to string before setting as label text
             else:
-                print("error")
+                self.boxlabel_total.setText("00.00")  # Set label text to indicate no data available
 
         except Error as err:
-            print(f"Error: {err}")
-            
-        try:
-            query = f"SELECT COUNT(*) AS totalSales FROM Sales  WHERE DATE(date)"
-            cur.execute(query)
-            totalsale = cur.fetchone()
+            print(f"Error executing query: {err}")
 
-            if totalsale is not None:
-                totaldailysale = totalsale[0]  # Extract the total sale value from the tuple
+        try:
+            query = f"SELECT COUNT(*) AS totalSales FROM Sales  WHERE DATE(date) = '{current_date}'"
+            cur.execute(query)
+            totalsalecount = cur.fetchone()
+
+            if totalsalecount is not None:
+                totaldailysale = totalsalecount[0]  # Extract the total sale value from the tuple
                 self.boxlabel_sale.setText(str(totaldailysale))  # Convert to string before setting as label text
             else:
-                print("error")
+                self.boxlabel_sale.setText("0")  # Set label text to indicate no data available
 
         except Error as err:
-            print(f"Error: {err}")
+            print(f"Error executing query: {err}")
     
     
 
@@ -751,6 +821,13 @@ class HomeScreen(QDialog):
             for col in range(column_count):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
+
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 11))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
         
     def update_time_label(self):
         current_datetime = QDateTime.currentDateTime()
@@ -866,37 +943,15 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)  
         
-        #To make the horizontal headers text aligned to the left of the table. 
-        for col in range(self.tableWidget.columnCount()):
-            header_item = self.tableWidget.horizontalHeaderItem(col)
-            if header_item is not None:
-                header_text = header_item.text()
-                header_item = QTableWidgetItem(header_text)
-                header_item.setTextAlignment(Qt.AlignLeft)
-                self.tableWidget.setHorizontalHeaderItem(col, header_item)
-        
-        #Table Design 
-        self.setStyleSheet("""
-            QTableWidget {
-                background-color: white; /* Set default background color */
-            }
-            
+        # Set font size and alignment for items in the tableWidget
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 11))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
 
 
-            QTableWidget::item:hover {
-                background-color: #FB9722; /* Set background color for header on hover */   
-            }
-
-            QHeaderView::section {
-                font-family:'Inter';
-                font-size: 13px;
-                font-weight: bold;
-                background-color: #FB9722; /* Set background color for header */
-                color: black; /* Set text color for header */
-                padding-left: 5px; /* Add padding to the left for better appearance */
-            }       
-        """)
-        
     def displayLugawProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 1"
         cur.execute(query)
@@ -918,7 +973,15 @@ class PManagementScreen(QDialog):
             for col in range(column_count):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)  
-                
+
+        # Set font size and alignment for items in the tableWidget
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 12))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+                                 
     def displayMamiProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 2"
         cur.execute(query)
@@ -941,6 +1004,14 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
 
+        # Set font size and alignment for items in the tableWidget
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 12))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+                    
     def displayMainDishProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 3"
         cur.execute(query)
@@ -963,6 +1034,14 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
 
+        # Set font size and alignment for items in the tableWidget
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 12))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+                    
     def displayDessertsProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 4"
         cur.execute(query)
@@ -985,7 +1064,14 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
 
-
+        # Set font size and alignment for items in the tableWidget
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 12))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+                    
     def displayBeveragesProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 5"
         cur.execute(query)
@@ -1008,6 +1094,14 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)        
 
+        # Set font size and alignment for items in the tableWidget
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 12))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+                    
     def displayExtrasProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 6"
         cur.execute(query)
@@ -1030,6 +1124,14 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)        
 
+        # Set font size and alignment for items in the tableWidget
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 12))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+                    
     def removeProduct(self):
         
         # Get the selected row index
@@ -1220,34 +1322,13 @@ class ReportScreen1(QDialog):
                     self.tableWidget.setItem(row, col, item)  
 
             # To make the horizontal headers text aligned to the left of the table. 
-            for col in range(self.tableWidget.columnCount()):
-                header_item = self.tableWidget.horizontalHeaderItem(col)
-                if header_item is not None:
-                    header_text = header_item.text()
-                    header_item = QTableWidgetItem(header_text)
-                    header_item.setTextAlignment(Qt.AlignLeft)
-                    self.tableWidget.setHorizontalHeaderItem(col, header_item)
-
-            # Table Design 
-            self.setStyleSheet("""
-                QTableWidget {
-                    background-color: white; /* Set default background color */
-                }
-                
-                QTableWidget::item:hover {
-                    background-color: #FB9722; /* Set background color for header on hover */   
-                }
-                
-                QHeaderView::section {
-                    font-family:'Inter';
-                    font-size: 13px;
-                    font-weight: bold;
-                    background-color: #FB9722; /* Set background color for header */
-                    color: black; /* Set text color for header */
-                    padding-left: 5px; /* Add padding to the left for better appearance */
-                }       
-            """)
-
+            for row in range(self.tableWidget.rowCount()):
+                for column in range(self.tableWidget.columnCount()):
+                    item = self.tableWidget.item(row, column)
+                    if item is not None:
+                        item.setFont(QFont("Roboto", 11))  # Set font size
+                        item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+                        
         except sqlite3.Error as err:
             print(f"Error: {err}")
 
@@ -1378,34 +1459,13 @@ class ReportScreen2(QDialog):
                     item = QTableWidgetItem(str(rows[row][col]))
                     self.tableWidget.setItem(row, col, item)
 
-            # To make the horizontal headers text aligned to the left of the table.
-            for col in range(self.tableWidget.columnCount()):
-                header_item = self.tableWidget.horizontalHeaderItem(col)
-                if header_item is not None:
-                    header_text = header_item.text()
-                    header_item = QTableWidgetItem(header_text)
-                    header_item.setTextAlignment(Qt.AlignLeft)
-                    self.tableWidget.setHorizontalHeaderItem(col, header_item)
-
-            # Table Design
-            self.setStyleSheet("""
-                QTableWidget {
-                    background-color: white; /* Set default background color */
-                }
-
-                QTableWidget::item:hover {
-                    background-color: #FB9722; /* Set background color for header on hover */   
-                }
-
-                QHeaderView::section {
-                    font-family:'Inter';
-                    font-size: 13px;
-                    font-weight: bold;
-                    background-color: #FB9722; /* Set background color for header */
-                    color: black; /* Set text color for header */
-                    padding-left: 5px; /* Add padding to the left for better appearance */
-                }       
-            """)
+            # To make the horizontal headers text aligned to the left of the table. 
+            for row in range(self.tableWidget.rowCount()):
+                for column in range(self.tableWidget.columnCount()):
+                    item = self.tableWidget.item(row, column)
+                    if item is not None:
+                        item.setFont(QFont("Roboto", 11))  # Set font size
+                        item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
 
             conn.commit()
 
@@ -1635,35 +1695,12 @@ class UserScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)  
         
-        #To make the horizontal headers text aligned to the left of the table. 
-        for col in range(self.tableWidget.columnCount()):
-            header_item = self.tableWidget.horizontalHeaderItem(col)
-            if header_item is not None:
-                header_text = header_item.text()
-                header_item = QTableWidgetItem(header_text)
-                header_item.setTextAlignment(Qt.AlignLeft)
-                self.tableWidget.setHorizontalHeaderItem(col, header_item)
-        
-        #Table Design 
-        self.setStyleSheet("""
-            QTableWidget {
-                background-color: white; /* Set default background color */
-            }
-            
-
-            QTableWidget::item:hover {
-                background-color: #FB9722; /* Set background color for header on hover */   
-            }
-
-            QHeaderView::section {
-                font-family:'Inter';
-                font-size: 13px;
-                font-weight: bold;
-                background-color: #FB9722; /* Set background color for header */
-                color: black; /* Set text color for header */
-                padding-left: 5px; /* Add padding to the left for better appearance */
-            }       
-        """)
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 11))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
         
     def gotoadminprofscreen(self): #to admin profile screen
         widget.removeWidget(self)
@@ -1785,37 +1822,13 @@ class UserScreenEditMode(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)  
         
-        #To make the horizontal headers text aligned to the left of the table. 
-        for col in range(self.tableWidget.columnCount()):
-            header_item = self.tableWidget.horizontalHeaderItem(col)
-            if header_item is not None:
-                header_text = header_item.text()
-                header_item = QTableWidgetItem(header_text)
-                header_item.setTextAlignment(Qt.AlignLeft)
-                self.tableWidget.setHorizontalHeaderItem(col, header_item)
-        
-        #Table Design 
-        self.setStyleSheet("""
-            QTableWidget {
-                background-color: white; /* Set default background color */
-            }
-            
-
-
-            QTableWidget::item:hover {
-                background-color: #FB9722; /* Set background color for header on hover */   
-            }
-
-            QHeaderView::section {
-                font-family:'Inter';
-                font-size: 13px;
-                font-weight: bold;
-                background-color: #FB9722; /* Set background color for header */
-                color: black; /* Set text color for header */
-                padding-left: 5px; /* Add padding to the left for better appearance */
-            }       
-        """)
-
+        #To set the row items font size and text alignment to center.
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 11))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
 
 
     def deleteEmployee(self):
@@ -1861,21 +1874,456 @@ class UserScreenEditMode(QDialog):
 
 
 ######################## CASHIER SCREENS ############################### 
-class MenuScreen(QDialog):
+
+class HomeScreenForCashier(QDialog):
     def __init__(self, user):
-        super(MenuScreen, self).__init__()
+        super(HomeScreenForCashier, self).__init__()
+        self.user = user
+        loadUi("ui/homescreenforcashier.ui",self)
+        
+        ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home2.png'))    #Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        #######################################################
+        
+        self.dashboardimg.setPixmap(QPixmap('icons/layout.png'))
+        self.dashboardimg_2.setPixmap(QPixmap('icons/coca-leaves.png'))
+        self.topimg.setPixmap(QPixmap('icons/badge.png'))
+        self.pesoimg.setPixmap(QPixmap('icons/peso.png'))
+        self.dailyimg.setPixmap(QPixmap('icons/24-hours.png'))
+        
+        
+        #Redirect Functions
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.logoutbtn.clicked.connect(self.gotologin)
+        self.settingsbtn.clicked.connect(self.gotosettings) 
+
+        # A Function to display the top 5 selling products based on sales
+        self.displayTopSellingProduct()
+        
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_time_label)
+        self.timer.start(1000)  # Update every 1 second
+
+        # Initial update of the time label function
+        self.update_time_label()
+        
+        current_date = date.today()
+        
+        try:
+            query = f"SELECT printf('%.2f', SUM(Sales.totalPrice)) AS total_sales FROM Sales WHERE DATE(Sales.date) = '{current_date}'"
+            cur.execute(query)
+            totalsale = cur.fetchone()
+
+            if totalsale is not None:
+                totaldailysale = totalsale[0]  # Extract the total sale value from the tuple
+                self.boxlabel_total.setText(str(totaldailysale))  # Convert to string before setting as label text
+            else:
+                self.boxlabel_total.setText("00.00")  # Set label text to indicate no data available
+
+        except Error as err:
+            print(f"Error executing query: {err}")
+
+        try:
+            query = f"SELECT COUNT(*) AS totalSales FROM Sales  WHERE DATE(date) = '{current_date}'"
+            cur.execute(query)
+            totalsalecount = cur.fetchone()
+
+            if totalsalecount is not None:
+                totaldailysale = totalsalecount[0]  # Extract the total sale value from the tuple
+                self.boxlabel_sale.setText(str(totaldailysale))  # Convert to string before setting as label text
+            else:
+                self.boxlabel_sale.setText("0")  # Set label text to indicate no data available
+
+        except Error as err:
+            print(f"Error executing query: {err}")
+    
+    
+
+    def displayTopSellingProduct(self):  #To load the data from database to the pyqt table
+        query = "SELECT productName, totalQuantitySold \
+                FROM ( SELECT P.name AS productName, SUM(T.quantity) AS totalQuantitySold \
+                FROM \"Transaction\" T \
+                JOIN Product P ON T.productID = P.id \
+                GROUP BY T.productID \
+                ORDER BY totalQuantitySold \
+                DESC LIMIT 5 ) AS topSoldProducts"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+        
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 11))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+        
+    def update_time_label(self):
+        current_datetime = QDateTime.currentDateTime()
+        current_time_string = current_datetime.toString("MM-dd-yyyy HH:mm:ss")
+        self.time.setText(current_time_string)
+           
+        
+
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = CashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)     
+    
+    def gotologin(self):
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1) 
+    
+    
+    def gotosettings(self): #to settings screen
+        widget.removeWidget(self)
+
+        settings = SettingScreenForCashier(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+        
+    def keyPressEvent(self, event): #To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        if event.key() == Qt.Key_Escape:
+            event.ignore()      
+
+class CashierScreen(QDialog):
+    def __init__(self, user):
+        super(CashierScreen, self).__init__()
         self.user = user
         loadUi("ui/cashierscreen.ui",self)
         ######################################################
         #Pixmap for the pngs images within the sidebar.
+        self.homeIcon.setPixmap(QPixmap('icons/home.png')) 
         self.menuIcon.setPixmap(QPixmap('icons/menu2.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
         #Redirect Functions
+        self.homebtn.clicked.connect(self.gotohome)
         self.logoutbtn.clicked.connect(self.gotologin)
-        self.settingsbtn.clicked.connect(self.gotosettings)  
+        self.settingsbtn.clicked.connect(self.gotosettings)
+        
+
+        self.tableWidget.setColumnWidth(0, 300) # Table index 0, first column with 50 width pixel
+        self.tableWidget.setColumnWidth(1, 100) # Table index 1, second column with 200 width pixel  
+        
+        self.tableWidget2.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
+        self.tableWidget2.setColumnWidth(1, 135) 
+        self.tableWidget2.setColumnWidth(2, 100) 
+        
     
+        self.lugawbtn.clicked.connect(self.displayLugawProductList)
+        self.mamibtn.clicked.connect(self.displayMamiProductList)
+        self.maindishbtn.clicked.connect(self.displayMainDishProductList)
+        self.dessertsbtn.clicked.connect(self.displayDessertsProductList)
+        self.beveragesbtn.clicked.connect(self.displayBeveragesProductList)
+        self.extrasbtn.clicked.connect(self.displayExtrasProductList)
+
+        # Connect signals
+        self.tableWidget.itemSelectionChanged.connect(self.addSelectedProductToInvoice)
+        self.tableWidget2.itemChanged.connect(self.updateAmount)
+        
+    def addSelectedProductToInvoice(self):
+        print("Adding selected product to invoice...")  # Add this line
+        # Retrieve the selected row from TableWidget
+        selected_indexes = self.tableWidget.selectedIndexes()
+        if not selected_indexes:
+            return
+ 
+
+        # Extract product name from the selected row
+        row = selected_indexes[0].row()
+        product_name = str(self.tableWidget.item(row, 0).text())  # ProductName
+
+        # Fetch product information based on product name
+        query = "SELECT id, price FROM Product WHERE name = ?"
+        cur.execute(query, (product_name,))
+        product_info = cur.fetchone()
+
+        if product_info:
+            product_id = product_info[0]
+            price = product_info[1]
+
+            # Check if the product already exists in TableWidget2
+            existing_row = self.findExistingProductRow(product_id)
+            if existing_row is not None:
+                # If the product exists, inform the user or take appropriate action
+                QMessageBox.warning(self, "Duplicate Product", "This product is already in the invoice.")
+            else:
+                # If the product does not exist, add a new row
+                row_position = self.tableWidget2.rowCount()
+                self.tableWidget2.insertRow(row_position)
+                self.tableWidget2.setItem(row_position, 0, QTableWidgetItem(str(1)))  # Default quantity to 1
+                self.tableWidget2.setItem(row_position, 1, QTableWidgetItem(product_name))  # ProductName
+                self.tableWidget2.setItem(row_position, 2, QTableWidgetItem(str(price)))  # Amount (ProductPrice)
+                self.tableWidget2.setItem(row_position, 3, QTableWidgetItem(product_id))  # ProductID
+            
+                for row in range(self.tableWidget2.rowCount()):
+                    for column in range(self.tableWidget2.columnCount()):
+                        item = self.tableWidget2.item(row, column)
+                        if item is not None:
+                            item.setFont(QFont("Roboto", 10))  # Set font size
+                            item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+            
+    def findExistingProductRow(self, product_id):
+        # Search for the product ID in TableWidget2
+        for row in range(self.tableWidget2.rowCount()):
+            item = self.tableWidget2.item(row, 3)  # ProductID column
+            if item is not None:
+                print("Comparing:", item.text(), "with:", str(product_id))
+                if item.text() == str(product_id):
+                    print("Found duplicate at row:", row)
+                    return row
+        return None
+
+
+    def updateAmount(self, item):
+        # Calculate the amount based on the quantity entered
+        if item.column() == 0:  # Quantity column
+            row = item.row()
+            quantity_item = self.tableWidget2.item(row, 0)
+            amount_item = self.tableWidget2.item(row, 2)
+
+            if quantity_item and amount_item:
+                quantity = int(quantity_item.text())
+                price = float(amount_item.text())
+                amount = quantity * price
+                amount_item.setText("{:.2f}".format(amount))  # Update the amount
+
+    def displayLugawProductList(self):  #To load the data from database to the pyqt table
+       
+        self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/lugaw.png'))
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 1 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+                
+        
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
+    
+    def displayMamiProductList(self):  #To load the data from database to the pyqt table
+        
+        self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/mami.png'))
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 2 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
+    
+    def displayMainDishProductList(self):  #To load the data from database to the pyqt table
+        
+        self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/maindish.png'))
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 3 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+      
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
+
+    def displayDessertsProductList(self):  #To load the data from database to the pyqt table
+        
+        self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/desserts.png'))
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 4 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
+                    
+    def displayBeveragesProductList(self):  #To load the data from database to the pyqt table
+        
+        self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/beverages.png'))
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 5 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)        
+
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
+                    
+    def displayExtrasProductList(self):  #To load the data from database to the pyqt table
+       
+        self.clearTableWidgetSelection()
+        self.imgplaceholder.setPixmap(QPixmap('icons/extra.png'))
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 6 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)      
+                  
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 13))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically  
+                     
+    def clearTableWidgetSelection(self):
+        self.tableWidget.clearSelection()  
+
+    def gotohome(self): #to home profile screen
+        widget.removeWidget(self)
+        
+        home = HomeScreenForCashier(self.user)     
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
     def gotologin(self):  #To logout from the system
         widget.removeWidget(self)
         
@@ -1902,6 +2350,7 @@ class SettingScreenForCashier(QDialog):
         self.user = user
         loadUi("ui/settingscreenforcashier.ui",self)
         ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home.png')) 
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
@@ -1911,10 +2360,17 @@ class SettingScreenForCashier(QDialog):
         #######################################################
         
         #redirect button functions
+        self.homebtn.clicked.connect(self.gotohome)
         self.logoutbtn.clicked.connect(self.gotologin) 
         self.userprofbtn.clicked.connect(self.gotouserprofscreen) 
         self.menubtn.clicked.connect(self.gotocashierscreen)
-    
+
+    def gotohome(self): #to home profile screen
+        widget.removeWidget(self)
+        
+        home = HomeScreenForCashier(self.user)     
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex()+1)
     
     def gotologin(self): #To login screen if logout button is clicked.
         widget.removeWidget(self)
@@ -1927,7 +2383,7 @@ class SettingScreenForCashier(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = MenuScreen(self.user)
+        menu = CashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1) 
         
@@ -1951,16 +2407,18 @@ class UserProfScreen(QDialog):
         loadUi("ui/userprofilescreen.ui",self)
         ######################################################
         #Pixmap for the pngs images within the sidebar.
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    # Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
-        self.image.setPixmap(QPixmap('icons/placeholder.jpg'))  
+        self.profileimg.setPixmap(QPixmap('icons/cresume.png'))  
         #######################################################
         #Pixmap for the second sidebar in settings screen.
         self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
         self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  
         #######################################################
         #Redirect Functions
+        self.homebtn.clicked.connect(self.gotohome)
         self.menubtn.clicked.connect(self.gotocashierscreen)
         self.logoutbtn.clicked.connect(self.gotologin)
         self.settingsbtn.clicked.connect(self.gotosettings)
@@ -1980,6 +2438,7 @@ class UserProfScreen(QDialog):
                 self.boxlabel_username.setText(username)
                 self.password.setText(password)
                 self.password.setEchoMode(QtWidgets.QLineEdit.Password)
+                self.viewpassword.setPixmap(QPixmap('icons/view.png')) 
             else:
                 print("User not found")
 
@@ -1989,14 +2448,32 @@ class UserProfScreen(QDialog):
         finally:
             if conn:
                 conn.close()
+        self.editbtn.clicked.connect(self.toggle_echo_mode)
+        
+    def toggle_echo_mode(self):
+        # Toggle the echo mode of the password field between Normal and Password
+        if self.password.echoMode() == QLineEdit.Normal:
+            self.password.setEchoMode(QLineEdit.Password)
+            self.viewpassword.setPixmap(QPixmap('icons/view.png'))  
+        else:
+            self.password.setEchoMode(QLineEdit.Normal)
+            self.viewpassword.setPixmap(QPixmap('icons/hide.png'))  
+            
 
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = MenuScreen(self.user)
+        menu = CashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
+
+    def gotohome(self): #to home profile screen
+        widget.removeWidget(self)
         
+        home = HomeScreenForCashier(self.user)     
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+   
     def gotologin(self):
         widget.removeWidget(self)
         

@@ -188,9 +188,9 @@ color: rgb(255, 0, 0);</string>
   <widget class="QLabel" name="subtitle">
    <property name="geometry">
     <rect>
-     <x>870</x>
+     <x>700</x>
      <y>210</y>
-     <width>121</width>
+     <width>291</width>
      <height>71</height>
     </rect>
    </property>
@@ -205,7 +205,7 @@ color: rgb(255, 0, 0);</string>
 }</string>
    </property>
    <property name="text">
-    <string>(POS)</string>
+    <string>(Cashiering System)</string>
    </property>
    <property name="scaledContents">
     <bool>false</bool>
@@ -329,6 +329,75 @@ color: rgb(255, 0, 0);</string>
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>431</x>
+     <y>391</y>
+     <width>347</width>
+     <height>46</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 100);
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>431</x>
+     <y>321</y>
+     <width>347</width>
+     <height>46</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 100);
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>456</x>
+     <y>481</y>
+     <width>285</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 100);
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>label_3</zorder>
+  <zorder>label_2</zorder>
+  <zorder>title</zorder>
+  <zorder>loginbtn</zorder>
+  <zorder>navline</zorder>
+  <zorder>error</zorder>
+  <zorder>subtitle</zorder>
+  <zorder>note</zorder>
+  <zorder>label</zorder>
+  <zorder>userfield</zorder>
+  <zorder>username_icon</zorder>
+  <zorder>line</zorder>
+  <zorder>passwordfield</zorder>
+  <zorder>password_icon</zorder>
+  <zorder>line_2</zorder>
  </widget>
  <resources>
   <include location="../resource.qrc"/>
