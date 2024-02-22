@@ -426,7 +426,8 @@ background-color: rgba(255, 167, 25, 0.1);
      <string notr="true">QLabel{
     color: #000000;
     font-family: 'Roboto';
-    font-size: 28px;
+    font-size: 38px;
+	font: 8pt &quot;Ravie&quot;;
     font-weight: bold;
 }</string>
     </property>
@@ -440,8 +441,8 @@ background-color: rgba(255, 167, 25, 0.1);
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>200</y>
+      <x>630</x>
+      <y>320</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -514,8 +515,8 @@ QPushButton:hover{text-decoration: underline;}</string>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>230</y>
+      <x>790</x>
+      <y>330</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -539,8 +540,8 @@ QPushButton:hover{text-decoration: underline;}</string>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>690</x>
-      <y>270</y>
+      <x>540</x>
+      <y>500</y>
       <width>81</width>
       <height>21</height>
      </rect>
@@ -564,8 +565,8 @@ QPushButton:hover{text-decoration: underline;}</string>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>690</x>
-      <y>300</y>
+      <x>540</x>
+      <y>530</y>
       <width>81</width>
       <height>21</height>
      </rect>
@@ -631,8 +632,8 @@ font-weight: 500;
    <widget class="QLabel" name="boxlabel_username">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>270</y>
+      <x>630</x>
+      <y>500</y>
       <width>121</width>
       <height>20</height>
      </rect>
@@ -651,33 +652,11 @@ font-weight: 500;
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="image">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>170</y>
-      <width>210</width>
-      <height>200</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border:1px solid black;</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap resource="../resource.qrc">:/icon/icons/placeholder.jpg</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="password">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>300</y>
+      <x>630</x>
+      <y>530</y>
       <width>121</width>
       <height>20</height>
      </rect>
@@ -741,7 +720,6 @@ font-weight: 500;
    <zorder>boxlabel_name</zorder>
    <zorder>boxlabel_role</zorder>
    <zorder>boxlabel_username</zorder>
-   <zorder>image</zorder>
    <zorder>password</zorder>
    <zorder>label_5</zorder>
    <zorder>settingIcon</zorder>

@@ -9,6 +9,7 @@ import sqlite3
 from sqlite3 import Error
 import warnings
 
+from datetime import *
 
 # Suppress DeprecationWarnings globally
 warnings.simplefilter("ignore", category=DeprecationWarning)
@@ -110,9 +111,9 @@ class LoginScreen(QDialog):
 
      
 ######################## ADMIN SCREENS ################################# 
-class AdminMenuScreen(QDialog):
+class AdminCashierScreen(QDialog):
     def __init__(self, user):
-        super(AdminMenuScreen, self).__init__()
+        super(AdminCashierScreen, self).__init__()
         self.user = user
         loadUi("ui/admin_cashierscreen.ui",self)
         ######################################################
@@ -129,6 +130,239 @@ class AdminMenuScreen(QDialog):
         self.settingsbtn.clicked.connect(self.gotosettings) 
         self.reportbtn.clicked.connect(self.gotosales) 
         self.p_managementbtn.clicked.connect(self.gotopmanagement)
+    
+        self.tableWidget.setColumnWidth(0, 300) # Table index 0, first column with 50 width pixel
+        self.tableWidget.setColumnWidth(1, 100) # Table index 1, second column with 200 width pixel  
+        
+        self.tableWidget2.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
+        self.tableWidget2.setColumnWidth(1, 140) 
+        self.tableWidget2.setColumnWidth(2, 100) 
+    
+        self.lugawbtn.clicked.connect(self.displayLugawProductList)
+        self.mamibtn.clicked.connect(self.displayMamiProductList)
+        self.maindishbtn.clicked.connect(self.displayMainDishProductList)
+        self.dessertsbtn.clicked.connect(self.displayDessertsProductList)
+        self.beveragesbtn.clicked.connect(self.displayBeveragesProductList)
+        self.extrasbtn.clicked.connect(self.displayExtrasProductList)
+    
+        # A function whenever a row is selected on the menu is transffered into the sale invoice
+        self.tableWidget.itemSelectionChanged.disconnect()
+        self.tableWidget2.itemChanged.disconnect()
+
+        # Connect signals
+        self.tableWidget.itemSelectionChanged.connect(self.addSelectedProductToInvoice)
+        self.tableWidget2.itemChanged.connect(self.updateAmount)
+        
+    def addSelectedProductToInvoice(self):
+        print("Adding selected product to invoice...")  # Add this line
+        # Retrieve the selected row from TableWidget
+        selected_indexes = self.tableWidget.selectedIndexes()
+        if not selected_indexes:
+            return
+ 
+
+        # Extract product name from the selected row
+        row = selected_indexes[0].row()
+        product_name = str(self.tableWidget.item(row, 0).text())  # ProductName
+
+        # Fetch product information based on product name
+        query = "SELECT id, price FROM Product WHERE name = ?"
+        cur.execute(query, (product_name,))
+        product_info = cur.fetchone()
+
+        if product_info:
+            product_id = product_info[0]
+            price = product_info[1]
+
+            # Check if the product already exists in TableWidget2
+            existing_row = self.findExistingProductRow(product_id)
+            if existing_row is not None:
+                # If the product exists, inform the user or take appropriate action
+                QMessageBox.warning(self, "Duplicate Product", "This product is already in the invoice.")
+            else:
+                # If the product does not exist, add a new row
+                row_position = self.tableWidget2.rowCount()
+                self.tableWidget2.insertRow(row_position)
+                self.tableWidget2.setItem(row_position, 0, QTableWidgetItem(str(1)))  # Default quantity to 1
+                self.tableWidget2.setItem(row_position, 1, QTableWidgetItem(product_name))  # ProductName
+                self.tableWidget2.setItem(row_position, 2, QTableWidgetItem(str(price)))  # Amount (ProductPrice)
+                self.tableWidget2.setItem(row_position, 3, QTableWidgetItem(product_id))  # ProductID
+            
+    def findExistingProductRow(self, product_id):
+        # Search for the product ID in TableWidget2
+        for row in range(self.tableWidget2.rowCount()):
+            item = self.tableWidget2.item(row, 3)  # ProductID column
+            if item is not None:
+                print("Comparing:", item.text(), "with:", str(product_id))
+                if item.text() == str(product_id):
+                    print("Found duplicate at row:", row)
+                    return row
+        return None
+
+
+    
+    
+    def updateAmount(self, item):
+        # Calculate the amount based on the quantity entered
+        if item.column() == 0:  # Quantity column
+            row = item.row()
+            quantity_item = self.tableWidget2.item(row, 0)
+            amount_item = self.tableWidget2.item(row, 2)
+
+            if quantity_item and amount_item:
+                quantity = int(quantity_item.text())
+                price = float(amount_item.text())
+                amount = quantity * price
+                amount_item.setText("{:.2f}".format(amount))  # Update the amount
+
+    def displayLugawProductList(self):  #To load the data from database to the pyqt table
+        self.clearTableWidgetSelection()
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 1 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)  
+    
+    def displayMamiProductList(self):  #To load the data from database to the pyqt table
+        self.clearTableWidgetSelection()
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 2 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+    
+    
+    def displayMainDishProductList(self):  #To load the data from database to the pyqt table
+        self.clearTableWidgetSelection()
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 3 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+
+    def displayDessertsProductList(self):  #To load the data from database to the pyqt table
+        self.clearTableWidgetSelection()
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 4 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)
+
+
+    def displayBeveragesProductList(self):  #To load the data from database to the pyqt table
+        self.clearTableWidgetSelection()
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 5 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)        
+
+    def displayExtrasProductList(self):  #To load the data from database to the pyqt table
+        self.clearTableWidgetSelection()
+        
+        query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 6 AND status = 'Available'"
+        cur.execute(query)
+        rows = cur.fetchall()
+        row_count = len(rows)
+
+        # Check if there are any rows
+        if row_count == 0:
+            return
+
+        column_count = len(rows[0])
+
+        # Resize the table widget to fit the data
+        self.tableWidget.setRowCount(row_count)
+        self.tableWidget.setColumnCount(column_count)
+
+        # Set the data into the table widget
+        for row in range(row_count):
+            for col in range(column_count):
+                item = QTableWidgetItem(str(rows[row][col]))
+                self.tableWidget.setItem(row, col, item)        
+    
+    def clearTableWidgetSelection(self):
+        self.tableWidget.clearSelection()
     
     def gotologin(self):
         widget.removeWidget(self)
@@ -171,7 +405,6 @@ class AdminMenuScreen(QDialog):
         if event.key() == Qt.Key_Escape:
             event.ignore()                  
 
-import sqlite3
 
 class AddNewUserScreen(QDialog):
     def __init__(self, user):
@@ -218,6 +451,7 @@ class AddNewUserScreen(QDialog):
                 self.usernamefield.clear()
                 self.passwordfield.clear()
             except sqlite3.Error as e:
+                self.error.setText("Check your input and try again, it may contain spaces.")
                 print("Error:", e)
             finally:
                 conn.close()
@@ -370,7 +604,7 @@ class AdminProfScreen(QDialog):
     def gotocashierscreen(self):  # To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminMenuScreen(self.user)
+        menu = AdminCashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
@@ -436,6 +670,12 @@ class HomeScreen(QDialog):
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
         
+        self.dashboardimg.setPixmap(QPixmap('icons/layout.png'))
+        self.dashboardimg_2.setPixmap(QPixmap('icons/coca-leaves.png'))
+        self.topimg.setPixmap(QPixmap('icons/badge.png'))
+        self.pesoimg.setPixmap(QPixmap('icons/peso.png'))
+        self.dailyimg.setPixmap(QPixmap('icons/24-hours.png'))
+        
         
         #Redirect Functions
         self.menubtn.clicked.connect(self.gotocashierscreen)
@@ -444,8 +684,15 @@ class HomeScreen(QDialog):
         self.reportbtn.clicked.connect(self.gotosales)
         self.p_managementbtn.clicked.connect(self.gotopmanagement) 
 
-        
+        # A Function to display the top 5 selling products based on sales
         self.displayTopSellingProduct()
+        
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_time_label)
+        self.timer.start(1000)  # Update every 1 second
+
+        # Initial update of the time label function
+        self.update_time_label()
         
         try:
             query = f"SELECT printf('%.2f', SUM(Sales.totalPrice)) AS total_sales FROM Sales WHERE DATE(Sales.date)"
@@ -476,6 +723,7 @@ class HomeScreen(QDialog):
             print(f"Error: {err}")
     
     
+
     def displayTopSellingProduct(self):  #To load the data from database to the pyqt table
         query = "SELECT productName, totalQuantitySold \
                 FROM ( SELECT P.name AS productName, SUM(T.quantity) AS totalQuantitySold \
@@ -504,11 +752,17 @@ class HomeScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
         
-    
+    def update_time_label(self):
+        current_datetime = QDateTime.currentDateTime()
+        current_time_string = current_datetime.toString("MM-dd-yyyy HH:mm:ss")
+        self.time.setText(current_time_string)
+           
+        
+
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminMenuScreen(self.user)
+        menu = AdminCashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)     
     
@@ -872,7 +1126,7 @@ class PManagementScreen(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminMenuScreen(self.user)
+        menu = AdminCashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
 
@@ -937,38 +1191,6 @@ class ReportScreen1(QDialog):
         self.settingsbtn.clicked.connect(self.gotosettings)
         self.DSRbtn.clicked.connect(self.gotodailysale)
         
-        
-        self.voidbtn.clicked.connect(self.deleteSales)
-
-
-    def deleteSales(self):
-        try:
-            conn = sqlite3.connect('projectse_db.db')
-            cur = conn.cursor()
-
-            # Get the selected row index
-            row_index = self.tableWidget.currentRow()
-            # Check if there is a selected row
-            if row_index < 0:
-                return
-            selected_row_id = int(self.tableWidget.item(row_index, 0).text())
-
-            delete_query1 = "DELETE FROM \"Transaction\" WHERE salesID = ?"
-            cur.execute(delete_query1, (selected_row_id,))
-            conn.commit()
-
-            delete_query2 = "DELETE FROM Sales WHERE id = ?"
-            cur.execute(delete_query2, (selected_row_id,))
-            conn.commit()
-
-            self.tableWidget.removeRow(row_index)
-
-        except sqlite3.Error as err:
-            print(f"Error: {err}")
-
-        finally:
-            if 'conn' in locals():
-                conn.close()
 
 
     def displaySales(self):  # To load the data from database to the pyqt table
@@ -1037,7 +1259,7 @@ class ReportScreen1(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminMenuScreen(self.user)
+        menu = AdminCashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
 
@@ -1217,7 +1439,7 @@ class ReportScreen2(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminMenuScreen(self.user)
+        menu = AdminCashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
  
@@ -1306,7 +1528,7 @@ class SettingScreen(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminMenuScreen(self.user)
+        menu = AdminCashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1) 
         
@@ -1462,7 +1684,7 @@ class UserScreen(QDialog):
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
 
-        menu = AdminMenuScreen(self.user)
+        menu = AdminCashierScreen(self.user)
         widget.addWidget(menu)
         widget.setCurrentIndex(widget.currentIndex()+1)
 

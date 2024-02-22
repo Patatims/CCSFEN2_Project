@@ -284,6 +284,9 @@ border-radius: 5px;  </string>
       <height>431</height>
      </rect>
     </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::SelectedClicked</set>
+    </property>
     <property name="alternatingRowColors">
      <bool>true</bool>
     </property>
@@ -734,7 +737,7 @@ background-color: rgba(255, 167, 25, 0.1);
     <property name="styleSheet">
      <string notr="true">QPushButton{
 	color: #FFFFFF;
-    background-color: #FB9722;
+    background-color: #F84A4A;
     border: 1px solid #888888;
     border-radius: 20px;
 	font-family: 'Inter';
@@ -765,7 +768,7 @@ QPushButton:pressed {
     <property name="styleSheet">
      <string notr="true">QPushButton{
 	color: #FFFFFF;
-    background-color: #FB9722;
+    background-color: #009B19;
     border: 1px solid #888888;
     border-radius: 20px;
 	font-family: 'Inter';

@@ -95,7 +95,7 @@ border-radius: 10px;  </string>
      <string notr="true">QLabel#title{
 	color: #FB9722;
     font-family: Sacramento;
-    font-size: 52px;
+    font-size: 58px;
     font-weight: 400;
     padding-bottom: 5px;
     text-align: center;
@@ -665,37 +665,6 @@ background-color: rgba(255, 167, 25, 0.1);
      </property>
     </column>
    </widget>
-   <widget class="QPushButton" name="voidbtn">
-    <property name="geometry">
-     <rect>
-      <x>790</x>
-      <y>710</y>
-      <width>151</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton{
-	color: #FFFFFF;
-    background-color: #FB9722;
-    border: 1px solid #888888;
-    border-radius: 20px;
-	font-family: 'Inter';
-    font-size: 17px;
-    font-weight: 400;
-}
-QPushButton:hover {
-	background-color: rgb(255, 167, 25);
-}
-
-QPushButton:pressed {
- 	background-color: #FB9722;
-}</string>
-    </property>
-    <property name="text">
-     <string>Void</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="viewbtn">
     <property name="geometry">
      <rect>
@@ -747,10 +716,39 @@ QPushButton:pressed {
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="title_3">
+    <property name="geometry">
+     <rect>
+      <x>1</x>
+      <y>11</y>
+      <width>1201</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+color: rgba(0, 0, 0, 100);
+    font-family: Sacramento;
+    font-size: 58px;
+    font-weight: 400;
+    padding-bottom: 5px;
+    text-align: center;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Oriental Dua Restaurant</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
    <zorder>whitebg</zorder>
-   <zorder>title</zorder>
    <zorder>logoutIcon</zorder>
    <zorder>logoutbtn</zorder>
    <zorder>settingsbtn</zorder>
@@ -765,11 +763,12 @@ QPushButton:pressed {
    <zorder>DSRbtn</zorder>
    <zorder>listofsale</zorder>
    <zorder>tableWidget</zorder>
-   <zorder>voidbtn</zorder>
    <zorder>viewbtn</zorder>
    <zorder>label_2</zorder>
    <zorder>reportIcon</zorder>
    <zorder>reportbtn</zorder>
+   <zorder>title_3</zorder>
+   <zorder>title</zorder>
   </widget>
  </widget>
  <resources>

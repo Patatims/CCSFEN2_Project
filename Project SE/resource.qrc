@@ -1,5 +1,12 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/24-hours.png</file>
+    <file>icons/badge.png</file>
+    <file>icons/coca-leaves.png</file>
+    <file>icons/leaves.png</file>
+    <file>icons/tropical-leaves.png</file>
+    <file>icons/layout.png</file>
+    <file>icons/peso.png</file>
     <file>icons/password.png</file>
     <file>icons/username.png</file>
     <file>icons/home2.png</file>

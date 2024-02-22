@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>798</height>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>801</height>
+     <height>800</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -58,8 +58,8 @@ color: rgba(0, 0,0, 215);</string>
      <rect>
       <x>220</x>
       <y>470</y>
-      <width>431</width>
-      <height>21</height>
+      <width>501</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -113,11 +113,11 @@ QPushButton:pressed {
     <property name="styleSheet">
      <string notr="true">QPushButton{
 	color: #FFFFFF;
-    background-color: #FB9722;
+    background-color: #009B19;
     border: 1px solid #888888;
     border-radius: 20px;
-	font-family: 'Inter';
-    font-size: 19px;
+	font-family: 'Roboto';
+    font-size: 21px;
     font-weight: 500;
 }
 QPushButton:hover {
@@ -359,8 +359,6 @@ background-color: rgb(255, 138, 0);
    </widget>
   </widget>
  </widget>
- <resources>
-  <include location="../../../Downloads/So_CTADVDBL_Project/So_CTADVDBL_Project/Wallpaper.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
