@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/newfood.png</file>
     <file>icons/beverages.png</file>
     <file>icons/desserts.png</file>
     <file>icons/extra.png</file>

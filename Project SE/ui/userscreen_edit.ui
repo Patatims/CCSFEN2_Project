@@ -817,8 +817,8 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>690</y>
-      <width>161</width>
+      <y>639</y>
+      <width>151</width>
       <height>41</height>
      </rect>
     </property>
@@ -1000,6 +1000,60 @@ border-radius: 5px;  </string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>739</y>
+      <width>681</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+   
+	color: rgba(0, 0, 0, 0.6);
+    font-family: &quot;Inter&quot;;
+    font-size: 15px;
+    font-weight: 350;
+
+}</string>
+    </property>
+    <property name="text">
+     <string>You are currently in edit mode. Navigation to other modules is disabled unless you click 'Back'.</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignJustify|Qt::AlignTop</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>416</x>
+      <y>737</y>
+      <width>51</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+	color: rgba(0, 0, 0, 0.65);
+    font-family: &quot;Roboto&quot;;
+    font-size: 17px;
+    font-weight: 500;
+
+}</string>
+    </property>
+    <property name="text">
+     <string>Note:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
    <zorder>whitebg_2</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
@@ -1032,6 +1086,8 @@ border-radius: 5px;  </string>
    <zorder>title</zorder>
    <zorder>userlistlabelshadow</zorder>
    <zorder>userlistlabel</zorder>
+   <zorder>label_9</zorder>
+   <zorder>label_10</zorder>
   </widget>
  </widget>
  <resources>

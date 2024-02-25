@@ -534,7 +534,7 @@ background-color: rgba(255, 167, 25, 0.1);
      <rect>
       <x>159</x>
       <y>200</y>
-      <width>221</width>
+      <width>241</width>
       <height>51</height>
      </rect>
     </property>
@@ -550,7 +550,7 @@ background-color: rgba(255, 167, 25, 0.1);
      <string>List of Product:</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QTableWidget" name="tableWidget">
@@ -592,10 +592,16 @@ QTableWidget#tableWidget QHeaderView::section {
      <number>1</number>
     </property>
     <property name="editTriggers">
-     <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::EditKeyPressed</set>
+     <set>QAbstractItemView::NoEditTriggers</set>
     </property>
     <property name="alternatingRowColors">
      <bool>true</bool>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::ExtendedSelection</enum>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
     </property>
     <property name="showGrid">
      <bool>true</bool>
@@ -682,7 +688,7 @@ QPushButton:pressed {
      <rect>
       <x>159</x>
       <y>90</y>
-      <width>271</width>
+      <width>291</width>
       <height>41</height>
      </rect>
     </property>
@@ -698,7 +704,7 @@ QPushButton:pressed {
      <string>Filter by Category</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QPushButton" name="addbtn">
@@ -1138,6 +1144,11 @@ color: rgb(255, 0, 0);</string>
     <property name="frame">
      <bool>true</bool>
     </property>
+    <item>
+     <property name="text">
+      <string/>
+     </property>
+    </item>
     <item>
      <property name="text">
       <string>Available</string>

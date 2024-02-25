@@ -31,8 +31,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>30</y>
+      <x>50</x>
+      <y>20</y>
       <width>521</width>
       <height>81</height>
      </rect>
@@ -57,14 +57,16 @@ font-weight:500;
    <widget class="QLabel" name="error">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>470</y>
-      <width>431</width>
-      <height>21</height>
+      <x>432</x>
+      <y>440</y>
+      <width>421</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+     <string notr="true">font-family:'Roboto';
+font-size:19px;
+font-weight:400;
 color: rgb(255, 0, 0);</string>
     </property>
     <property name="text">
@@ -74,8 +76,8 @@ color: rgb(255, 0, 0);</string>
    <widget class="QPushButton" name="backbtn">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>540</y>
+      <x>250</x>
+      <y>539</y>
       <width>181</width>
       <height>51</height>
      </rect>
@@ -83,19 +85,20 @@ color: rgb(255, 0, 0);</string>
     <property name="styleSheet">
      <string notr="true">QPushButton{
 	color: #FFFFFF;
-    background-color: #FB9722;
+    background-color: #F84A4A;
     border: 1px solid #888888;
-    border-radius: 20px;
+    border-radius: 15px;
 	font-family: 'Inter';
     font-size: 22px;
     font-weight: 500;
 }
 QPushButton:hover {
-	background-color: rgb(255, 167, 25);
+	
+	background-color: rgb(255, 85, 73);
 }
 
 QPushButton:pressed {
- 	background-color: #FB9722;
+ 	background-color: #F84A4A;
 }</string>
     </property>
     <property name="text">
@@ -114,42 +117,42 @@ QPushButton:pressed {
     <property name="styleSheet">
      <string notr="true">QPushButton{
 	color: #FFFFFF;
-    background-color: #FB9722;
+    background-color: #009B19;
     border: 1px solid #888888;
-    border-radius: 20px;
+    border-radius: 15px;
 	font-family: 'Inter';
-    font-size: 19px;
+    font-size: 22px;
     font-weight: 500;
 }
 QPushButton:hover {
-	background-color: rgb(255, 167, 25);
+	background-color: rgb(0, 175, 26);
 }
 
 QPushButton:pressed {
- 	background-color: #FB9722;
+  background-color: #009B19;
 }</string>
     </property>
     <property name="text">
-     <string>Insert to database</string>
+     <string>Add Product</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="pricefield">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>380</y>
+      <x>427</x>
+      <y>282</y>
       <width>321</width>
       <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QLineEdit{
-	padding-left: 25px;
+	padding-left: 20px;
     border-radius: 10px;
     border: 1px solid rgb(234, 112, 0);  
     background-color: rgba(255, 255, 255, 240);
     font-family: 'Roboto';
-	font-size: 17px;
+	font-size: 22px;
 	font-weight: 400;
 }
 
@@ -159,9 +162,9 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>250</y>
-      <width>141</width>
+      <x>430</x>
+      <y>155</y>
+      <width>201</width>
       <height>21</height>
      </rect>
     </property>
@@ -169,7 +172,7 @@ QPushButton:pressed {
      <string notr="true">QLabel{
     color: #000000;
     font-family: 'Inter';
-    font-size: 18px;
+     font-size: 24px;
     font-weight: 500;
 }</string>
     </property>
@@ -180,9 +183,9 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>350</y>
-      <width>71</width>
+      <x>430</x>
+      <y>255</y>
+      <width>101</width>
       <height>21</height>
      </rect>
     </property>
@@ -190,7 +193,7 @@ QPushButton:pressed {
      <string notr="true">QLabel{
     color: #000000;
     font-family: 'Inter';
-    font-size: 18px;
+    font-size: 24px;
     font-weight: 500;
 }</string>
     </property>
@@ -198,149 +201,12 @@ QPushButton:pressed {
      <string>Price:</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>150</y>
-      <width>701</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-radius: 10px;
-border: 1px solid rgb(234, 112, 0);  
-background-color: rgba(255, 255, 255, 240);
-font-family: 'Roboto';
-font-size: 17px;
-font-weight: 400;
-
-</string>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QRadioButton" name="lugawbtn">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>15</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-family:&quot;Roboto&quot;;
-font-size:19px;
-font-weight: 400;
-border:none;</string>
-     </property>
-     <property name="text">
-      <string>Lugaw</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="mamibtn">
-     <property name="geometry">
-      <rect>
-       <x>130</x>
-       <y>15</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-family:&quot;Roboto&quot;;
-font-size:19px;
-font-weight: 400;
-border:none;</string>
-     </property>
-     <property name="text">
-      <string>Mami</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="maindishbtn">
-     <property name="geometry">
-      <rect>
-       <x>225</x>
-       <y>15</y>
-       <width>111</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-family:&quot;Roboto&quot;;
-font-size:19px;
-font-weight: 400;
-border:none;</string>
-     </property>
-     <property name="text">
-      <string>Main Dish</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="dessertsbtn">
-     <property name="geometry">
-      <rect>
-       <x>350</x>
-       <y>15</y>
-       <width>111</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-family:&quot;Roboto&quot;;
-font-size:19px;
-font-weight: 400;
-border:none;</string>
-     </property>
-     <property name="text">
-      <string>Desserts</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="beveragesbtn">
-     <property name="geometry">
-      <rect>
-       <x>470</x>
-       <y>15</y>
-       <width>111</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-family:&quot;Roboto&quot;;
-font-size:19px;
-font-weight: 400;
-border:none;</string>
-     </property>
-     <property name="text">
-      <string>Beverages</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="extrasbtn">
-     <property name="geometry">
-      <rect>
-       <x>600</x>
-       <y>15</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-family:&quot;Roboto&quot;;
-font-size:19px;
-font-weight: 400;
-border:none;</string>
-     </property>
-     <property name="text">
-      <string>Extras</string>
-     </property>
-    </widget>
-   </widget>
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>110</y>
-      <width>141</width>
+      <x>430</x>
+      <y>361</y>
+      <width>161</width>
       <height>31</height>
      </rect>
     </property>
@@ -359,20 +225,20 @@ border:none;</string>
    <widget class="QLineEdit" name="pnamefield">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>280</y>
+      <x>427</x>
+      <y>182</y>
       <width>321</width>
-      <height>46</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QLineEdit{
-	padding-left: 25px;
+	padding-left: 20px;
     border-radius: 10px;
     border: 1px solid rgb(234, 112, 0);  
     background-color: rgba(255, 255, 255, 240);
     font-family: 'Roboto';
-	font-size: 17px;
+	font-size: 22px;
 	font-weight: 400;
 }
 </string>
@@ -407,8 +273,190 @@ background-color: rgb(255, 138, 0);
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
+   <widget class="QComboBox" name="categoryComboBox">
+    <property name="geometry">
+     <rect>
+      <x>427</x>
+      <y>392</y>
+      <width>321</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+	padding-left: 10px;
+    border-radius: 10px;
+    border: 1px solid rgb(234, 112, 0);  
+    background-color: rgba(255, 255, 255, 240);
+    font-family: 'Roboto';
+	font-size: 18px;
+	font-weight: 400;
+
+</string>
+    </property>
+    <item>
+     <property name="text">
+      <string/>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Lugaw</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Mami</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Main Dish</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Desserts</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Beverages</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Extras</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>52</x>
+      <y>22</y>
+      <width>521</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgba(0, 0, 0, 0.5);
+font-family:&quot;Inter&quot;;
+font-size:52px;
+font-weight:500;
+</string>
+    </property>
+    <property name="text">
+     <string>Add a new Product:</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>428</x>
+      <y>184</y>
+      <width>321</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 100);
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>428</x>
+      <y>284</y>
+      <width>321</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 100);
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>427</x>
+      <y>394</y>
+      <width>321</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 100);
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="newproductIMG">
+    <property name="geometry">
+     <rect>
+      <x>1020</x>
+      <y>10</y>
+      <width>161</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color: #000000;
+    font-family: 'Inter';
+    font-size: 24px;
+    font-weight: 500;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../resource.qrc">:/icon/icons/newfood.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <zorder>error</zorder>
+   <zorder>backbtn</zorder>
+   <zorder>insertbtn</zorder>
+   <zorder>label_3</zorder>
+   <zorder>label_4</zorder>
+   <zorder>label_7</zorder>
+   <zorder>navline</zorder>
+   <zorder>label_2</zorder>
+   <zorder>label</zorder>
+   <zorder>label_5</zorder>
+   <zorder>pnamefield</zorder>
+   <zorder>label_6</zorder>
+   <zorder>label_8</zorder>
+   <zorder>categoryComboBox</zorder>
+   <zorder>pricefield</zorder>
+   <zorder>newproductIMG</zorder>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

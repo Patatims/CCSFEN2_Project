@@ -9,7 +9,7 @@ import sqlite3
 from sqlite3 import Error
 import warnings
 
-from datetime import date, time, timezone
+from datetime import date
 
 # Suppress DeprecationWarnings globally
 warnings.simplefilter("ignore", category=DeprecationWarning)
@@ -528,27 +528,18 @@ class AddNewProductScreen(QDialog):
         super(AddNewProductScreen, self).__init__()
         self.user = user
         loadUi("ui/add_new_product.ui", self)
+        self.newproductIMG.setPixmap(QPixmap('icons/newfood.png'))
+        
         self.insertbtn.clicked.connect(self.addProduct)
         self.backbtn.clicked.connect(self.backfunction)
 
-        # create a button group for the radio buttons
-        self.roleButtonGroup = QButtonGroup()
-        self.roleButtonGroup.addButton(self.lugawbtn)
-        self.roleButtonGroup.addButton(self.mamibtn)
-        self.roleButtonGroup.addButton(self.maindishbtn)
-        self.roleButtonGroup.addButton(self.dessertsbtn)
-        self.roleButtonGroup.addButton(self.beveragesbtn)
-        self.roleButtonGroup.addButton(self.extrasbtn)
-
-        # connect the button group's buttonClicked signal to a slot
-        self.roleButtonGroup.buttonClicked.connect(self.handleCategorySelection)
-
-    def handleCategorySelection(self, radioButton):
-        # get the selected radio button's text
-        selected_category = radioButton.text()
-        # do something with the selected role, such as storing it in a variable
-        print("Selected Category:", selected_category)
-
+    def isInteger(self, value):
+        try:
+            int(value)
+            return True
+        except ValueError:
+            return False
+        
     def addProduct(self):
         try:
             productname = self.pnamefield.text()
@@ -556,21 +547,14 @@ class AddNewProductScreen(QDialog):
 
             if len(productname) == 0 or len(price) == 0:
                 self.error.setText("Please fill in all necessary fields")
-            elif not self.lugawbtn.isChecked() and not \
-                    self.mamibtn.isChecked() and not \
-                    self.maindishbtn.isChecked() and not \
-                    self.dessertsbtn.isChecked() and not \
-                    self.beveragesbtn.isChecked() and not \
-                    self.extrasbtn.isChecked():
+            elif not self.isInteger(price):
+                self.error.setText("Price must be a decimal number.")
+            elif self.categoryComboBox.currentIndex() == 0:
                 self.error.setText("Please select a category for the product.")
 
             else:
-                category = "1" if self.lugawbtn.isChecked() else \
-                        "2" if self.mamibtn.isChecked() else \
-                        "3" if self.maindishbtn.isChecked() else \
-                        "4" if self.dessertsbtn.isChecked() else \
-                        "5" if self.beveragesbtn.isChecked() else \
-                        "6" if self.extrasbtn.isChecked() else None
+                # Get the index of the selected category and add 1 to match the category IDs
+                category = str(self.categoryComboBox.currentIndex() + 1)
 
                 product_data = [productname, price, category]
 
@@ -586,6 +570,9 @@ class AddNewProductScreen(QDialog):
 
                 self.pnamefield.clear()
                 self.pricefield.clear()
+                self.categoryComboBox.setCurrentIndex(0)
+                self.backfunction()
+                
 
         except sqlite3.Error as e:
             print("Error:", e)
@@ -630,6 +617,10 @@ class AdminProfScreen(QDialog):
         self.settingsbtn.clicked.connect(self.gotosettings)
         self.usersbtn.clicked.connect(self.gotouserscreen)
         self.reportbtn.clicked.connect(self.gotosales)
+        self.newpasswordbtn.clicked.connect(self.gotonewpassword)
+
+
+        self.editimg.setPixmap(QPixmap('icons/editp.png')) 
 
         try:
             conn = sqlite3.connect('projectse_db.db')
@@ -696,6 +687,13 @@ class AdminProfScreen(QDialog):
         product = PManagementScreen(self.user)
         widget.addWidget(product)
         widget.setCurrentIndex(widget.currentIndex() + 1)
+        
+    def gotonewpassword(self): 
+        widget.removeWidget(self)
+
+        nwpass = AdminNewPasswordScreen(self.user)
+        widget.addWidget(nwpass)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def gotouserscreen(self):  # To user screen
         widget.removeWidget(self)
@@ -721,6 +719,169 @@ class AdminProfScreen(QDialog):
     def keyPressEvent(self, event):  # To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
         if event.key() == Qt.Key_Escape:
             event.ignore()
+
+class AdminNewPasswordScreen(QDialog):
+    def __init__(self, user):
+        super(AdminNewPasswordScreen, self).__init__()
+        self.user = user
+        loadUi("ui/newpasswordscreen.ui", self)
+        ######################################################
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    # Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        self.profileimg.setPixmap(QPixmap('icons/cresume.png'))  
+        #######################################################
+        self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
+        self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  # Pixmap for the second sidebar in settings screen.
+        self.usersIcon.setPixmap(QPixmap('icons/users.png'))
+        #######################################################
+        # Redirect Functions
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.homebtn.clicked.connect(self.gotohome)
+        self.logoutbtn.clicked.connect(self.gotologin)
+        self.p_managementbtn.clicked.connect(self.gotopmanagement)
+        self.settingsbtn.clicked.connect(self.gotosettings)
+        self.usersbtn.clicked.connect(self.gotouserscreen)
+        self.reportbtn.clicked.connect(self.gotosales)
+        
+        self.savebtn.clicked.connect(self.update_password)
+        self.cancelbtn.clicked.connect(self.goback)
+
+        
+        self.new_passwordfield.setMaxLength(25)
+        
+ #------------------------------------------------------------------------------      
+        
+    def update_password(self):
+            old_password = self.old_passwordfield.text()
+            new_password = self.new_passwordfield.text()
+            re_entered_password = self.re_passwordfield.text()
+
+            # Add validation logic here
+            if not old_password or not new_password or not re_entered_password:
+                self.error.setText("Please fill in all fields.")
+                return
+
+            if new_password == old_password:
+                self.error.setText("New password cannot be the same as the old password.")
+                return
+            
+            if new_password != re_entered_password:
+                self.error.setText("New password does not match.")
+                return
+            
+            if len(new_password) > 25:
+                self.error.setText("New password exceeds maximum length of 25 characters.")
+                return
+
+            
+            if not self.check_password_strength(new_password):
+                self.error.setText("New password must contain both uppercase and lowercase letters.")
+                return 
+            
+            
+            # Proceed with updating the password
+            try:
+                conn = sqlite3.connect('projectse_db.db')
+                cur = conn.cursor()
+
+                # Validate old password
+                query = 'SELECT password FROM employee WHERE username = ?'
+                cur.execute(query, (self.user,))
+                stored_password = cur.fetchone()
+
+                if not stored_password or stored_password[0] != old_password:
+                    self.error.setText("Incorrect old password.")
+                    return
+
+                # Update the password
+                update_query = 'UPDATE employee SET password = ? WHERE username = ?'
+                cur.execute(update_query, (new_password, self.user))
+                conn.commit()
+                self.goback()
+                
+                
+                QMessageBox.information(self, "Success", "Password updated successfully.")
+
+
+            except sqlite3.Error as e:
+                QMessageBox.warning(self, "Error", f"An error occurred: {e}")
+
+            finally:
+                if conn:
+                    conn.close()
+        
+    def check_password_strength(self, password):
+        # Check if password contains both uppercase and lowercase letters
+        has_upper = any(char.isupper() for char in password)
+        has_lower = any(char.islower() for char in password)
+        return has_upper and has_lower
+        
+#------------------------------------------------------------------------------------------------      
+    
+    def goback(self): 
+        widget.removeWidget(self)
+
+        back= AdminProfScreen(self.user)
+        widget.addWidget(back)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotocashierscreen(self):  # To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotohome(self):  # To home profile screen
+        widget.removeWidget(self)
+
+        home = HomeScreen(self.user)
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotologin(self):
+        widget.removeWidget(self)
+
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotopmanagement(self):
+        widget.removeWidget(self)
+
+        product = PManagementScreen(self.user)
+        widget.addWidget(product)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotouserscreen(self):  # To user screen
+        widget.removeWidget(self)
+
+        userlist = UserScreen(self.user)
+        widget.addWidget(userlist)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotosettings(self):  # To user screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotosales(self):  # To user setting screen
+        widget.removeWidget(self)
+
+        sales = ReportScreen1(self.user)
+        widget.addWidget(sales)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def keyPressEvent(self, event):  # To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+
 
 
 class HomeScreen(QDialog):
@@ -891,13 +1052,9 @@ class PManagementScreen(QDialog):
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         #######################################################
-
-        
         
         self.tableWidget.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
         self.tableWidget.setColumnWidth(1, 250) # Table index 1, second column with 200 width pixel
-        
-        
 
         self.displayAllProductList()
         
@@ -920,6 +1077,15 @@ class PManagementScreen(QDialog):
         self.deletebtn.clicked.connect(self.removeProduct)
         self.updatebtn.clicked.connect(self.updateProduct)
 
+     # A fucntion to set the font size and alignment for items in the tableWidget
+    def tableFontModify(self):
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(row, column)
+                if item is not None:
+                    item.setFont(QFont("Roboto", 11))  # Set font size
+                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+                    
 
     def displayAllProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product ORDER BY categoryID ASC"
@@ -974,13 +1140,7 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)  
 
-        # Set font size and alignment for items in the tableWidget
-        for row in range(self.tableWidget.rowCount()):
-            for column in range(self.tableWidget.columnCount()):
-                item = self.tableWidget.item(row, column)
-                if item is not None:
-                    item.setFont(QFont("Roboto", 12))  # Set font size
-                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+        self.tableFontModify()
                                  
     def displayMamiProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 2"
@@ -1004,13 +1164,7 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
 
-        # Set font size and alignment for items in the tableWidget
-        for row in range(self.tableWidget.rowCount()):
-            for column in range(self.tableWidget.columnCount()):
-                item = self.tableWidget.item(row, column)
-                if item is not None:
-                    item.setFont(QFont("Roboto", 12))  # Set font size
-                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+        self.tableFontModify()
                     
     def displayMainDishProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 3"
@@ -1034,13 +1188,7 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
 
-        # Set font size and alignment for items in the tableWidget
-        for row in range(self.tableWidget.rowCount()):
-            for column in range(self.tableWidget.columnCount()):
-                item = self.tableWidget.item(row, column)
-                if item is not None:
-                    item.setFont(QFont("Roboto", 12))  # Set font size
-                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+        self.tableFontModify()
                     
     def displayDessertsProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 4"
@@ -1064,13 +1212,7 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)
 
-        # Set font size and alignment for items in the tableWidget
-        for row in range(self.tableWidget.rowCount()):
-            for column in range(self.tableWidget.columnCount()):
-                item = self.tableWidget.item(row, column)
-                if item is not None:
-                    item.setFont(QFont("Roboto", 12))  # Set font size
-                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+        self.tableFontModify()
                     
     def displayBeveragesProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 5"
@@ -1094,13 +1236,7 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)        
 
-        # Set font size and alignment for items in the tableWidget
-        for row in range(self.tableWidget.rowCount()):
-            for column in range(self.tableWidget.columnCount()):
-                item = self.tableWidget.item(row, column)
-                if item is not None:
-                    item.setFont(QFont("Roboto", 12))  # Set font size
-                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+        self.tableFontModify()
                     
     def displayExtrasProductList(self):  #To load the data from database to the pyqt table
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 6"
@@ -1124,13 +1260,7 @@ class PManagementScreen(QDialog):
                 item = QTableWidgetItem(str(rows[row][col]))
                 self.tableWidget.setItem(row, col, item)        
 
-        # Set font size and alignment for items in the tableWidget
-        for row in range(self.tableWidget.rowCount()):
-            for column in range(self.tableWidget.columnCount()):
-                item = self.tableWidget.item(row, column)
-                if item is not None:
-                    item.setFont(QFont("Roboto", 12))  # Set font size
-                    item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+        self.tableFontModify()
                     
     def removeProduct(self):
         
@@ -1149,7 +1279,15 @@ class PManagementScreen(QDialog):
             self.tableWidget.removeRow(row_index)  
             
         except sqlite3.Error as err:
-            print(f"Error: {err}")        
+            print(f"Error: {err}")     
+            
+               
+    def isInteger(self, value):
+        try:
+            int(value)
+            return True
+        except ValueError:
+            return False
 
 
     def updateProduct(self):
@@ -1160,15 +1298,20 @@ class PManagementScreen(QDialog):
                 row_index = self.tableWidget.currentRow()
                 if row_index < 0:
                     return
-
+                
                 selected_row_id = str(self.tableWidget.item(row_index, 0).text())
 
                 new_productname = self.pnamefield.text() or None
                 new_price = self.pricefield.text() or None
+                new_status = self.comboBox.currentText() or None  # Get the selected status from the combo box
+            
+                formatted_price = None  # Initialize formatted_price
                
-
-               
-                if all(x is None for x in [new_productname, new_price]):
+                if new_price and not self.isInteger(new_price):
+                    self.error.setText("Price must be a decimal number.")
+                    return
+            
+                if all(x is None for x in [new_productname, new_price, new_status]):
                     self.error.setText("At least one field must be filled before clicking the update.")
                 else:
                     query = "UPDATE Product SET"
@@ -1178,8 +1321,12 @@ class PManagementScreen(QDialog):
                         query += " name = ?,"
                         params.append(new_productname)
                     if new_price:
-                        query += " price = ?,"
-                        params.append(new_price)
+                       query += " price = ?,"
+                       formatted_price = "{:.2f}".format(float(new_price))
+                       params.append(formatted_price)
+                    if new_status:
+                        query += " status = ?,"
+                        params.append(new_status)
                     
 
                     query = query.rstrip(',') + " WHERE id = ?"
@@ -1188,27 +1335,25 @@ class PManagementScreen(QDialog):
                     self.error.setText("")
                     self.pnamefield.clear()
                     self.pricefield.clear()
+                    self.comboBox.setCurrentIndex(0)
                     
                     cur.execute(query, tuple(params))
                     conn.commit()
 
-                    for i, value in enumerate([new_productname, new_price]):
+                    for i, value in enumerate([new_productname,formatted_price, new_status]):
                         if value:
                             self.tableWidget.setItem(row_index, i + 1, QTableWidgetItem(value))
                             
-
-            except Exception as e:
-                if e.errno == 1062:
-                    self.error.setText ("The product name is already exist" )
-                elif e.errno == 1366:
-                    self.error.setText ("Incorrect decimal value for pricing")
-                else:
-                    print("An error occurred:", e)
-                    
+                    self.tableFontModify()
+                            
+                    QMessageBox.information(self, "Success", "Product information updated successfully.")
+            
+            except sqlite3.Error as e:
+                conn.rollback()  # Rollback the transaction in case of error
+                QMessageBox.warning(self, "Error", f"An error occurred: {e}")
             finally:
-                if conn is locals():
-                    conn.close()
-                    
+                conn.close()
+                                
                     
     def gotoaddproduct(self): 
         widget.removeWidget(self)
