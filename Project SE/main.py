@@ -134,10 +134,22 @@ class AdminCashierScreen(QDialog):
         self.tableWidget.setColumnWidth(0, 300) # Table index 0, first column with 50 width pixel
         self.tableWidget.setColumnWidth(1, 100) # Table index 1, second column with 200 width pixel  
         
-        self.tableWidget2.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
+        self.tableWidget2.setColumnCount(4)
+        self.tableWidget2.setColumnWidth(0, 30) # Table index 0, first column with 50 width pixel
         self.tableWidget2.setColumnWidth(1, 135) 
-        self.tableWidget2.setColumnWidth(2, 100) 
+        self.tableWidget2.setColumnWidth(2, 75) 
+        self.tableWidget2.setColumnWidth(3, 40)  # Width for delete button column
         
+
+        # Loop through the columns and set the item flags accordingly
+        self.tableWidget2.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.SelectedClicked)
+        for row in range(self.tableWidget2.rowCount()):
+            qty_item = self.tableWidget2.item(row, 0)
+            qty_item.setFlags(qty_item.flags() | Qt.ItemIsEditable)
+            for column in range(1, self.tableWidget2.columnCount()):
+                item = self.tableWidget2.item(row, column)
+                item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+
     
         self.lugawbtn.clicked.connect(self.displayLugawProductList)
         self.mamibtn.clicked.connect(self.displayMamiProductList)
@@ -145,19 +157,35 @@ class AdminCashierScreen(QDialog):
         self.dessertsbtn.clicked.connect(self.displayDessertsProductList)
         self.beveragesbtn.clicked.connect(self.displayBeveragesProductList)
         self.extrasbtn.clicked.connect(self.displayExtrasProductList)
-
-        # Connect signals
-        self.tableWidget.itemSelectionChanged.connect(self.addSelectedProductToInvoice)
+        
+        
+        self.tableWidget.itemDoubleClicked.connect(self.addSelectedProductToInvoice)
         self.tableWidget2.itemChanged.connect(self.updateAmount)
         
+        header = QTableWidgetItem("")
+        self.tableWidget2.setHorizontalHeaderItem(3, header)
+     
+    def addDeleteButtons(self):
+        for row in range(self.tableWidget2.rowCount()):
+            delete_button = QToolButton()
+            delete_button.setIcon(QIcon('icons/delete.png'))
+            delete_button.setIconSize(QSize(25, 20))  # Adjust the size as needed
+            delete_button.setStyleSheet("QToolButton { border: none; background-color: transparent; }")
+            delete_button.clicked.connect(lambda _, row=row: self.deleteRow(row))
+            self.tableWidget2.setCellWidget(row, 3, delete_button) 
+            
+    def deleteRow(self, row):
+        # Ensure that deleteRow method is called properly
+        print("Delete row", row)
+        self.tableWidget2.removeRow(row)    
+   
     def addSelectedProductToInvoice(self):
         print("Adding selected product to invoice...")  # Add this line
         # Retrieve the selected row from TableWidget
         selected_indexes = self.tableWidget.selectedIndexes()
         if not selected_indexes:
             return
- 
-
+        
         # Extract product name from the selected row
         row = selected_indexes[0].row()
         product_name = str(self.tableWidget.item(row, 0).text())  # ProductName
@@ -172,7 +200,7 @@ class AdminCashierScreen(QDialog):
             price = product_info[1]
 
             # Check if the product already exists in TableWidget2
-            existing_row = self.findExistingProductRow(product_id)
+            existing_row = self.findExistingProductRow(product_name)  # Use product name for checking duplicates
             if existing_row is not None:
                 # If the product exists, inform the user or take appropriate action
                 QMessageBox.warning(self, "Duplicate Product", "This product is already in the invoice.")
@@ -183,26 +211,26 @@ class AdminCashierScreen(QDialog):
                 self.tableWidget2.setItem(row_position, 0, QTableWidgetItem(str(1)))  # Default quantity to 1
                 self.tableWidget2.setItem(row_position, 1, QTableWidgetItem(product_name))  # ProductName
                 self.tableWidget2.setItem(row_position, 2, QTableWidgetItem(str(price)))  # Amount (ProductPrice)
-                self.tableWidget2.setItem(row_position, 3, QTableWidgetItem(product_id))  # ProductID
+
+                # Update the font and alignment for the newly added row
+                for column in range(self.tableWidget2.columnCount()):
+                    item = self.tableWidget2.item(row_position, column)
+                    if item is not None:
+                        item.setFont(QFont("Roboto", 10))  # Set font size
+                        item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
             
-                for row in range(self.tableWidget2.rowCount()):
-                    for column in range(self.tableWidget2.columnCount()):
-                        item = self.tableWidget2.item(row, column)
-                        if item is not None:
-                            item.setFont(QFont("Roboto", 10))  # Set font size
-                            item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+            self.addDeleteButtons() 
             
-    def findExistingProductRow(self, product_id):
-        # Search for the product ID in TableWidget2
+    def findExistingProductRow(self, product_name):
+        # Search for the product name in TableWidget2
         for row in range(self.tableWidget2.rowCount()):
-            item = self.tableWidget2.item(row, 3)  # ProductID column
+            item = self.tableWidget2.item(row, 1)  # ProductName column
             if item is not None:
-                print("Comparing:", item.text(), "with:", str(product_id))
-                if item.text() == str(product_id):
+                print("Comparing:", item.text(), "with:", product_name)
+                if item.text() == product_name:
                     print("Found duplicate at row:", row)
                     return row
         return None
-
 
     def updateAmount(self, item):
         # Calculate the amount based on the quantity entered
@@ -752,7 +780,23 @@ class AdminNewPasswordScreen(QDialog):
 
         
         self.new_passwordfield.setMaxLength(25)
+        self.editbtn.clicked.connect(self.toggle_echo_mode)
         
+        self.old_passwordfield.textChanged.connect(self.handle_editbtn_visibility)
+
+    # Initially hide the edit button
+        self.editbtn.hide()
+
+    def handle_editbtn_visibility(self, text):
+        # Show editbtn if old_passwordfield is not empty, otherwise hide it
+        if text.strip():
+            self.editbtn.show()
+            self.viewpassword.setPixmap(QPixmap('icons/view.png'))
+        else:
+            self.editbtn.hide()
+            self.viewpassword.setPixmap(QPixmap()) 
+            self.old_passwordfield.setEchoMode(QtWidgets.QLineEdit.Password)    
+
  #------------------------------------------------------------------------------      
         
     def update_password(self):
@@ -760,7 +804,8 @@ class AdminNewPasswordScreen(QDialog):
             new_password = self.new_passwordfield.text()
             re_entered_password = self.re_passwordfield.text()
 
-            # Add validation logic here
+            
+            # A validation logic statements
             if not old_password or not new_password or not re_entered_password:
                 self.error.setText("Please fill in all fields.")
                 return
@@ -813,6 +858,17 @@ class AdminNewPasswordScreen(QDialog):
             finally:
                 if conn:
                     conn.close()
+                    
+        
+    def toggle_echo_mode(self):
+        # Toggle the echo mode of the password field between Normal and Password
+        if self.old_passwordfield.echoMode() == QLineEdit.Normal:
+            self.old_passwordfield.setEchoMode(QLineEdit.Password)
+            self.viewpassword.setPixmap(QPixmap('icons/view.png'))  
+        else:
+            self.old_passwordfield.setEchoMode(QLineEdit.Normal)
+            self.viewpassword.setPixmap(QPixmap('icons/hide.png')) 
+                    
         
     def check_password_strength(self, password):
         # Check if password contains both uppercase and lowercase letters
@@ -1945,6 +2001,73 @@ class UserScreenEditMode(QDialog):
         self.dropbtn.clicked.connect(self.deleteEmployee)
         self.addbtn.clicked.connect(self.gotoadduser)
         
+
+    
+        # Connect cellDoubleClicked signal to handle_cell_double_clicked method
+        self.tableWidget.cellDoubleClicked.connect(self.handle_cell_double_clicked)
+
+    def handle_cell_double_clicked(self, row, column):
+        # Check if the double-clicked cell is in the role column (column index 2)
+        if column == 2:
+            # Get the item being double-clicked
+            item = self.tableWidget.item(row, column)
+            if item is None:  # No item at this cell
+                return
+
+            # Create a combo box with Admin and Cashier options
+            combo_box = QComboBox()
+            combo_box.addItems([ "", "Admin", "Cashier"])
+
+            # Set the combo box as the cell widget
+            self.tableWidget.setCellWidget(row, column, combo_box)
+
+            # Connect the combo box signal to handle_role_changed method
+            combo_box.currentIndexChanged.connect(lambda index, row=row, column=column: self.handle_role_changed(index, row, column))
+
+        else:
+            # Get the item being double-clicked
+            item = self.tableWidget.item(row, column)
+            if item is None:  # No item at this cell
+                return
+
+            # Display an input dialog to get the new value
+            new_value, ok = QInputDialog.getText(self, "Edit Value", "Enter new value:", text=item.text())
+            if ok:
+                # Update the database with the new value
+                row_id = self.tableWidget.item(row, 0).text()  # Assuming the ID is in the first column
+                column_name = self.tableWidget.horizontalHeaderItem(column).text()  # Column name
+                update_query = f"UPDATE employee SET {column_name} = ? WHERE id = ?"
+                try:
+                    cur.execute(update_query, (new_value, row_id))
+                    conn.commit()
+
+                except Exception as e:
+                    QMessageBox.warning(self, "Error", f"Failed to update value: {str(e)}")
+                    return
+
+                # Update the table widget with the new value
+                item.setText(new_value)
+
+    def handle_role_changed(self, index, row, column):
+        combo_box = self.tableWidget.cellWidget(row, column)
+        new_role = combo_box.currentText()
+
+        if new_role == "":
+            return  # Ignore or pass
+        
+        # Update the data in the table widget
+        item = QTableWidgetItem(new_role)
+        self.tableWidget.setItem(row, column, item)
+
+        # Update the data in the database
+        employee_id = int(self.tableWidget.item(row, 0).text())  # Assuming the ID is in the first column
+        update_query = "UPDATE employee SET role = ? WHERE id = ?"
+        try:
+            cur.execute(update_query, (new_role, employee_id))
+            conn.commit()
+        except Exception as e:
+            QMessageBox.warning(self, "Error", f"Failed to update value: {str(e)}")
+        
     def displayEmployee(self):  #To load the data from database to the pyqt table
         query = "SELECT * FROM employee"
         cur.execute(query)
@@ -2017,21 +2140,23 @@ class UserScreenEditMode(QDialog):
             event.ignore()
 
 
-
+#----------------------------------------------------------------------#
 ######################## CASHIER SCREENS ############################### 
+#----------------------------------------------------------------------#
 
 class HomeScreenForCashier(QDialog):
     def __init__(self, user):
         super(HomeScreenForCashier, self).__init__()
         self.user = user
         loadUi("ui/homescreenforcashier.ui",self)
-        
-        ######################################################
+#------------------------------------------------------------------------------  
+
         self.homeIcon.setPixmap(QPixmap('icons/home2.png'))    #Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
-        #######################################################
+        
+#------------------------------------------------------------------------------  
         
         self.dashboardimg.setPixmap(QPixmap('icons/layout.png'))
         self.dashboardimg_2.setPixmap(QPixmap('icons/coca-leaves.png'))
@@ -2039,11 +2164,14 @@ class HomeScreenForCashier(QDialog):
         self.pesoimg.setPixmap(QPixmap('icons/peso.png'))
         self.dailyimg.setPixmap(QPixmap('icons/24-hours.png'))
         
+#------------------------------------------------------------------------------  
         
         #Redirect Functions
         self.menubtn.clicked.connect(self.gotocashierscreen)
         self.logoutbtn.clicked.connect(self.gotologin)
         self.settingsbtn.clicked.connect(self.gotosettings) 
+        
+#------------------------------------------------------------------------------  
 
         # A Function to display the top 5 selling products based on sales
         self.displayTopSellingProduct()
@@ -2056,6 +2184,7 @@ class HomeScreenForCashier(QDialog):
         self.update_time_label()
         
         current_date = date.today()
+#------------------------------------------------------------------------------  
         
         try:
             query = f"SELECT printf('%.2f', SUM(Sales.totalPrice)) AS total_sales FROM Sales WHERE DATE(Sales.date) = '{current_date}'"
@@ -2127,7 +2256,7 @@ class HomeScreenForCashier(QDialog):
         current_time_string = current_datetime.toString("MM-dd-yyyy HH:mm:ss")
         self.time.setText(current_time_string)
            
-        
+ #------------------------------------------------------------------------------         
 
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)
@@ -2161,26 +2290,32 @@ class CashierScreen(QDialog):
         super(CashierScreen, self).__init__()
         self.user = user
         loadUi("ui/cashierscreen.ui",self)
-        ######################################################
+        
+#------------------------------------------------------------------------------  
+
         #Pixmap for the pngs images within the sidebar.
         self.homeIcon.setPixmap(QPixmap('icons/home.png')) 
         self.menuIcon.setPixmap(QPixmap('icons/menu2.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
-        #######################################################
+        
+#------------------------------------------------------------------------------  
+
         #Redirect Functions
         self.homebtn.clicked.connect(self.gotohome)
         self.logoutbtn.clicked.connect(self.gotologin)
         self.settingsbtn.clicked.connect(self.gotosettings)
         
+#------------------------------------------------------------------------------          
 
         self.tableWidget.setColumnWidth(0, 300) # Table index 0, first column with 50 width pixel
         self.tableWidget.setColumnWidth(1, 100) # Table index 1, second column with 200 width pixel  
-        
         self.tableWidget2.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
+        
         self.tableWidget2.setColumnWidth(1, 135) 
         self.tableWidget2.setColumnWidth(2, 100) 
-        
+
+#------------------------------------------------------------------------------          
     
         self.lugawbtn.clicked.connect(self.displayLugawProductList)
         self.mamibtn.clicked.connect(self.displayMamiProductList)
@@ -2189,9 +2324,13 @@ class CashierScreen(QDialog):
         self.beveragesbtn.clicked.connect(self.displayBeveragesProductList)
         self.extrasbtn.clicked.connect(self.displayExtrasProductList)
 
+#------------------------------------------------------------------------------  
+
         # Connect signals
         self.tableWidget.itemSelectionChanged.connect(self.addSelectedProductToInvoice)
         self.tableWidget2.itemChanged.connect(self.updateAmount)
+ 
+ #------------------------------------------------------------------------------  
         
     def addSelectedProductToInvoice(self):
         print("Adding selected product to invoice...")  # Add this line
@@ -2462,6 +2601,8 @@ class CashierScreen(QDialog):
     def clearTableWidgetSelection(self):
         self.tableWidget.clearSelection()  
 
+#------------------------------------------------------------------------------  
+
     def gotohome(self): #to home profile screen
         widget.removeWidget(self)
         
@@ -2489,20 +2630,26 @@ class CashierScreen(QDialog):
         if event.key() == Qt.Key_Escape:
             event.ignore()    
 
+
 class SettingScreenForCashier(QDialog):
     def __init__(self, user):
         super(SettingScreenForCashier, self).__init__()
         self.user = user
         loadUi("ui/settingscreenforcashier.ui",self)
-        ######################################################
+        
+#------------------------------------------------------------------------------  
+
         self.homeIcon.setPixmap(QPixmap('icons/home.png')) 
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
-        #######################################################
+        
+#------------------------------------------------------------------------------  
+
         self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
         self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  #Pixmap for the second sidebar in settings screen.
-        #######################################################
+        
+#------------------------------------------------------------------------------  
         
         #redirect button functions
         self.homebtn.clicked.connect(self.gotohome)
@@ -2550,24 +2697,34 @@ class UserProfScreen(QDialog):
         super(UserProfScreen, self).__init__()
         self.user = user
         loadUi("ui/userprofilescreen.ui",self)
-        ######################################################
+        
+#------------------------------------------------------------------------------  
+
         #Pixmap for the pngs images within the sidebar.
         self.homeIcon.setPixmap(QPixmap('icons/home.png'))    # Pixmap for the pngs images within the sidebar.
         self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
         self.profileimg.setPixmap(QPixmap('icons/cresume.png'))  
-        #######################################################
+        
+#------------------------------------------------------------------------------  
+
         #Pixmap for the second sidebar in settings screen.
         self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
         self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  
-        #######################################################
+        
+#------------------------------------------------------------------------------  
+
         #Redirect Functions
         self.homebtn.clicked.connect(self.gotohome)
         self.menubtn.clicked.connect(self.gotocashierscreen)
         self.logoutbtn.clicked.connect(self.gotologin)
         self.settingsbtn.clicked.connect(self.gotosettings)
+        self.newpasswordbtn.clicked.connect(self.gotonewpassword)
         
+        self.editimg.setPixmap(QPixmap('icons/editp.png')) 
+        
+ #------------------------------------------------------------------------------         
         try:
             conn = sqlite3.connect('projectse_db.db')
             cur = conn.cursor()
@@ -2626,6 +2783,13 @@ class UserProfScreen(QDialog):
         widget.addWidget(login)
         widget.setCurrentIndex(widget.currentIndex()+1)
 
+    def gotonewpassword(self): 
+        widget.removeWidget(self)
+
+        nwpass = NewPasswordScreen(self.user)
+        widget.addWidget(nwpass)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
     def gotosettings(self): #to user screen
         widget.removeWidget(self)
 
@@ -2638,7 +2802,172 @@ class UserProfScreen(QDialog):
         if event.key() == Qt.Key_Escape:
             event.ignore()
         
+class NewPasswordScreen(QDialog):
+    def __init__(self, user):
+        super(NewPasswordScreen, self).__init__()
+        self.user = user
+        loadUi("ui/newpasswordscreen1.ui", self)
+#------------------------------------------------------------------------------  
 
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    # Pixmap for the pngs images within the sidebar.
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings2.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        self.profileimg.setPixmap(QPixmap('icons/cresume.png'))  
+        
+#------------------------------------------------------------------------------  
+
+        self.userprofIcon.setPixmap(QPixmap('icons/user.png'))
+        self.appearanceIcon.setPixmap(QPixmap('icons/appearance.png'))  # Pixmap for the second sidebar in settings screen.
+        
+#------------------------------------------------------------------------------  
+        
+        # Redirect Functions
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.homebtn.clicked.connect(self.gotohome)
+        self.logoutbtn.clicked.connect(self.gotologin)
+        self.settingsbtn.clicked.connect(self.gotosettings)
+    
+        
+        self.savebtn.clicked.connect(self.update_password)
+        self.cancelbtn.clicked.connect(self.goback)
+
+        
+        self.new_passwordfield.setMaxLength(25)
+        self.editbtn.clicked.connect(self.toggle_echo_mode)
+        
+        self.old_passwordfield.textChanged.connect(self.handle_editbtn_visibility)
+
+    # Initially hide the edit button
+        self.editbtn.hide()
+
+    def handle_editbtn_visibility(self, text):
+        # Show editbtn if old_passwordfield is not empty, otherwise hide it
+        if text.strip():
+            self.editbtn.show()
+            self.viewpassword.setPixmap(QPixmap('icons/view.png'))
+        else:
+            self.editbtn.hide()
+            self.viewpassword.setPixmap(QPixmap()) 
+            self.old_passwordfield.setEchoMode(QtWidgets.QLineEdit.Password) 
+ #------------------------------------------------------------------------------      
+        
+    def update_password(self):
+            old_password = self.old_passwordfield.text()
+            new_password = self.new_passwordfield.text()
+            re_entered_password = self.re_passwordfield.text()
+
+            # Add validation logic here
+            if not old_password or not new_password or not re_entered_password:
+                self.error.setText("Please fill in all fields.")
+                return
+
+            if new_password == old_password:
+                self.error.setText("New password cannot be the same as the old password.")
+                return
+            
+            if new_password != re_entered_password:
+                self.error.setText("New password does not match.")
+                return
+            
+            if len(new_password) > 25:
+                self.error.setText("New password exceeds maximum length of 25 characters.")
+                return
+
+            
+            if not self.check_password_strength(new_password):
+                self.error.setText("New password must contain both uppercase and lowercase letters.")
+                return 
+            
+            
+            # Proceed with updating the password
+            try:
+                conn = sqlite3.connect('projectse_db.db')
+                cur = conn.cursor()
+
+                # Validate old password
+                query = 'SELECT password FROM employee WHERE username = ?'
+                cur.execute(query, (self.user,))
+                stored_password = cur.fetchone()
+
+                if not stored_password or stored_password[0] != old_password:
+                    self.error.setText("Incorrect old password.")
+                    return
+
+                # Update the password
+                update_query = 'UPDATE employee SET password = ? WHERE username = ?'
+                cur.execute(update_query, (new_password, self.user))
+                conn.commit()
+                self.goback()
+                
+                
+                QMessageBox.information(self, "Success", "Password updated successfully.")
+
+
+            except sqlite3.Error as e:
+                QMessageBox.warning(self, "Error", f"An error occurred: {e}")
+
+            finally:
+                if conn:
+                    conn.close()
+
+
+    def toggle_echo_mode(self):
+        # Toggle the echo mode of the password field between Normal and Password
+        if self.old_passwordfield.echoMode() == QLineEdit.Normal:
+            self.old_passwordfield.setEchoMode(QLineEdit.Password)
+            self.viewpassword.setPixmap(QPixmap('icons/view.png'))  
+        else:
+            self.old_passwordfield.setEchoMode(QLineEdit.Normal)
+            self.viewpassword.setPixmap(QPixmap('icons/hide.png')) 
+        
+    def check_password_strength(self, password):
+        # Check if password contains both uppercase and lowercase letters
+        has_upper = any(char.isupper() for char in password)
+        has_lower = any(char.islower() for char in password)
+        return has_upper and has_lower
+        
+#------------------------------------------------------------------------------------------------   
+   
+    def goback(self): 
+        widget.removeWidget(self)
+
+        back= UserProfScreen(self.user)
+        widget.addWidget(back)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotocashierscreen(self):  # To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = CashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotohome(self):  # To home profile screen
+        widget.removeWidget(self)
+
+        home = HomeScreen(self.user)
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotologin(self):
+        widget.removeWidget(self)
+
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def gotosettings(self):  # To user screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+
+    def keyPressEvent(self, event):  # To ignore 'ESC' Key, kasi nireremove niya yung current stacked page sa screen.
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
 
 
 

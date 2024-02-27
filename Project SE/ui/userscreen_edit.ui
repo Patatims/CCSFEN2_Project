@@ -138,9 +138,9 @@ border-radius: 5px;  </string>
     <property name="geometry">
      <rect>
       <x>380</x>
-      <y>110</y>
+      <y>100</y>
       <width>171</width>
-      <height>61</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -279,7 +279,7 @@ border-radius: 5px;  </string>
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>180</y>
+      <y>170</y>
       <width>661</width>
       <height>431</height>
      </rect>
@@ -310,7 +310,7 @@ QTableWidget#tableWidget QHeaderView::section {
      <number>0</number>
     </property>
     <property name="editTriggers">
-     <set>QAbstractItemView::SelectedClicked</set>
+     <set>QAbstractItemView::DoubleClicked</set>
     </property>
     <property name="alternatingRowColors">
      <bool>true</bool>
@@ -754,7 +754,7 @@ background-color: rgba(255, 167, 25, 0.1);
     <property name="geometry">
      <rect>
       <x>780</x>
-      <y>640</y>
+      <y>630</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -786,7 +786,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>950</x>
-      <y>640</y>
+      <y>630</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -817,7 +817,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>639</y>
+      <y>629</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -979,10 +979,10 @@ border-radius: 5px;  </string>
    <widget class="QLabel" name="userlistlabelshadow">
     <property name="geometry">
      <rect>
-      <x>381</x>
-      <y>111</y>
+      <x>382</x>
+      <y>102</y>
       <width>171</width>
-      <height>61</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1004,15 +1004,16 @@ border-radius: 5px;  </string>
     <property name="geometry">
      <rect>
       <x>460</x>
-      <y>739</y>
+      <y>722</y>
       <width>681</width>
       <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QLabel{
-   
-	color: rgba(0, 0, 0, 0.6);
+ 
+	
+	color: rgba(255, 0, 0, 0.6);
     font-family: &quot;Inter&quot;;
     font-size: 15px;
     font-weight: 350;
@@ -1033,14 +1034,14 @@ border-radius: 5px;  </string>
     <property name="geometry">
      <rect>
       <x>416</x>
-      <y>737</y>
+      <y>720</y>
       <width>51</width>
       <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QLabel{
-	color: rgba(0, 0, 0, 0.65);
+	color: rgba(0, 0, 0, 0.5);
     font-family: &quot;Roboto&quot;;
     font-size: 17px;
     font-weight: 500;
@@ -1054,6 +1055,23 @@ border-radius: 5px;  </string>
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="whitebg_3">
+    <property name="geometry">
+     <rect>
+      <x>441</x>
+      <y>172</y>
+      <width>661</width>
+      <height>431</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, 0.4);
+border-radius: 2px;  </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
    <zorder>whitebg_2</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
@@ -1063,7 +1081,6 @@ border-radius: 5px;  </string>
    <zorder>appearanceIcon</zorder>
    <zorder>usersIcon</zorder>
    <zorder>p_mIcon</zorder>
-   <zorder>tableWidget</zorder>
    <zorder>logoutbtn</zorder>
    <zorder>p_managementbtn</zorder>
    <zorder>homebtn</zorder>
@@ -1088,6 +1105,8 @@ border-radius: 5px;  </string>
    <zorder>userlistlabel</zorder>
    <zorder>label_9</zorder>
    <zorder>label_10</zorder>
+   <zorder>whitebg_3</zorder>
+   <zorder>tableWidget</zorder>
   </widget>
  </widget>
  <resources>
