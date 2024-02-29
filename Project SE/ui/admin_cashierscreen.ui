@@ -625,6 +625,9 @@ QTableWidget#tableWidget2 QHeaderView::section {
 }       
 </string>
     </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
+    </property>
     <attribute name="horizontalHeaderStretchLastSection">
      <bool>true</bool>
     </attribute>
@@ -677,7 +680,7 @@ QTableWidget#tableWidget2 QHeaderView::section {
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="userfield">
+   <widget class="QLineEdit" name="customerName_field">
     <property name="geometry">
      <rect>
       <x>910</x>
@@ -748,7 +751,7 @@ QTableWidget#tableWidget2 QHeaderView::section {
     <property name="title">
      <string/>
     </property>
-    <widget class="QRadioButton" name="dinebtn">
+    <widget class="QRadioButton" name="dineinbtn">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -767,7 +770,7 @@ border:none;</string>
       <string>Dine-in</string>
      </property>
     </widget>
-    <widget class="QRadioButton" name="takebtn">
+    <widget class="QRadioButton" name="takeoutbtn">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -787,7 +790,7 @@ border:none;</string>
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="addbtn">
+   <widget class="QPushButton" name="proceedbtn">
     <property name="geometry">
      <rect>
       <x>1030</x>
@@ -846,7 +849,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>900</x>
-      <y>650</y>
+      <y>648</y>
       <width>91</width>
       <height>21</height>
      </rect>
@@ -1177,7 +1180,7 @@ QTableWidget#tableWidget QHeaderView::section {
      <number>100</number>
     </attribute>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>100</number>
+     <number>450</number>
     </attribute>
     <attribute name="horizontalHeaderHighlightSections">
      <bool>false</bool>
@@ -1206,7 +1209,7 @@ QTableWidget#tableWidget QHeaderView::section {
     <property name="geometry">
      <rect>
       <x>1090</x>
-      <y>650</y>
+      <y>648</y>
       <width>101</width>
       <height>21</height>
      </rect>
@@ -1319,10 +1322,10 @@ QTableWidget#tableWidget QHeaderView::section {
    <zorder>title</zorder>
    <zorder>tableWidget2</zorder>
    <zorder>userlistlabel_7</zorder>
-   <zorder>userfield</zorder>
+   <zorder>customerName_field</zorder>
    <zorder>userlistlabel_8</zorder>
    <zorder>groupBox</zorder>
-   <zorder>addbtn</zorder>
+   <zorder>proceedbtn</zorder>
    <zorder>userlistlabel_9</zorder>
    <zorder>userlistlabel_10</zorder>
    <zorder>userlistlabel_11</zorder>
