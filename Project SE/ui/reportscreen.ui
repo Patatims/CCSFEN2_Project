@@ -604,12 +604,12 @@ background-color: rgba(255, 167, 25, 0.1);
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLabel#listofsale{
+     <string notr="true">
     color: #000000;
     font-family: 'Inter';
     font-size: 32px;
     font-weight: 500;
-}</string>
+</string>
     </property>
     <property name="text">
      <string>List of Sales:</string>
@@ -783,6 +783,48 @@ border-radius: 10px;  </string>
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="whitebg_3">
+    <property name="geometry">
+     <rect>
+      <x>162</x>
+      <y>252</y>
+      <width>951</width>
+      <height>391</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, 0.4);
+border-radius: 2px;  </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="listofsale_2">
+    <property name="geometry">
+     <rect>
+      <x>162</x>
+      <y>191</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgba(0, 0, 0, 0.4);
+    font-family: 'Inter';
+    font-size: 32px;
+    font-weight: 500;
+</string>
+    </property>
+    <property name="text">
+     <string>List of Sales:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <zorder>listofsale_2</zorder>
+   <zorder>whitebg_3</zorder>
    <zorder>whitebgshadow</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>

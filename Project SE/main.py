@@ -154,11 +154,18 @@ class AdminCashierScreen(QDialog):
         header = QTableWidgetItem("")
         self.tableWidget2.setHorizontalHeaderItem(3, header)
 
-        # Set validator to accept only numbers
+        # Set validator to accept only alphabet and some special characters in the Customer Name Field
+        allowed_characters = "[a-zA-Z., ]+"  # Allow alphabetical characters, spaces, comma, and periods
+        alphabet_validator = QRegExpValidator(QRegExp(allowed_characters))
+        self.customerName_field.setValidator(alphabet_validator)
+        
+        
+        # Set validator to accept only numbers in the Tendered Field
         validator = QIntValidator()
         validator.setBottom(0)  # Allow only non-negative numbers
         self.tendered_field.setValidator(validator)
         self.tendered_field.textChanged.connect(self.calculateChange)
+        
 
         self.proceedbtn.clicked.connect(self.processOrder)
         self.setupTableWidget2()
@@ -272,13 +279,16 @@ class AdminCashierScreen(QDialog):
                 change = tendered - total_price
                 self.change.setText("{:.2f}".format(change))
                 self.change.setStyleSheet("color: black; font-family: 'Roboto'; font-size: 16px; font-weight: 500 ")
+                return change  # Return the calculated change
             else:
                 # If tendered amount is less than total price, display "Insufficient"
                 self.change.setText("Insufficient")
                 self.change.setStyleSheet("color: red; font-family: 'Roboto'; font-size: 16px; font-weight: 500;")
+                return 0  # Return 0 if tendered amount is insufficient
         except ValueError:
             # Handle the case where the input cannot be converted to float
             self.change.setText("")
+            return 0  # Return 0 in case of ValueError
 
     def setupTableWidget2(self):
         for row in range(self.tableWidget2.rowCount()):
