@@ -1140,6 +1140,61 @@ color: rgba(0, 0, 0, 100);
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="borderbox_4">
+    <property name="geometry">
+     <rect>
+      <x>221</x>
+      <y>192</y>
+      <width>801</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, 0.4);
+border: 1px solid rgba(0, 0, 0, 0.3); 
+border-radius: 5px;   </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="borderbox_5">
+    <property name="geometry">
+     <rect>
+      <x>221</x>
+      <y>472</y>
+      <width>271</width>
+      <height>241</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, 0.4); 
+border-radius: 10px;   </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="borderbox_6">
+    <property name="geometry">
+     <rect>
+      <x>521</x>
+      <y>472</y>
+      <width>501</width>
+      <height>241</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, 0.4); 
+border-radius: 5px;   </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>borderbox_6</zorder>
+   <zorder>borderbox_5</zorder>
+   <zorder>borderbox_4</zorder>
    <zorder>date_3</zorder>
    <zorder>date</zorder>
    <zorder>line_2</zorder>

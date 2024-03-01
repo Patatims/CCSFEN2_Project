@@ -164,6 +164,7 @@ class AdminCashierScreen(QDialog):
         self.setupTableWidget2()
         
     def processOrder(self):
+        print("Type of self.user:", type(self.user))
         # Check if there are selected products in tableWidget2
         if self.tableWidget2.rowCount() == 0:
             self.showErrorMessage("Error", "Please select products to proceed with the sale.")
@@ -177,7 +178,7 @@ class AdminCashierScreen(QDialog):
         # Retrieve customer name from the line edit
         customer_name = self.customerName_field.text().strip()  # Remove leading/trailing spaces
         if not customer_name:
-            customer_name = "Anonymous"  # Set a default name if left blank
+            customer_name = " "  # Set a default name if left blank
 
         # Retrieve selected option from radio button group
         if self.takeoutbtn.isChecked():
@@ -208,33 +209,39 @@ class AdminCashierScreen(QDialog):
         self.placeOrder(customer_name, order_type, tendered_amount)
 
     def placeOrder(self, customer_name, order_type, tendered_amount):
-        # Get the number of rows in tableWidget2
-        row_count = self.tableWidget2.rowCount()
+        try:
+            # Get the employee ID based on the username
+            cur = conn.cursor()
+            query = "SELECT id FROM employee WHERE username = ?"
+            cur.execute(query, (self.user,))
+            employee_id = cur.fetchone()[0]  # Fetch the employee ID
 
-        # Check if there are any selected products
-        if row_count == 0:
-            self.showErrorMessage("Error", "No selected products.")
-            return
+            # Insert data into Sales table
+            cur.execute("INSERT INTO Sales (name, orderType, tenderedAmount, employeeID) VALUES (?, ?, ?, ?)",
+                        (customer_name, order_type, tendered_amount, employee_id))
+            sales_id = cur.lastrowid  # Get the ID of the last inserted row
 
-        # Print the selected products with their IDs and quantities
-        print("Selected Products:")
-        for row in range(row_count):
-            item_id = self.tableWidget2.item(row, 4).text()  # Product ID from the hidden column
-            item_name = self.tableWidget2.item(row, 1).text()  # Product name
-            qty_spin_box = self.tableWidget2.cellWidget(row, 0)  # Spin box for quantity
-            qty = qty_spin_box.value()  # Retrieve the quantity from the spin box
-            if item_id:
-                print(f"- Product ID: {item_id}, Product Name: {item_name}, Quantity: {qty}")
+            # Insert data into Transaction table
+            for row in range(self.tableWidget2.rowCount()):
+                product_id = self.tableWidget2.item(row, 4).text()
+                quantity = self.tableWidget2.cellWidget(row, 0).value()
 
-        # Implement order processing logic here
-        # For example, you can print the details
-        print("Customer Name:", customer_name)
-        print("Order Type:", order_type)
-        print("Tendered Amount:", tendered_amount)
+                # Fetch price dynamically from the database based on product_id
+                query = "SELECT price FROM Product WHERE id = ?"
+                cur.execute(query, (product_id,))
+                price = cur.fetchone()[0]
 
-        self.showSuccessMessage()
+                cur.execute("INSERT INTO 'Transaction' (salesID, productID, price, quantity) VALUES (?, ?, ?, ?)",
+                            (sales_id, product_id, price, quantity))
 
+            # Commit the changes to the database
+            conn.commit()
 
+            self.showSuccessMessage()
+
+        except sqlite3.Error as e:
+            print("Error placing order:", e)
+        
     def showSuccessMessage(self):
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Information)
