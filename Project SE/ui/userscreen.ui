@@ -457,36 +457,6 @@ background-color: rgba(255, 167, 25, 0.1);
      <string>Menu</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="reportbtn">
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>395</y>
-      <width>81</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton{
-    color: rgba(0,0,0, 0.5);
-    font-family: 'Inter';
-    font-size: 13px;
-    font-weight: 500;
-	border:none;
-}
-
-QPushButton:hover{
-color: #FB9722;
-border: 2px solid #FB9722;
-border-radius: 8px;
-background-color: rgba(255, 167, 25, 0.1);
-}
-</string>
-    </property>
-    <property name="text">
-     <string>Reports</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="menuIcon">
     <property name="geometry">
      <rect>
@@ -966,6 +936,35 @@ border-radius: 2px;  </string>
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="reportbtn">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>395</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+    color: rgba(0,0,0, 0.5);
+    font-family: 'Inter';
+    font-size: 12px;
+    font-weight: 500;
+	border:none;
+}
+
+QPushButton:hover{
+color: #FB9722;
+border: 2px solid #FB9722;
+border-radius: 8px;
+background-color: rgba(255, 167, 25, 0.1);
+}</string>
+    </property>
+    <property name="text">
+     <string>S. Management</string>
+    </property>
+   </widget>
    <zorder>whitebg_2</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
@@ -979,7 +978,6 @@ border-radius: 2px;  </string>
    <zorder>p_managementbtn</zorder>
    <zorder>homebtn</zorder>
    <zorder>menubtn</zorder>
-   <zorder>reportbtn</zorder>
    <zorder>menuIcon</zorder>
    <zorder>homeIcon</zorder>
    <zorder>reportIcon</zorder>
@@ -998,6 +996,7 @@ border-radius: 2px;  </string>
    <zorder>userlistlabelshadow</zorder>
    <zorder>whitebg_3</zorder>
    <zorder>tableWidget</zorder>
+   <zorder>reportbtn</zorder>
   </widget>
  </widget>
  <resources>

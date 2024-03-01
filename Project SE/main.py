@@ -205,10 +205,13 @@ class AdminCashierScreen(QDialog):
             self.showErrorMessage("Error", "Insufficient tendered amount.")
             return
 
-        # Process the order with customer name, order type, and tendered amount
-        self.placeOrder(customer_name, order_type, tendered_amount)
+        # Calculate change
+        change = self.calculateChange()
+        
+        # Process the order with customer name, order type, and t   endered amount
+        self.placeOrder(customer_name, order_type, tendered_amount, change)
 
-    def placeOrder(self, customer_name, order_type, tendered_amount):
+    def placeOrder(self, customer_name, order_type, tendered_amount, change):
         try:
             # Get the employee ID based on the username
             cur = conn.cursor()
@@ -217,8 +220,8 @@ class AdminCashierScreen(QDialog):
             employee_id = cur.fetchone()[0]  # Fetch the employee ID
 
             # Insert data into Sales table
-            cur.execute("INSERT INTO Sales (name, orderType, tenderedAmount, employeeID) VALUES (?, ?, ?, ?)",
-                        (customer_name, order_type, tendered_amount, employee_id))
+            cur.execute("INSERT INTO Sales (name, orderType, tenderedAmount, changedAmount, employeeID) VALUES (?, ?, ?, ?, ?)",
+                        (customer_name, order_type, tendered_amount, change, employee_id))
             sales_id = cur.lastrowid  # Get the ID of the last inserted row
 
             # Insert data into Transaction table
@@ -1656,10 +1659,15 @@ class ReportScreen1(QDialog):
         #######################################################
 
         #TableWidget
-        self.tableWidget.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
-        self.tableWidget.setColumnWidth(1, 200) # Table index 1, second column with 200 width pixel
-        self.tableWidget.setColumnWidth(2, 100) # Table index 2, three column with 100 width pixel
-        self.tableWidget.setColumnWidth(3, 160) # Table index 3, fourth column with 160 width pixel
+        self.tableWidget.setColumnWidth(0, 60) # Table index 0
+        self.tableWidget.setColumnWidth(1, 250) # Table index 1
+        self.tableWidget.setColumnWidth(2, 122) # Table index 2
+        self.tableWidget.setColumnWidth(3, 135) # Table index 3
+        self.tableWidget.setColumnWidth(4, 145) # Table index 4
+        self.tableWidget.setColumnWidth(5, 160) # Table index 5
+        self.tableWidget.setColumnWidth(6, 75) # Table index 5
+    
+        
 
         self.displaySales()
         
@@ -1669,15 +1677,13 @@ class ReportScreen1(QDialog):
         self.p_managementbtn.clicked.connect(self.gotopmanagement)
         self.settingsbtn.clicked.connect(self.gotosettings)
         self.DSRbtn.clicked.connect(self.gotodailysale)
-        
 
-
-    def displaySales(self):  # To load the data from database to the pyqt table
+    def displaySales(self):
         try:
             conn = sqlite3.connect('projectse_db.db')
             cur = conn.cursor()
 
-            query = "SELECT id, name, printf('%.2f', Totalprice), orderType FROM Sales"
+            query = "SELECT id, name, printf('%.2f', Totalprice), printf('%.2f', tenderedAmount), printf('%.2f', changedAmount), orderType FROM Sales"
             cur.execute(query)
             rows = cur.fetchall()
             row_count = len(rows)
@@ -1690,13 +1696,15 @@ class ReportScreen1(QDialog):
 
             # Resize the table widget to fit the data
             self.tableWidget.setRowCount(row_count)
-            self.tableWidget.setColumnCount(column_count)
+            self.tableWidget.setColumnCount(column_count + 1)  # Additional columns for tenderedAmount and delete button
 
             # Set the data into the table widget
             for row in range(row_count):
                 for col in range(column_count):
                     item = QTableWidgetItem(str(rows[row][col]))
                     self.tableWidget.setItem(row, col, item)  
+
+                self.addDeleteButtons()
 
             # To make the horizontal headers text aligned to the left of the table. 
             for row in range(self.tableWidget.rowCount()):
@@ -1705,14 +1713,53 @@ class ReportScreen1(QDialog):
                     if item is not None:
                         item.setFont(QFont("Roboto", 11))  # Set font size
                         item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
-                        
+                            
         except sqlite3.Error as err:
             print(f"Error: {err}")
 
         finally:
             if 'conn' in locals():
                 conn.close()
-      
+
+    
+    def addDeleteButtons(self):
+        for row in range(self.tableWidget.rowCount()):
+            delete_button = QToolButton()
+            delete_button.setIcon(QIcon('icons/delete.png'))
+            delete_button.setIconSize(QSize(50, 50))  # Adjust the size as needed
+            delete_button.setStyleSheet("QToolButton { border: none; background-color: transparent; }")
+            delete_button.clicked.connect(lambda _, row=row: self.deleteRow(row))
+            self.tableWidget.setCellWidget(row, 6, delete_button)
+    
+    
+    def deleteRow(self, row):
+        try:
+            conn = sqlite3.connect('projectse_db.db')
+            cur = conn.cursor()
+
+            # Get the selected row ID
+            selected_row_id = int(self.tableWidget.item(row, 0).text())
+
+            delete_query1 = "DELETE FROM \"Transaction\" WHERE salesID = ?"
+            cur.execute(delete_query1, (selected_row_id,))
+            conn.commit()
+
+            delete_query2 = "DELETE FROM Sales WHERE id = ?"
+            cur.execute(delete_query2, (selected_row_id,))
+            conn.commit()
+            
+            
+            self.tableWidget.removeRow(row)
+            self.addDeleteButtons()
+
+        except sqlite3.Error as err:
+            print(f"Error: {err}")
+
+        finally:
+            if 'conn' in locals():
+                conn.close()
+
+
         
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
         widget.removeWidget(self)

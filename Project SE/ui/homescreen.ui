@@ -383,35 +383,6 @@ background-color: rgba(255, 167, 25, 0.1);
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="reportbtn">
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>395</y>
-      <width>81</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton{
-    color: rgba(0,0,0, 0.5);
-    font-family: 'Inter';
-    font-size: 13px;
-    font-weight: 500;
-	border:none;
-}
-
-QPushButton:hover{
-color: #FB9722;
-border: 2px solid #FB9722;
-border-radius: 8px;
-background-color: rgba(255, 167, 25, 0.1);
-}</string>
-    </property>
-    <property name="text">
-     <string>Reports</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="homebtn">
     <property name="geometry">
      <rect>
@@ -1192,6 +1163,35 @@ border-radius: 5px;   </string>
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="reportbtn">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>395</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+    color: rgba(0,0,0, 0.5);
+    font-family: 'Inter';
+    font-size: 12px;
+    font-weight: 500;
+	border:none;
+}
+
+QPushButton:hover{
+color: #FB9722;
+border: 2px solid #FB9722;
+border-radius: 8px;
+background-color: rgba(255, 167, 25, 0.1);
+}</string>
+    </property>
+    <property name="text">
+     <string>S. Management</string>
+    </property>
+   </widget>
    <zorder>borderbox_6</zorder>
    <zorder>borderbox_5</zorder>
    <zorder>borderbox_4</zorder>
@@ -1211,7 +1211,6 @@ border-radius: 5px;   </string>
    <zorder>menubtn</zorder>
    <zorder>p_mIcon</zorder>
    <zorder>p_managementbtn</zorder>
-   <zorder>reportbtn</zorder>
    <zorder>reportIcon</zorder>
    <zorder>menuIcon</zorder>
    <zorder>borderbox</zorder>
@@ -1235,6 +1234,7 @@ border-radius: 5px;   </string>
    <zorder>topimg</zorder>
    <zorder>title_3</zorder>
    <zorder>title</zorder>
+   <zorder>reportbtn</zorder>
   </widget>
  </widget>
  <resources>
