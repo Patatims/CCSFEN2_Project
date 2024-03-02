@@ -655,9 +655,9 @@ QTableWidget#tableWidget2 QHeaderView::section {
     <property name="geometry">
      <rect>
       <x>910</x>
-      <y>92</y>
+      <y>93</y>
       <width>231</width>
-      <height>20</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">

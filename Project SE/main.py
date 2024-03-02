@@ -131,6 +131,8 @@ class AdminCashierScreen(QDialog):
         self.reportbtn.clicked.connect(self.gotosales)
         self.p_managementbtn.clicked.connect(self.gotopmanagement)
 
+#-----------------------------------------------------------------------------
+        
         self.tableWidget.setColumnWidth(0, 450)
         self.tableWidget.setColumnWidth(1, 100)
 
@@ -171,15 +173,14 @@ class AdminCashierScreen(QDialog):
         self.setupTableWidget2()
         
     def processOrder(self):
-        print("Type of self.user:", type(self.user))
         # Check if there are selected products in tableWidget2
         if self.tableWidget2.rowCount() == 0:
-            self.showErrorMessage("Error", "Please select products to proceed with the sale.")
+            self.showErrorMessage("Warning", "Please select products to proceed with the sale.")
             return
 
         # Check if order type is selected
         if not self.takeoutbtn.isChecked() and not self.dineinbtn.isChecked():
-            self.showErrorMessage("Error", "Please select an order type.")
+            self.showErrorMessage("Warning", "Please select an order type.")
             return
 
         # Retrieve customer name from the line edit
@@ -196,12 +197,12 @@ class AdminCashierScreen(QDialog):
         # Retrieve tendered amount from the line edit
         tendered_amount = self.tendered_field.text().strip()
         if not tendered_amount:
-            self.showErrorMessage("Error", "Please enter the tendered amount.")
+            self.showErrorMessage("Warning", "Please enter the tendered amount.")
             return
         try:
             tendered_amount = float(tendered_amount)
         except ValueError:
-            self.showErrorMessage("Error", "Invalid tendered amount. Please enter a valid number.")
+            self.showErrorMessage("Warning", "Invalid tendered amount. Please enter a valid number.")
             return
 
         # Retrieve total payable amount
@@ -209,7 +210,7 @@ class AdminCashierScreen(QDialog):
 
         # Check if tendered amount is sufficient
         if tendered_amount < total_price:
-            self.showErrorMessage("Error", "Insufficient tendered amount.")
+            self.showErrorMessage("Warning", "Insufficient tendered amount.")
             return
 
         # Calculate change
@@ -217,6 +218,8 @@ class AdminCashierScreen(QDialog):
         
         # Process the order with customer name, order type, and t   endered amount
         self.placeOrder(customer_name, order_type, tendered_amount, change)
+        self.takeoutbtn.setChecked(False)
+        self.dineinbtn.setChecked(False)
 
     def placeOrder(self, customer_name, order_type, tendered_amount, change):
         try:
@@ -249,6 +252,16 @@ class AdminCashierScreen(QDialog):
 
             self.showSuccessMessage()
 
+            # Clear QLineEdit fields
+            self.customerName_field.clear()
+            self.tendered_field.clear()
+            self.payable_amount.setText("0.00")
+            self.change.setText("0.00")
+                
+            # Clear selected products in tableWidget2
+            self.tableWidget2.clearContents()
+            self.tableWidget2.setRowCount(0)
+            
         except sqlite3.Error as e:
             print("Error placing order:", e)
         
@@ -262,7 +275,7 @@ class AdminCashierScreen(QDialog):
 
     def showErrorMessage(self, title, message):
         msgBox = QMessageBox()
-        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setIcon(QMessageBox.Warning)
         msgBox.setText(message)
         msgBox.setWindowTitle(title)
         msgBox.setStandardButtons(QMessageBox.Ok)
@@ -1158,6 +1171,18 @@ class HomeScreen(QDialog):
         self.reportbtn.clicked.connect(self.gotosales)
         self.p_managementbtn.clicked.connect(self.gotopmanagement) 
 
+        
+        self.tableWidget_2.setColumnWidth(0, 180) # Table index 0
+        self.tableWidget_2.setColumnWidth(1, 110) # Table index 1
+        self.tableWidget_2.setColumnWidth(2, 140) # Table index 2
+        self.tableWidget_2.setColumnWidth(3, 150) # Table index 3
+        self.tableWidget_2.setColumnWidth(4, 150) # Table index 4
+       
+    
+        self.displaySales()
+        
+        
+        
         # A Function to display the top 5 selling products based on sales
         self.displayTopSellingProduct()
         
@@ -1167,7 +1192,6 @@ class HomeScreen(QDialog):
 
         # Initial update of the time label function
         self.update_time_label()
-        
         current_date = date.today()
         
         try:
@@ -1234,12 +1258,57 @@ class HomeScreen(QDialog):
                 if item is not None:
                     item.setFont(QFont("Roboto", 11))  # Set font size
                     item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
-        
+
+    
+    def displaySales(self):
+        try:
+            conn = sqlite3.connect('projectse_db.db')
+            cur = conn.cursor()
+
+            query = "SELECT name, printf('%.2f', Totalprice), printf('%.2f', tenderedAmount), printf('%.2f', changedAmount), orderType FROM Sales"
+            cur.execute(query)
+            rows = cur.fetchall()
+            row_count = len(rows)
+
+            # Check if there are any rows
+            if row_count == 0:
+                return
+
+            column_count = len(rows[0])
+
+            # Resize the table widget to fit the data
+            self.tableWidget_2.setRowCount(row_count)
+            self.tableWidget_2.setColumnCount(column_count)  # Additional columns for tenderedAmount and delete button
+
+            # Set the data into the table widget
+            for row in range(row_count):
+                for col in range(column_count):
+                    item = QTableWidgetItem(str(rows[row][col]))
+                    self.tableWidget_2.setItem(row, col, item)  
+
+
+            # To make the horizontal headers text aligned to the left of the table. 
+            for row in range(self.tableWidget_2.rowCount()):
+                for column in range(self.tableWidget_2.columnCount()):
+                    item = self.tableWidget_2.item(row, column)
+                    if item is not None:
+                        item.setFont(QFont("Roboto", 11))  # Set font size
+                        item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+                            
+        except sqlite3.Error as err:
+            print(f"Error: {err}")
+
+        finally:
+            if 'conn' in locals():
+                conn.close()
+
+    
+    
     def update_time_label(self):
         current_datetime = QDateTime.currentDateTime()
         current_time_string = current_datetime.toString("MM-dd-yyyy HH:mm:ss")
         self.time.setText(current_time_string)
-           
+
         
 
     def gotocashierscreen(self): #To cashier screen if menu button is clicked.
@@ -1670,10 +1739,10 @@ class ReportScreen1(QDialog):
 
         #TableWidget
         self.tableWidget.setColumnWidth(0, 60) # Table index 0
-        self.tableWidget.setColumnWidth(1, 250) # Table index 1
+        self.tableWidget.setColumnWidth(1, 245) # Table index 1
         self.tableWidget.setColumnWidth(2, 122) # Table index 2
         self.tableWidget.setColumnWidth(3, 135) # Table index 3
-        self.tableWidget.setColumnWidth(4, 145) # Table index 4
+        self.tableWidget.setColumnWidth(4, 150) # Table index 4
         self.tableWidget.setColumnWidth(5, 160) # Table index 5
         self.tableWidget.setColumnWidth(6, 75) # Table index 5
     
@@ -2406,6 +2475,17 @@ class HomeScreenForCashier(QDialog):
         
 #------------------------------------------------------------------------------  
 
+        self.tableWidget_2.setColumnWidth(0, 170) # Table index 0
+        self.tableWidget_2.setColumnWidth(1, 110) # Table index 1
+        self.tableWidget_2.setColumnWidth(2, 140) # Table index 2
+        self.tableWidget_2.setColumnWidth(3, 150) # Table index 3
+        self.tableWidget_2.setColumnWidth(4, 150) # Table index 4
+       
+    
+        self.displaySales()
+        
+        
+        
         # A Function to display the top 5 selling products based on sales
         self.displayTopSellingProduct()
         
@@ -2415,9 +2495,7 @@ class HomeScreenForCashier(QDialog):
 
         # Initial update of the time label function
         self.update_time_label()
-        
         current_date = date.today()
-#------------------------------------------------------------------------------  
         
         try:
             query = f"SELECT printf('%.2f', SUM(Sales.totalPrice)) AS total_sales FROM Sales WHERE DATE(Sales.date) = '{current_date}'"
@@ -2483,11 +2561,57 @@ class HomeScreenForCashier(QDialog):
                 if item is not None:
                     item.setFont(QFont("Roboto", 11))  # Set font size
                     item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
-        
+
+    
+    def displaySales(self):
+        try:
+            conn = sqlite3.connect('projectse_db.db')
+            cur = conn.cursor()
+
+            query = "SELECT name, printf('%.2f', Totalprice), printf('%.2f', tenderedAmount), printf('%.2f', changedAmount), orderType FROM Sales"
+            cur.execute(query)
+            rows = cur.fetchall()
+            row_count = len(rows)
+
+            # Check if there are any rows
+            if row_count == 0:
+                return
+
+            column_count = len(rows[0])
+
+            # Resize the table widget to fit the data
+            self.tableWidget_2.setRowCount(row_count)
+            self.tableWidget_2.setColumnCount(column_count)  # Additional columns for tenderedAmount and delete button
+
+            # Set the data into the table widget
+            for row in range(row_count):
+                for col in range(column_count):
+                    item = QTableWidgetItem(str(rows[row][col]))
+                    self.tableWidget_2.setItem(row, col, item)  
+
+
+            # To make the horizontal headers text aligned to the left of the table. 
+            for row in range(self.tableWidget_2.rowCount()):
+                for column in range(self.tableWidget_2.columnCount()):
+                    item = self.tableWidget_2.item(row, column)
+                    if item is not None:
+                        item.setFont(QFont("Roboto", 11))  # Set font size
+                        item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+                            
+        except sqlite3.Error as err:
+            print(f"Error: {err}")
+
+        finally:
+            if 'conn' in locals():
+                conn.close()
+
+    
+    
     def update_time_label(self):
         current_datetime = QDateTime.currentDateTime()
         current_time_string = current_datetime.toString("MM-dd-yyyy HH:mm:ss")
         self.time.setText(current_time_string)
+
            
  #------------------------------------------------------------------------------         
 
@@ -2540,16 +2664,16 @@ class CashierScreen(QDialog):
         self.settingsbtn.clicked.connect(self.gotosettings)
         
 #------------------------------------------------------------------------------          
+        self.tableWidget.setColumnWidth(0, 450)
+        self.tableWidget.setColumnWidth(1, 100)
 
-        self.tableWidget.setColumnWidth(0, 300) # Table index 0, first column with 50 width pixel
-        self.tableWidget.setColumnWidth(1, 100) # Table index 1, second column with 200 width pixel  
-        self.tableWidget2.setColumnWidth(0, 50) # Table index 0, first column with 50 width pixel
-        
-        self.tableWidget2.setColumnWidth(1, 135) 
-        self.tableWidget2.setColumnWidth(2, 100) 
+        self.tableWidget2.setColumnCount(5)
+        self.tableWidget2.setColumnWidth(0, 30)
+        self.tableWidget2.setColumnWidth(1, 135)
+        self.tableWidget2.setColumnWidth(2, 75)
+        self.tableWidget2.setColumnWidth(3, 40)
+        self.tableWidget2.setColumnWidth(4, 0)  # Hide the column for product ID
 
-#------------------------------------------------------------------------------          
-    
         self.lugawbtn.clicked.connect(self.displayLugawProductList)
         self.mamibtn.clicked.connect(self.displayMamiProductList)
         self.maindishbtn.clicked.connect(self.displayMainDishProductList)
@@ -2557,80 +2681,298 @@ class CashierScreen(QDialog):
         self.beveragesbtn.clicked.connect(self.displayBeveragesProductList)
         self.extrasbtn.clicked.connect(self.displayExtrasProductList)
 
-#------------------------------------------------------------------------------  
-
-        # Connect signals
-        self.tableWidget.itemSelectionChanged.connect(self.addSelectedProductToInvoice)
+        self.tableWidget.itemDoubleClicked.connect(self.addSelectedProductToInvoice)
         self.tableWidget2.itemChanged.connect(self.updateAmount)
- 
- #------------------------------------------------------------------------------  
+
+        header = QTableWidgetItem("")
+        self.tableWidget2.setHorizontalHeaderItem(3, header)
+
+        # Set validator to accept only alphabet and some special characters in the Customer Name Field
+        allowed_characters = "[a-zA-Z., ]+"  # Allow alphabetical characters, spaces, comma, and periods
+        alphabet_validator = QRegExpValidator(QRegExp(allowed_characters))
+        self.customerName_field.setValidator(alphabet_validator)
         
+        
+        # Set validator to accept only numbers in the Tendered Field
+        validator = QIntValidator()
+        validator.setBottom(0)  # Allow only non-negative numbers
+        self.tendered_field.setValidator(validator)
+        self.tendered_field.textChanged.connect(self.calculateChange)
+        
+
+        self.proceedbtn.clicked.connect(self.processOrder)
+        self.setupTableWidget2()
+        
+    def processOrder(self):
+        # Check if there are selected products in tableWidget2
+        if self.tableWidget2.rowCount() == 0:
+            self.showErrorMessage("Warning", "Please select products to proceed with the sale.")
+            return
+
+        # Check if order type is selected
+        if not self.takeoutbtn.isChecked() and not self.dineinbtn.isChecked():
+            self.showErrorMessage("Warning", "Please select an order type.")
+            return
+
+        # Retrieve customer name from the line edit
+        customer_name = self.customerName_field.text().strip()  # Remove leading/trailing spaces
+        if not customer_name:
+            customer_name = " "  # Set a default name if left blank
+
+        # Retrieve selected option from radio button group
+        if self.takeoutbtn.isChecked():
+            order_type = "Take-out"
+        elif self.dineinbtn.isChecked():
+            order_type = "Dine-in"
+
+        # Retrieve tendered amount from the line edit
+        tendered_amount = self.tendered_field.text().strip()
+        if not tendered_amount:
+            self.showErrorMessage("Warning", "Please enter the tendered amount.")
+            return
+        try:
+            tendered_amount = float(tendered_amount)
+        except ValueError:
+            self.showErrorMessage("Warning", "Invalid tendered amount. Please enter a valid number.")
+            return
+
+        # Retrieve total payable amount
+        total_price = float(self.payable_amount.text())
+
+        # Check if tendered amount is sufficient
+        if tendered_amount < total_price:
+            self.showErrorMessage("Warning", "Insufficient tendered amount.")
+            return
+
+        # Calculate change
+        change = self.calculateChange()
+        
+        # Process the order with customer name, order type, and t   endered amount
+        self.placeOrder(customer_name, order_type, tendered_amount, change)
+        self.takeoutbtn.setChecked(False)
+        self.dineinbtn.setChecked(False)
+
+    def placeOrder(self, customer_name, order_type, tendered_amount, change):
+        try:
+            # Get the employee ID based on the username
+            cur = conn.cursor()
+            query = "SELECT id FROM employee WHERE username = ?"
+            cur.execute(query, (self.user,))
+            employee_id = cur.fetchone()[0]  # Fetch the employee ID
+
+            # Insert data into Sales table
+            cur.execute("INSERT INTO Sales (name, orderType, tenderedAmount, changedAmount, employeeID) VALUES (?, ?, ?, ?, ?)",
+                        (customer_name, order_type, tendered_amount, change, employee_id))
+            sales_id = cur.lastrowid  # Get the ID of the last inserted row
+
+            # Insert data into Transaction table
+            for row in range(self.tableWidget2.rowCount()):
+                product_id = self.tableWidget2.item(row, 4).text()
+                quantity = self.tableWidget2.cellWidget(row, 0).value()
+
+                # Fetch price dynamically from the database based on product_id
+                query = "SELECT price FROM Product WHERE id = ?"
+                cur.execute(query, (product_id,))
+                price = cur.fetchone()[0]
+
+                cur.execute("INSERT INTO 'Transaction' (salesID, productID, price, quantity) VALUES (?, ?, ?, ?)",
+                            (sales_id, product_id, price, quantity))
+
+            # Commit the changes to the database
+            conn.commit()
+
+            self.showSuccessMessage()
+
+            # Clear QLineEdit fields
+            self.customerName_field.clear()
+            self.tendered_field.clear()
+            self.payable_amount.setText("0.00")
+            self.change.setText("0.00")
+                
+            # Clear selected products in tableWidget2
+            self.tableWidget2.clearContents()
+            self.tableWidget2.setRowCount(0)
+            
+        except sqlite3.Error as e:
+            print("Error placing order:", e)
+        
+    def showSuccessMessage(self):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setText("Sale processed successfully.")
+        msgBox.setWindowTitle("Success")
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec_()
+
+    def showErrorMessage(self, title, message):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Warning)
+        msgBox.setText(message)
+        msgBox.setWindowTitle(title)
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec_()
+        
+        
+    def calculateChange(self):
+        try:
+            total_price = float(self.payable_amount.text())
+            tendered = float(self.tendered_field.text())
+
+            # Check if tendered amount is greater than or equal to total price
+            if tendered >= total_price:
+                change = tendered - total_price
+                self.change.setText("{:.2f}".format(change))
+                self.change.setStyleSheet("color: black; font-family: 'Roboto'; font-size: 16px; font-weight: 500 ")
+                return change  # Return the calculated change
+            else:
+                # If tendered amount is less than total price, display "Insufficient"
+                self.change.setText("Insufficient")
+                self.change.setStyleSheet("color: red; font-family: 'Roboto'; font-size: 16px; font-weight: 500;")
+                return 0  # Return 0 if tendered amount is insufficient
+        except ValueError:
+            # Handle the case where the input cannot be converted to float
+            self.change.setText("")
+            return 0  # Return 0 in case of ValueError
+
+    def setupTableWidget2(self):
+        for row in range(self.tableWidget2.rowCount()):
+            spin_box = QSpinBox()
+            spin_box.setMinimum(1)
+            spin_box.setMaximum(1000)
+            self.tableWidget2.setCellWidget(row, 0, spin_box)
+            spin_box.valueChanged.connect(self.updateAmount)
+
+        for row in range(self.tableWidget2.rowCount()):
+            for col in range(1, self.tableWidget2.columnCount()):
+                item = self.tableWidget2.item(row, col)
+                if item:
+                    item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                    item.setFlags(item.flags() & ~Qt.ItemIsSelectable)
+                    item.setFlags(item.flags() | Qt.ItemIsEnabled)
+
+    def addDeleteButtons(self):
+        for row in range(self.tableWidget2.rowCount()):
+            delete_button = QToolButton()
+            delete_button.setIcon(QIcon('icons/delete.png'))
+            delete_button.setIconSize(QSize(25, 20))  # Adjust the size as needed
+            delete_button.setStyleSheet("QToolButton { border: none; background-color: transparent; }")
+            delete_button.clicked.connect(lambda _, row=row: self.deleteRow(row))
+            self.tableWidget2.setCellWidget(row, 3, delete_button)
+
+    def deleteRow(self, row):
+        print("Delete row", row)
+        self.tableWidget2.removeRow(row)
+        # Update the delete buttons after removing the row
+        self.addDeleteButtons()
+        self.updatePayableAmount()  # Update the payable amount
+
     def addSelectedProductToInvoice(self):
-        print("Adding selected product to invoice...")  # Add this line
-        # Retrieve the selected row from TableWidget
+        print("Adding selected product to invoice...")
         selected_indexes = self.tableWidget.selectedIndexes()
         if not selected_indexes:
             return
- 
 
-        # Extract product name from the selected row
         row = selected_indexes[0].row()
-        product_name = str(self.tableWidget.item(row, 0).text())  # ProductName
+        product_name = str(self.tableWidget.item(row, 0).text())
 
-        # Fetch product information based on product name
+        # Fetch product info dynamically from the database
         query = "SELECT id, price FROM Product WHERE name = ?"
         cur.execute(query, (product_name,))
         product_info = cur.fetchone()
 
         if product_info:
-            product_id = product_info[0]
-            price = product_info[1]
+            product_id, price = product_info
+            price = "{:.2f}".format(price)
 
-            # Check if the product already exists in TableWidget2
-            existing_row = self.findExistingProductRow(product_id)
+            existing_row = self.findExistingProductRow(product_name)
             if existing_row is not None:
-                # If the product exists, inform the user or take appropriate action
-                QMessageBox.warning(self, "Duplicate Product", "This product is already in the invoice.")
+                # Retrieve the spin box associated with the row
+                spin_box = self.tableWidget2.cellWidget(existing_row, 0)
+                if spin_box:
+                    # Increment the quantity
+                    current_qty = spin_box.value()
+                    spin_box.setValue(current_qty + 1)
             else:
-                # If the product does not exist, add a new row
+                # Add a new row for the selected product
                 row_position = self.tableWidget2.rowCount()
                 self.tableWidget2.insertRow(row_position)
-                self.tableWidget2.setItem(row_position, 0, QTableWidgetItem(str(1)))  # Default quantity to 1
-                self.tableWidget2.setItem(row_position, 1, QTableWidgetItem(product_name))  # ProductName
-                self.tableWidget2.setItem(row_position, 2, QTableWidgetItem(str(price)))  # Amount (ProductPrice)
-                self.tableWidget2.setItem(row_position, 3, QTableWidgetItem(product_id))  # ProductID
-            
-                for row in range(self.tableWidget2.rowCount()):
-                    for column in range(self.tableWidget2.columnCount()):
-                        item = self.tableWidget2.item(row, column)
-                        if item is not None:
-                            item.setFont(QFont("Roboto", 10))  # Set font size
-                            item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
-            
-    def findExistingProductRow(self, product_id):
-        # Search for the product ID in TableWidget2
+                spin_box = QSpinBox()  # Create a spin box for quantity
+                spin_box.setMinimum(1)
+                spin_box.setMaximum(1000)
+                spin_box.valueChanged.connect(self.updateAmount)  # Connect valueChanged signal
+                self.tableWidget2.setCellWidget(row_position, 0, spin_box)
+                self.tableWidget2.setItem(row_position, 1, QTableWidgetItem(product_name))
+                self.tableWidget2.setItem(row_position, 2, QTableWidgetItem(str(price)))
+
+                # Store the original price in the data role of the item
+                self.tableWidget2.item(row_position, 2).setData(Qt.UserRole, float(price))
+
+                # Store the product ID in the data role of the item
+                self.tableWidget2.setItem(row_position, 4, QTableWidgetItem(str(product_id)))
+                self.tableWidget2.item(row_position, 4).setData(Qt.UserRole, product_id)
+
+                for column in range(self.tableWidget2.columnCount()):
+                    item = self.tableWidget2.item(row_position, column)
+                    if item is not None:
+                        item.setFont(QFont("Roboto", 10))
+                        item.setTextAlignment(Qt.AlignCenter)
+
+                # Do not call setupTableWidget2 here
+
+            self.addDeleteButtons()
+            self.updatePayableAmount()  # Update the payable amount
+
+    def findExistingProductQty(self, product_name):
+        # Search for the product name in TableWidget2
         for row in range(self.tableWidget2.rowCount()):
-            item = self.tableWidget2.item(row, 3)  # ProductID column
+            item = self.tableWidget2.item(row, 1)  # ProductName column
             if item is not None:
-                print("Comparing:", item.text(), "with:", str(product_id))
-                if item.text() == str(product_id):
-                    print("Found duplicate at row:", row)
+                if item.text() == product_name:
+                    qty_item = self.tableWidget2.item(row, 0)  # Quantity column
+                    if qty_item is not None:
+                        return int(qty_item.text())
+        return None
+
+    def findExistingProductRow(self, product_name):
+        # Search for the product name in TableWidget2
+        for row in range(self.tableWidget2.rowCount()):
+            item = self.tableWidget2.item(row, 1)  # ProductName column
+            if item is not None:
+                if item.text() == product_name:
                     return row
         return None
 
+    def updateAmount(self):
+        spin_box = self.sender()
+        index = self.tableWidget2.indexAt(spin_box.pos())
+        row = index.row()
+        amount_item = self.tableWidget2.item(row, 2)
 
-    def updateAmount(self, item):
-        # Calculate the amount based on the quantity entered
-        if item.column() == 0:  # Quantity column
-            row = item.row()
-            quantity_item = self.tableWidget2.item(row, 0)
+        if amount_item:
+            quantity = spin_box.value()
+            print("Quantity:", quantity)  # Debug print statement
+            # Get the original price from the stored data
+            original_price = float(self.tableWidget2.item(row, 2).data(Qt.UserRole))
+            amount = quantity * original_price
+            amount_item.setText("{:.2f}".format(amount))
+
+        self.updatePayableAmount()  # Update the payable amount
+        
+    def getOriginalPrice(self, product_name):
+        # Fetch the original price of the product from the tableWidget
+        for row in range(self.tableWidget.rowCount()):
+            if self.tableWidget.item(row, 0).text() == product_name:
+                return float(self.tableWidget.item(row, 1).text())
+        return 0.0  # Return 0 if the product is not found
+
+    def updatePayableAmount(self):
+        total_amount = 0.0
+        for row in range(self.tableWidget2.rowCount()):
             amount_item = self.tableWidget2.item(row, 2)
-
-            if quantity_item and amount_item:
-                quantity = int(quantity_item.text())
-                price = float(amount_item.text())
-                amount = quantity * price
-                amount_item.setText("{:.2f}".format(amount))  # Update the amount
+            if amount_item:
+                amount = float(amount_item.text())
+                total_amount += amount
+        self.payable_amount.setText("{:.2f}".format(total_amount))
 
     def displayLugawProductList(self):  #To load the data from database to the pyqt table
        

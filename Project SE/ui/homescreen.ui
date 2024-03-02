@@ -14,6 +14,9 @@
    <string>Dialog</string>
   </property>
   <widget class="QWidget" name="bgwidget" native="true">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -728,6 +731,9 @@ border-radius: 5px;    </string>
     <property name="sizeAdjustPolicy">
      <enum>QAbstractScrollArea::AdjustToContents</enum>
     </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
+    </property>
     <property name="tabKeyNavigation">
      <bool>false</bool>
     </property>
@@ -846,6 +852,9 @@ border-radius: 5px;    </string>
     </property>
    </widget>
    <widget class="QTableWidget" name="tableWidget_2">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -854,6 +863,114 @@ border-radius: 5px;    </string>
       <height>192</height>
      </rect>
     </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="acceptDrops">
+     <bool>true</bool>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="whatsThis">
+     <string/>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="accessibleDescription">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTableWidget#tableWidget_2 QHeaderView::section {
+	font-family: 'Inter';
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #FB9722; 
+	color: black; 
+	padding-left: 5px;
+}       
+</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::WinPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAsNeeded</enum>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QAbstractScrollArea::AdjustIgnored</enum>
+    </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
+    </property>
+    <property name="tabKeyNavigation">
+     <bool>false</bool>
+    </property>
+    <property name="showDropIndicator" stdset="0">
+     <bool>false</bool>
+    </property>
+    <property name="dragDropOverwriteMode">
+     <bool>false</bool>
+    </property>
+    <property name="alternatingRowColors">
+     <bool>true</bool>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::NoSelection</enum>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
+    </property>
+    <property name="showGrid">
+     <bool>true</bool>
+    </property>
+    <property name="gridStyle">
+     <enum>Qt::DashDotDotLine</enum>
+    </property>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>148</number>
+    </attribute>
+    <attribute name="horizontalHeaderStretchLastSection">
+     <bool>true</bool>
+    </attribute>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="verticalHeaderHighlightSections">
+     <bool>false</bool>
+    </attribute>
+    <column>
+     <property name="text">
+      <string>Customer</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Amount</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Amount Paid</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Change Amount</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Type of Order</string>
+     </property>
+    </column>
    </widget>
    <widget class="QLabel" name="dashboardimg">
     <property name="geometry">
