@@ -582,7 +582,7 @@ border-radius: 10px;   </string>
      <rect>
       <x>250</x>
       <y>200</y>
-      <width>241</width>
+      <width>251</width>
       <height>41</height>
      </rect>
     </property>
@@ -811,7 +811,7 @@ border-radius: 5px;    </string>
    <widget class="QLabel" name="boxlabel_sale">
     <property name="geometry">
      <rect>
-      <x>490</x>
+      <x>492</x>
       <y>200</y>
       <width>81</width>
       <height>41</height>

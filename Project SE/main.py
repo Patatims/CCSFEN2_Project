@@ -24,17 +24,13 @@ conn = sqlite3.connect('projectse_db.db')
 cur = conn.cursor()
 
 #------------------------------------------------------------------------------
-
-
 ################# Starting page with Login Screen  #####################
-
 
 class LoginScreen(QDialog):
     def __init__(self):
         super(LoginScreen, self).__init__()
         loadUi("ui/loginscreen.ui", self)
         self.passwordfield.setEchoMode(QtWidgets.QLineEdit.Password)
-        
         
 #------------------------------------------------------------------------------
     
@@ -3745,6 +3741,7 @@ class NewPasswordScreen(QDialog):
 
 #main
 app = QApplication(sys.argv)
+app.setWindowIcon(QIcon('icon.ico'))
 login = LoginScreen()
 widget = QtWidgets.QStackedWidget()
 widget.addWidget(login)
