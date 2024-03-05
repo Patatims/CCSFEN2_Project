@@ -477,7 +477,7 @@ border-radius: 10px;   </string>
      <string notr="true">QLabel{
     color: #000000;
     font-family: 'Inter';
-    font-size: 28px;
+    font-size: 27px;
     font-weight: 500;
 }</string>
     </property>
@@ -698,7 +698,7 @@ border-radius: 5px;    </string>
    <widget class="QLabel" name="boxlabel_sale">
     <property name="geometry">
      <rect>
-      <x>492</x>
+      <x>500</x>
       <y>200</y>
       <width>81</width>
       <height>41</height>
