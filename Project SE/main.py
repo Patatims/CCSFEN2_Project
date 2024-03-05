@@ -11,18 +11,20 @@ import warnings
 
 from datetime import date
 
+
+#------------------------------------------------------------------------------
+
 # Suppress DeprecationWarnings globally
 warnings.simplefilter("ignore", category=DeprecationWarning)
 
-########################################################################
-########################################################################
-########################################################################
+#------------------------------------------------------------------------------
 
 # Connect to SQLite database
 conn = sqlite3.connect('projectse_db.db')
 cur = conn.cursor()
 
-########################################################################
+#------------------------------------------------------------------------------
+
 
 ################# Starting page with Login Screen  #####################
 
@@ -34,17 +36,20 @@ class LoginScreen(QDialog):
         self.passwordfield.setEchoMode(QtWidgets.QLineEdit.Password)
         
         
-########################################################################       
+#------------------------------------------------------------------------------
+    
         self.username_icon.setPixmap(QPixmap('icons/username.png'))
         self.password_icon.setPixmap(QPixmap('icons/password.png'))
         
-########################################################################       
+#------------------------------------------------------------------------------
+    
 
         self.loginbtn.clicked.connect(self.login)  
         self.userfield.returnPressed.connect(self.login)  ### "Enter" key event
         self.passwordfield.returnPressed.connect(self.login)  ### Para gumana yung Enter key as click to the loginbtn
         
-########################################################################
+#------------------------------------------------------------------------------
+
     def login(self):
         user = self.userfield.text()
         password = self.passwordfield.text()
@@ -116,14 +121,17 @@ class AdminCashierScreen(QDialog):
         super(AdminCashierScreen, self).__init__()
         self.user = user
         loadUi("ui/admin_cashierscreen.ui", self)
-        ######################################################
+#------------------------------------------------------------------------------
+
         self.homeIcon.setPixmap(QPixmap('icons/home.png'))
         self.menuIcon.setPixmap(QPixmap('icons/menu2.png'))
         self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
         self.reportIcon.setPixmap(QPixmap('icons/report.png'))
         self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
         self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
-        #######################################################
+        
+ #------------------------------------------------------------------------------
+
         # Redirect Functions
         self.logoutbtn.clicked.connect(self.gotologin)
         self.homebtn.clicked.connect(self.gotohome)
@@ -932,14 +940,14 @@ class AdminProfScreen(QDialog):
         widget.addWidget(userlist)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
-    def gotosettings(self):  # To user screen
+    def gotosettings(self): 
         widget.removeWidget(self)
 
         settings = SettingScreen(self.user)
         widget.addWidget(settings)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
-    def gotosales(self):  # To user setting screen
+    def gotosales(self): 
         widget.removeWidget(self)
 
         sales = ReportScreen1(self.user)
@@ -1739,15 +1747,14 @@ class ReportScreen1(QDialog):
 
         #TableWidget
         self.tableWidget.setColumnWidth(0, 60) # Table index 0
-        self.tableWidget.setColumnWidth(1, 245) # Table index 1
+        self.tableWidget.setColumnWidth(1, 180) # Table index 1
         self.tableWidget.setColumnWidth(2, 122) # Table index 2
         self.tableWidget.setColumnWidth(3, 135) # Table index 3
         self.tableWidget.setColumnWidth(4, 150) # Table index 4
         self.tableWidget.setColumnWidth(5, 160) # Table index 5
-        self.tableWidget.setColumnWidth(6, 75) # Table index 5
+        self.tableWidget.setColumnWidth(6, 75) # Table index 6
+        self.tableWidget.setColumnWidth(7, 65) # Table index 7
     
-        
-
         self.displaySales()
         
         self.logoutbtn.clicked.connect(self.gotologin)     
@@ -1775,7 +1782,7 @@ class ReportScreen1(QDialog):
 
             # Resize the table widget to fit the data
             self.tableWidget.setRowCount(row_count)
-            self.tableWidget.setColumnCount(column_count + 1)  # Additional columns for tenderedAmount and delete button
+            self.tableWidget.setColumnCount(column_count + 2)  # Additional columns for tenderedAmount and delete button
 
             # Set the data into the table widget
             for row in range(row_count):
@@ -1783,6 +1790,7 @@ class ReportScreen1(QDialog):
                     item = QTableWidgetItem(str(rows[row][col]))
                     self.tableWidget.setItem(row, col, item)  
 
+                self.addViewButton()
                 self.addDeleteButtons()
 
             # To make the horizontal headers text aligned to the left of the table. 
@@ -1800,6 +1808,26 @@ class ReportScreen1(QDialog):
             if 'conn' in locals():
                 conn.close()
 
+
+    def addViewButton(self):
+        for row in range(self.tableWidget.rowCount()):
+            view_button = QToolButton()
+            view_button.setIcon(QIcon('icons/view.png'))
+            view_button.setIconSize(QSize(50, 50))  # Adjust the size as needed
+            view_button.setStyleSheet("QToolButton { border: none; background-color: transparent; }")
+            view_button.clicked.connect(lambda _, row=row: self.viewSale(row))
+            self.tableWidget.setCellWidget(row, 6, view_button)
+
+    def viewSale(self, row):
+        # Get the salesID from the selected row
+        sales_id = int(self.tableWidget.item(row, 0).text())
+
+        widget.removeWidget(self)
+
+        view_sale = ViewSaleScreen(self.user, sales_id)     
+        widget.addWidget(view_sale)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
     
     def addDeleteButtons(self):
         for row in range(self.tableWidget.rowCount()):
@@ -1808,7 +1836,7 @@ class ReportScreen1(QDialog):
             delete_button.setIconSize(QSize(50, 50))  # Adjust the size as needed
             delete_button.setStyleSheet("QToolButton { border: none; background-color: transparent; }")
             delete_button.clicked.connect(lambda _, row=row: self.deleteRow(row))
-            self.tableWidget.setCellWidget(row, 6, delete_button)
+            self.tableWidget.setCellWidget(row, 7, delete_button)
     
     
     def deleteRow(self, row):
@@ -1891,6 +1919,175 @@ class ReportScreen1(QDialog):
     def keyPressEvent(self, event):    #To ignore close event by "ESC" key
         if event.key() == Qt.Key_Escape:
             event.ignore()
+
+
+
+class ViewSaleScreen(QDialog):
+    def __init__(self, user, sales_id):
+        super(ViewSaleScreen, self).__init__()
+        self.user = user
+        self.sales_id = sales_id 
+        loadUi("ui/viewsalescreen.ui",self)
+        
+        #----------------------------------------------------------------
+        #Pixmap for the pngs images within the sidebar.
+        self.homeIcon.setPixmap(QPixmap('icons/home.png'))    
+        self.menuIcon.setPixmap(QPixmap('icons/menu.png'))
+        self.p_mIcon.setPixmap(QPixmap('icons/productm.png'))
+        self.reportIcon.setPixmap(QPixmap('icons/report2.png'))
+        self.settingIcon.setPixmap(QPixmap('icons/settings.png'))
+        self.logoutIcon.setPixmap(QPixmap('icons/shutdown.png'))
+        
+        #----------------------------------------------------------------
+        self.displaySalesData()
+        #TableWidget
+        self.tableWidget.setColumnWidth(0, 100) # Table index 0
+        self.tableWidget.setColumnWidth(1, 200) # Table index 1
+        self.tableWidget.setColumnWidth(2, 140) # Table index 2
+        self.displayTransaction()
+        #----------------------------------------------------------------
+        #Redirect Buttons
+        self.logoutbtn.clicked.connect(self.gotologin)     
+        self.menubtn.clicked.connect(self.gotocashierscreen)
+        self.homebtn.clicked.connect(self.gotohome)
+        self.p_managementbtn.clicked.connect(self.gotopmanagement)
+        self.settingsbtn.clicked.connect(self.gotosettings)
+        self.backbtn.clicked.connect(self.backfunction)
+        
+#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------
+    
+    def displaySalesData(self):
+        try:
+            conn = sqlite3.connect('projectse_db.db')
+            cur = conn.cursor()
+
+            # Retrieve transaction data based on salesID
+            query = f"SELECT Sales.id, Sales.name, Sales.orderType, Sales.date, " \
+                    f"printf('%.2f', Sales.Totalprice), printf('%.2f', Sales.tenderedAmount), " \
+                    f"printf('%.2f', Sales.changedAmount), Employee.name " \
+                    f"FROM Sales " \
+                    f"JOIN Employee ON Sales.employeeID = Employee.id " \
+                    f"WHERE Sales.id = ?"
+            cur.execute(query, (self.sales_id,))
+            transaction_data = cur.fetchone()
+
+            if transaction_data:
+                # Extract the data from the fetched row
+                (sales_id, customer_name, order_type, date, total_price, tendered_amount, change_amount, employee_name) = transaction_data
+
+                # Update QLabel texts with transaction data
+                self.salesID.setText(str(sales_id))
+                self.customerName.setText(customer_name)
+                self.orderType.setText(order_type)
+                self.date.setText(date)
+                self.payable_amount.setText(str(total_price))
+                self.amountPaid.setText(str(tendered_amount))
+                self.change.setText(str(change_amount))
+                self.employeeName.setText(employee_name)
+
+            conn.close()
+        except sqlite3.Error as e:
+            print("Error loading transaction data:", e)
+
+    
+    
+    def displayTransaction(self):
+        try:
+            conn = sqlite3.connect('projectse_db.db')
+            cur = conn.cursor()
+
+            query = "SELECT \"Transaction\".quantity, Product.name, printf('%.2f', \"Transaction\".price) " \
+                    "FROM \"Transaction\" " \
+                    "JOIN Product ON \"Transaction\".productID = Product.id " \
+                    "WHERE \"Transaction\".salesID = ?"
+
+            cur.execute(query, (self.sales_id,))
+            rows = cur.fetchall()
+            row_count = len(rows)
+
+            # Check if there are any rows
+            if row_count == 0:
+                return
+
+            column_count = len(rows[0])
+
+            # Resize the table widget to fit the data
+            self.tableWidget.setRowCount(row_count)
+            self.tableWidget.setColumnCount(column_count)  # Additional columns for tenderedAmount and delete button
+
+            # Set the data into the table widget
+            for row in range(row_count):
+                for col in range(column_count):
+                    item = QTableWidgetItem(str(rows[row][col]))
+                    self.tableWidget.setItem(row, col, item)  
+
+            # To make the horizontal headers text aligned to the left of the table. 
+            for row in range(self.tableWidget.rowCount()):
+                for column in range(self.tableWidget.columnCount()):
+                    item = self.tableWidget.item(row, column)
+                    if item is not None:
+                        item.setFont(QFont("Roboto", 11))  # Set font size
+                        item.setTextAlignment(Qt.AlignCenter)  # Center-align text horizontally and vertically
+                                
+        except sqlite3.Error as err:
+            print(f"Error: {err}")
+
+        finally:
+            if 'conn' in locals():
+                conn.close()
+
+    
+    def backfunction(self):
+        widget.removeWidget(self)
+        back = ReportScreen1(self.user)
+        widget.addWidget(back)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+        
+    def gotocashierscreen(self): #To cashier screen if menu button is clicked.
+        widget.removeWidget(self)
+
+        menu = AdminCashierScreen(self.user)
+        widget.addWidget(menu)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+
+    def gotopmanagement(self):
+        widget.removeWidget(self)
+
+        product = PManagementScreen(self.user)     
+        widget.addWidget(product)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
+        
+    def gotohome(self): #to home profile screen
+        widget.removeWidget(self)
+        
+        home = HomeScreen(self.user)     
+        widget.addWidget(home)
+        widget.setCurrentIndex(widget.currentIndex()+1) 
+        
+    def gotologin(self):  #Direct to the login screen if logout button is clicked.
+        widget.removeWidget(self)
+        
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)    
+    
+        
+    def gotosettings(self): #to user screen
+        widget.removeWidget(self)
+
+        settings = SettingScreen(self.user)     
+        widget.addWidget(settings)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+        
+
+    def keyPressEvent(self, event):    #To ignore close event by "ESC" key
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+
 
 class ReportScreen2(QDialog):
     def __init__(self, user):

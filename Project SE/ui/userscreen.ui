@@ -965,6 +965,35 @@ background-color: rgba(255, 167, 25, 0.1);
      <string>S. Management</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>261</x>
+      <y>230</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+   
+	color: rgba(0, 0, 0, 0.6);
+    font-family: &quot;Roboto&quot;;
+    font-size: 10px;
+    font-weight: 400;
+
+}</string>
+    </property>
+    <property name="text">
+     <string>(Coming Soon)</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+    <property name="wordWrap">
+     <bool>false</bool>
+    </property>
+   </widget>
    <zorder>whitebg_2</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
@@ -997,6 +1026,7 @@ background-color: rgba(255, 167, 25, 0.1);
    <zorder>whitebg_3</zorder>
    <zorder>tableWidget</zorder>
    <zorder>reportbtn</zorder>
+   <zorder>label_9</zorder>
   </widget>
  </widget>
  <resources>

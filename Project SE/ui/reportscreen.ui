@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>801</height>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -726,6 +726,11 @@ QTableWidget#tableWidget QHeaderView::section {
     <column>
      <property name="text">
       <string>Type of Order</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string/>
      </property>
     </column>
     <column>

@@ -430,37 +430,6 @@ background-color: rgba(255, 167, 25, 0.1);
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="voidbtn">
-    <property name="geometry">
-     <rect>
-      <x>730</x>
-      <y>750</y>
-      <width>151</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton{
-	color: #FFFFFF;
-    background-color: #FB9722;
-    border: 1px solid #888888;
-    border-radius: 20px;
-	font-family: 'Inter';
-    font-size: 17px;
-    font-weight: 400;
-}
-QPushButton:hover {
-	background-color: rgb(255, 167, 25);
-}
-
-QPushButton:pressed {
- 	background-color: #FB9722;
-}</string>
-    </property>
-    <property name="text">
-     <string>Void</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="title_3">
     <property name="geometry">
      <rect>
@@ -514,6 +483,9 @@ QTableWidget#tableWidget2 QHeaderView::section {
 }       
 </string>
     </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
+    </property>
     <attribute name="horizontalHeaderStretchLastSection">
      <bool>true</bool>
     </attribute>
@@ -546,7 +518,7 @@ QTableWidget#tableWidget2 QHeaderView::section {
     <property name="geometry">
      <rect>
       <x>900</x>
-      <y>70</y>
+      <y>69</y>
       <width>121</width>
       <height>30</height>
      </rect>
@@ -555,7 +527,7 @@ QTableWidget#tableWidget2 QHeaderView::section {
      <string notr="true">QLabel{
     color: #000000;
     font-family: 'Roboto';
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
 }</string>
     </property>
@@ -566,17 +538,17 @@ QTableWidget#tableWidget2 QHeaderView::section {
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="userfield">
+   <widget class="QLineEdit" name="customerName_field">
     <property name="geometry">
      <rect>
       <x>910</x>
-      <y>92</y>
+      <y>93</y>
       <width>231</width>
-      <height>20</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLineEdit#userfield {
+     <string notr="true">QLineEdit {
 	padding-left: 10px;
     border-radius: 10px;
     border: 1.5px solid rgb(0, 0, 0);  
@@ -601,7 +573,7 @@ QTableWidget#tableWidget2 QHeaderView::section {
     <property name="geometry">
      <rect>
       <x>900</x>
-      <y>112</y>
+      <y>114</y>
       <width>91</width>
       <height>21</height>
      </rect>
@@ -610,7 +582,7 @@ QTableWidget#tableWidget2 QHeaderView::section {
      <string notr="true">QLabel{
     color: #000000;
     font-family: 'Roboto';
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
 }</string>
     </property>
@@ -637,18 +609,18 @@ QTableWidget#tableWidget2 QHeaderView::section {
     <property name="title">
      <string/>
     </property>
-    <widget class="QRadioButton" name="dinebtn">
+    <widget class="QRadioButton" name="dineinbtn">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>0</y>
+       <x>6</x>
+       <y>3</y>
        <width>61</width>
-       <height>17</height>
+       <height>16</height>
       </rect>
      </property>
      <property name="styleSheet">
       <string notr="true">font-family:'Roboto';
-font-size:11px;
+font-size:12px;
 font-weight: 500;
 border:none;</string>
      </property>
@@ -656,18 +628,18 @@ border:none;</string>
       <string>Dine-in</string>
      </property>
     </widget>
-    <widget class="QRadioButton" name="takebtn">
+    <widget class="QRadioButton" name="takeoutbtn">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>0</y>
+       <x>78</x>
+       <y>3</y>
        <width>71</width>
        <height>16</height>
       </rect>
      </property>
      <property name="styleSheet">
       <string notr="true">font-family:'Roboto';
-font-size:11px;
+font-size:12px;
 font-weight: 500;
 border:none;</string>
      </property>
@@ -676,7 +648,7 @@ border:none;</string>
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="addbtn">
+   <widget class="QPushButton" name="proceedbtn">
     <property name="geometry">
      <rect>
       <x>1030</x>
@@ -704,7 +676,7 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>Proceed</string>
+     <string>Generate Sale!</string>
     </property>
    </widget>
    <widget class="QLabel" name="userlistlabel_9">
@@ -735,9 +707,9 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>900</x>
-      <y>650</y>
+      <y>648</y>
       <width>91</width>
-      <height>30</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -759,9 +731,9 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>900</x>
-      <y>680</y>
+      <y>675</y>
       <width>81</width>
-      <height>30</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1066,7 +1038,7 @@ QTableWidget#tableWidget QHeaderView::section {
      <number>100</number>
     </attribute>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>100</number>
+     <number>450</number>
     </attribute>
     <attribute name="horizontalHeaderHighlightSections">
      <bool>false</bool>
@@ -1094,20 +1066,20 @@ QTableWidget#tableWidget QHeaderView::section {
    <widget class="QLineEdit" name="tendered_field">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>660</y>
-      <width>141</width>
+      <x>1090</x>
+      <y>648</y>
+      <width>101</width>
       <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLineEdit#userfield {
-	padding-left: 10px;
-    border-radius: 10px;
-    border: 1.5px solid rgb(0, 0, 0);  
+     <string notr="true">QLineEdit{
+	padding-left: 8px;
+    border-radius: 5px;
+    border: 1px solid rgb(0, 0, 0);  
     background-color: rgba(255, 255, 255, 240);
     font-family: 'Roboto';
-	font-size: 13px;
+	font-size: 15px;
 	font-weight: 400;
 }
 </string>
@@ -1122,30 +1094,52 @@ QTableWidget#tableWidget QHeaderView::section {
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="payable_amount">
     <property name="geometry">
      <rect>
-      <x>1110</x>
+      <x>1099</x>
       <y>610</y>
-      <width>81</width>
+      <width>83</width>
       <height>31</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color: #000000;
+    font-family: 'Roboto';
+    font-size: 20px;
+    font-weight: 500;
+}</string>
+    </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>0.00</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
+   <widget class="QLabel" name="change">
     <property name="geometry">
      <rect>
-      <x>1110</x>
-      <y>680</y>
-      <width>61</width>
+      <x>1060</x>
+      <y>675</y>
+      <width>121</width>
       <height>21</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    color: #000000;
+    font-family: 'Roboto';
+    font-size: 16px;
+    font-weight: 500;
+}</string>
+    </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>0.00</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="imgplaceholder">
@@ -1178,15 +1172,14 @@ QTableWidget#tableWidget QHeaderView::section {
    <zorder>label_2</zorder>
    <zorder>menuIcon</zorder>
    <zorder>menubtn</zorder>
-   <zorder>voidbtn</zorder>
    <zorder>title_3</zorder>
    <zorder>title</zorder>
    <zorder>tableWidget2</zorder>
    <zorder>userlistlabel_7</zorder>
-   <zorder>userfield</zorder>
+   <zorder>customerName_field</zorder>
    <zorder>userlistlabel_8</zorder>
    <zorder>groupBox</zorder>
-   <zorder>addbtn</zorder>
+   <zorder>proceedbtn</zorder>
    <zorder>userlistlabel_9</zorder>
    <zorder>userlistlabel_10</zorder>
    <zorder>userlistlabel_11</zorder>
@@ -1198,8 +1191,8 @@ QTableWidget#tableWidget QHeaderView::section {
    <zorder>extrasbtn</zorder>
    <zorder>tableWidget</zorder>
    <zorder>tendered_field</zorder>
-   <zorder>label</zorder>
-   <zorder>label_3</zorder>
+   <zorder>payable_amount</zorder>
+   <zorder>change</zorder>
    <zorder>imgplaceholder</zorder>
   </widget>
  </widget>

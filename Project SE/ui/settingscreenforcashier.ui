@@ -583,6 +583,35 @@ color: rgba(0, 0, 0, 80);
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>261</x>
+      <y>230</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+   
+	color: rgba(0, 0, 0, 0.6);
+    font-family: &quot;Roboto&quot;;
+    font-size: 10px;
+    font-weight: 400;
+
+}</string>
+    </property>
+    <property name="text">
+     <string>(Coming Soon)</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+    <property name="wordWrap">
+     <bool>false</bool>
+    </property>
+   </widget>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
    <zorder>whitebg</zorder>
@@ -603,6 +632,7 @@ color: rgba(0, 0, 0, 80);
    <zorder>settingsbtn</zorder>
    <zorder>title_3</zorder>
    <zorder>title</zorder>
+   <zorder>label_11</zorder>
   </widget>
  </widget>
  <resources>

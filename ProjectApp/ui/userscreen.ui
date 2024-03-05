@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
+    <width>1199</width>
     <height>799</height>
    </rect>
   </property>
@@ -134,30 +134,6 @@ border-radius: 5px;  </string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="userlistlabel">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>110</y>
-      <width>171</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel{
-    color: #000000;
-    font-family: 'Inter';
-    font-size: 32px;
-    font-weight: 500;
-}</string>
-    </property>
-    <property name="text">
-     <string>User List:</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="userprofIcon">
     <property name="geometry">
      <rect>
@@ -279,7 +255,7 @@ border-radius: 5px;  </string>
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>180</y>
+      <y>170</y>
       <width>661</width>
       <height>431</height>
      </rect>
@@ -479,36 +455,6 @@ background-color: rgba(255, 167, 25, 0.1);
     </property>
     <property name="text">
      <string>Menu</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="reportbtn">
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>395</y>
-      <width>81</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton{
-    color: rgba(0,0,0, 0.5);
-    font-family: 'Inter';
-    font-size: 13px;
-    font-weight: 500;
-	border:none;
-}
-
-QPushButton:hover{
-color: #FB9722;
-border: 2px solid #FB9722;
-border-radius: 8px;
-background-color: rgba(255, 167, 25, 0.1);
-}
-</string>
-    </property>
-    <property name="text">
-     <string>Reports</string>
     </property>
    </widget>
    <widget class="QLabel" name="menuIcon">
@@ -774,10 +720,10 @@ background-color: rgba(255, 167, 25, 0.1);
    <widget class="QPushButton" name="editbtn">
     <property name="geometry">
      <rect>
-      <x>1060</x>
+      <x>1070</x>
       <y>120</y>
-      <width>51</width>
-      <height>41</height>
+      <width>31</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -925,13 +871,37 @@ color: rgba(0, 0, 0, 80);
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="userlistlabel">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>100</y>
+      <width>171</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel#userlistlabel{
+    color: #000000;
+    font-family: 'Inter';
+    font-size: 32px;
+    font-weight: 500;
+}</string>
+    </property>
+    <property name="text">
+     <string>User List:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
    <widget class="QLabel" name="userlistlabelshadow">
     <property name="geometry">
      <rect>
-      <x>381</x>
-      <y>111</y>
+      <x>382</x>
+      <y>102</y>
       <width>171</width>
-      <height>61</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -949,6 +919,81 @@ color: rgba(0, 0, 0, 80);
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="whitebg_3">
+    <property name="geometry">
+     <rect>
+      <x>441</x>
+      <y>172</y>
+      <width>661</width>
+      <height>431</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, 0.4);
+border-radius: 2px;  </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="reportbtn">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>395</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+    color: rgba(0,0,0, 0.5);
+    font-family: 'Inter';
+    font-size: 12px;
+    font-weight: 500;
+	border:none;
+}
+
+QPushButton:hover{
+color: #FB9722;
+border: 2px solid #FB9722;
+border-radius: 8px;
+background-color: rgba(255, 167, 25, 0.1);
+}</string>
+    </property>
+    <property name="text">
+     <string>S. Management</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>261</x>
+      <y>230</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+   
+	color: rgba(0, 0, 0, 0.6);
+    font-family: &quot;Roboto&quot;;
+    font-size: 10px;
+    font-weight: 400;
+
+}</string>
+    </property>
+    <property name="text">
+     <string>(Coming Soon)</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+    <property name="wordWrap">
+     <bool>false</bool>
+    </property>
+   </widget>
    <zorder>whitebg_2</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
@@ -958,12 +1003,10 @@ color: rgba(0, 0, 0, 80);
    <zorder>appearanceIcon</zorder>
    <zorder>usersIcon</zorder>
    <zorder>p_mIcon</zorder>
-   <zorder>tableWidget</zorder>
    <zorder>logoutbtn</zorder>
    <zorder>p_managementbtn</zorder>
    <zorder>homebtn</zorder>
    <zorder>menubtn</zorder>
-   <zorder>reportbtn</zorder>
    <zorder>menuIcon</zorder>
    <zorder>homeIcon</zorder>
    <zorder>reportIcon</zorder>
@@ -978,8 +1021,12 @@ color: rgba(0, 0, 0, 80);
    <zorder>settingsbtn</zorder>
    <zorder>title_3</zorder>
    <zorder>title</zorder>
-   <zorder>userlistlabelshadow</zorder>
    <zorder>userlistlabel</zorder>
+   <zorder>userlistlabelshadow</zorder>
+   <zorder>whitebg_3</zorder>
+   <zorder>tableWidget</zorder>
+   <zorder>reportbtn</zorder>
+   <zorder>label_9</zorder>
   </widget>
  </widget>
  <resources>

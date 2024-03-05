@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>801</height>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,8 +18,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1211</width>
-     <height>801</height>
+     <width>1200</width>
+     <height>800</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -398,9 +398,9 @@ background-color: rgba(255, 167, 25, 0.1);
    <widget class="QPushButton" name="reportbtn">
     <property name="geometry">
      <rect>
-      <x>15</x>
+      <x>5</x>
       <y>395</y>
-      <width>81</width>
+      <width>101</width>
       <height>31</height>
      </rect>
     </property>
@@ -408,14 +408,14 @@ background-color: rgba(255, 167, 25, 0.1);
      <string notr="true">QPushButton{
     color: #FB9722;;
     font-family: 'Inter';
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
 	border:none;
 }
 </string>
     </property>
     <property name="text">
-     <string>Reports</string>
+     <string>S. Management</string>
     </property>
    </widget>
    <widget class="QPushButton" name="homebtn">
@@ -604,12 +604,12 @@ background-color: rgba(255, 167, 25, 0.1);
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLabel#listofsale{
+     <string notr="true">
     color: #000000;
     font-family: 'Inter';
     font-size: 32px;
     font-weight: 500;
-}</string>
+</string>
     </property>
     <property name="text">
      <string>List of Sales:</string>
@@ -626,6 +626,21 @@ background-color: rgba(255, 167, 25, 0.1);
       <width>951</width>
       <height>391</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true"/>
+    </property>
+    <property name="statusTip">
+     <string notr="true"/>
+    </property>
+    <property name="whatsThis">
+     <string notr="true"/>
+    </property>
+    <property name="accessibleName">
+     <string notr="true"/>
+    </property>
+    <property name="accessibleDescription">
+     <string notr="true"/>
     </property>
     <property name="styleSheet">
      <string notr="true">::item:hover {
@@ -647,14 +662,23 @@ QTableWidget#tableWidget QHeaderView::section {
     <property name="frameShadow">
      <enum>QFrame::Plain</enum>
     </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
+    </property>
     <property name="alternatingRowColors">
      <bool>true</bool>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::NoSelection</enum>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
     </property>
     <property name="showGrid">
      <bool>true</bool>
     </property>
     <property name="gridStyle">
-     <enum>Qt::SolidLine</enum>
+     <enum>Qt::DashDotDotLine</enum>
     </property>
     <property name="sortingEnabled">
      <bool>false</bool>
@@ -663,13 +687,13 @@ QTableWidget#tableWidget QHeaderView::section {
      <bool>true</bool>
     </attribute>
     <attribute name="horizontalHeaderMinimumSectionSize">
-     <number>100</number>
+     <number>50</number>
     </attribute>
     <attribute name="horizontalHeaderDefaultSectionSize">
      <number>150</number>
     </attribute>
     <attribute name="horizontalHeaderStretchLastSection">
-     <bool>true</bool>
+     <bool>false</bool>
     </attribute>
     <attribute name="verticalHeaderVisible">
      <bool>false</bool>
@@ -691,16 +715,36 @@ QTableWidget#tableWidget QHeaderView::section {
     </column>
     <column>
      <property name="text">
+      <string>Amount Paid</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Change Amount</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
       <string>Type of Order</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string/>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string/>
      </property>
     </column>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>15</x>
+      <x>5</x>
       <y>350</y>
-      <width>81</width>
+      <width>101</width>
       <height>76</height>
      </rect>
     </property>
@@ -763,6 +807,48 @@ border-radius: 10px;  </string>
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="whitebg_3">
+    <property name="geometry">
+     <rect>
+      <x>162</x>
+      <y>252</y>
+      <width>951</width>
+      <height>391</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0, 0.4);
+border-radius: 2px;  </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="listofsale_2">
+    <property name="geometry">
+     <rect>
+      <x>162</x>
+      <y>191</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgba(0, 0, 0, 0.4);
+    font-family: 'Inter';
+    font-size: 32px;
+    font-weight: 500;
+</string>
+    </property>
+    <property name="text">
+     <string>List of Sales:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <zorder>listofsale_2</zorder>
+   <zorder>whitebg_3</zorder>
    <zorder>whitebgshadow</zorder>
    <zorder>sidebar</zorder>
    <zorder>titlebar</zorder>
