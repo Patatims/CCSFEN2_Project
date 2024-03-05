@@ -915,7 +915,7 @@ QTableWidget#tableWidget QHeaderView::section {
 }</string>
     </property>
     <property name="text">
-     <string>Process By:</string>
+     <string>Processed By:</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

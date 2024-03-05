@@ -3738,7 +3738,6 @@ class NewPasswordScreen(QDialog):
             event.ignore()
 
 
-
 #main
 app = QApplication(sys.argv)
 app.setWindowIcon(QIcon('icon.ico'))
