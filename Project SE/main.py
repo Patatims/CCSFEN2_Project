@@ -451,6 +451,8 @@ class AdminCashierScreen(QDialog):
        
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/lugaw.png'))
+        self.tableWidget.setRowCount(0)
+
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 1 AND status = 'Available'"
         cur.execute(query)
@@ -480,6 +482,8 @@ class AdminCashierScreen(QDialog):
         
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/mami.png'))
+        self.tableWidget.setRowCount(0)
+
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 2 AND status = 'Available'"
         cur.execute(query)
@@ -508,6 +512,8 @@ class AdminCashierScreen(QDialog):
         
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/maindish.png'))
+        self.tableWidget.setRowCount(0)
+
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 3 AND status = 'Available'"
         cur.execute(query)
@@ -536,6 +542,8 @@ class AdminCashierScreen(QDialog):
         
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/desserts.png'))
+        self.tableWidget.setRowCount(0)
+
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 4 AND status = 'Available'"
         cur.execute(query)
@@ -551,6 +559,8 @@ class AdminCashierScreen(QDialog):
         # Resize the table widget to fit the data
         self.tableWidget.setRowCount(row_count)
         self.tableWidget.setColumnCount(column_count)
+        self.tableWidget.setRowCount(0)
+
 
         # Set the data into the table widget
         for row in range(row_count):
@@ -564,6 +574,8 @@ class AdminCashierScreen(QDialog):
         
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/beverages.png'))
+        self.tableWidget.setRowCount(0)
+
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 5 AND status = 'Available'"
         cur.execute(query)
@@ -592,6 +604,8 @@ class AdminCashierScreen(QDialog):
        
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/extra.png'))
+        self.tableWidget.setRowCount(0)
+
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 6 AND status = 'Available'"
         cur.execute(query)
@@ -1406,6 +1420,9 @@ class PManagementScreen(QDialog):
                     
 
     def displayAllProductList(self):  #To load the data from database to the pyqt table
+        self.tableWidget.setRowCount(0)
+        
+        
         query = "SELECT id, name, printf('%.2f', price), status FROM Product ORDER BY categoryID ASC"
         cur.execute(query)
         rows = cur.fetchall()
@@ -1437,6 +1454,8 @@ class PManagementScreen(QDialog):
 
 
     def displayLugawProductList(self):  #To load the data from database to the pyqt table
+        self.tableWidget.setRowCount(0)
+        
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 1"
         cur.execute(query)
         rows = cur.fetchall()
@@ -1461,6 +1480,9 @@ class PManagementScreen(QDialog):
         self.tableFontModify()
                                  
     def displayMamiProductList(self):  #To load the data from database to the pyqt table
+        self.tableWidget.setRowCount(0)
+        
+        
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 2"
         cur.execute(query)
         rows = cur.fetchall()
@@ -1485,6 +1507,9 @@ class PManagementScreen(QDialog):
         self.tableFontModify()
                     
     def displayMainDishProductList(self):  #To load the data from database to the pyqt table
+        self.tableWidget.setRowCount(0)
+        
+        
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 3"
         cur.execute(query)
         rows = cur.fetchall()
@@ -1509,6 +1534,9 @@ class PManagementScreen(QDialog):
         self.tableFontModify()
                     
     def displayDessertsProductList(self):  #To load the data from database to the pyqt table
+        self.tableWidget.setRowCount(0)
+        
+        
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 4"
         cur.execute(query)
         rows = cur.fetchall()
@@ -1533,6 +1561,9 @@ class PManagementScreen(QDialog):
         self.tableFontModify()
                     
     def displayBeveragesProductList(self):  #To load the data from database to the pyqt table
+        self.tableWidget.setRowCount(0)
+        
+        
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 5"
         cur.execute(query)
         rows = cur.fetchall()
@@ -1557,6 +1588,9 @@ class PManagementScreen(QDialog):
         self.tableFontModify()
                     
     def displayExtrasProductList(self):  #To load the data from database to the pyqt table
+        self.tableWidget.setRowCount(0)
+        
+        
         query = "SELECT id, name, printf('%.2f', price), status FROM Product WHERE categoryID = 6"
         cur.execute(query)
         rows = cur.fetchall()
@@ -3171,6 +3205,7 @@ class CashierScreen(QDialog):
        
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/lugaw.png'))
+        self.tableWidget.setRowCount(0)
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 1 AND status = 'Available'"
         cur.execute(query)
@@ -3205,6 +3240,7 @@ class CashierScreen(QDialog):
         
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/mami.png'))
+        self.tableWidget.setRowCount(0)
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 2 AND status = 'Available'"
         cur.execute(query)
@@ -3238,6 +3274,7 @@ class CashierScreen(QDialog):
         
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/maindish.png'))
+        self.tableWidget.setRowCount(0)
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 3 AND status = 'Available'"
         cur.execute(query)
@@ -3271,6 +3308,7 @@ class CashierScreen(QDialog):
         
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/desserts.png'))
+        self.tableWidget.setRowCount(0)
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 4 AND status = 'Available'"
         cur.execute(query)
@@ -3304,6 +3342,7 @@ class CashierScreen(QDialog):
         
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/beverages.png'))
+        self.tableWidget.setRowCount(0)
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 5 AND status = 'Available'"
         cur.execute(query)
@@ -3337,6 +3376,7 @@ class CashierScreen(QDialog):
        
         self.clearTableWidgetSelection()
         self.imgplaceholder.setPixmap(QPixmap('icons/extra.png'))
+        self.tableWidget.setRowCount(0)
         
         query = "SELECT name, printf('%.2f', price) FROM Product WHERE categoryID = 6 AND status = 'Available'"
         cur.execute(query)

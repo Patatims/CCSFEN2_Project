@@ -181,7 +181,7 @@ QPushButton:pressed {
 </string>
     </property>
     <property name="echoMode">
-     <enum>QLineEdit::Password</enum>
+     <enum>QLineEdit::Normal</enum>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
