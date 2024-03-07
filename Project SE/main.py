@@ -1628,6 +1628,7 @@ class PManagementScreen(QDialog):
             conn.commit()
             
             self.tableWidget.removeRow(row_index)  
+            QMessageBox.information(self, "Success", "A product has been successfully deleted.")
             
         except sqlite3.Error as err:
             print(f"Error: {err}")     
@@ -1886,6 +1887,7 @@ class ReportScreen1(QDialog):
             
             
             self.tableWidget.removeRow(row)
+            QMessageBox.information(self, "Success", "A sale has been successfully deleted.")
             self.addDeleteButtons()
 
         except sqlite3.Error as err:
