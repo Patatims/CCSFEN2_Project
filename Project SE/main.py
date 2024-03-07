@@ -559,7 +559,6 @@ class AdminCashierScreen(QDialog):
         # Resize the table widget to fit the data
         self.tableWidget.setRowCount(row_count)
         self.tableWidget.setColumnCount(column_count)
-        self.tableWidget.setRowCount(0)
 
 
         # Set the data into the table widget
