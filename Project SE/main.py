@@ -2160,6 +2160,7 @@ class ReportScreen2(QDialog):
     def displaydailySales(self):
 
         selected_date = self.dateEdit.date().toString(Qt.ISODate)
+        self.tableWidget.setRowCount(0)
 
         try:
             conn = sqlite3.connect('projectse_db.db')

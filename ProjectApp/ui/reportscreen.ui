@@ -730,7 +730,7 @@ QTableWidget#tableWidget QHeaderView::section {
     </column>
     <column>
      <property name="text">
-      <string/>
+      <string>View</string>
      </property>
     </column>
     <column>
