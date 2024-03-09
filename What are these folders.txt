@@ -1,0 +1,24 @@
+------------------------ CCSFEN2_PROJECT------------------------
+
+This folder contains the necessary components for the Oriental "DUA" Restaurant Cashier System.
+
+Folder Structure:
+
+1. Database Backup: This folder contains backups of the database used by the application. It can be used to reset the database to a previous state if needed.
+
+2. Project SE: This folder contains the source code of the application. Developers can modify and enhance the application by editing the files within this folder.
+
+3. ProjectApp: This folder contains the executable version of the application generated using PyInstaller. Users can run the application directly from this folder without needing to install Python or any dependencies.
+
+How to Use:
+
+- If you need to reset the database to a previous state, navigate to the Database Backup folder and restore the desired backup file using your preferred database management tool.
+
+- To view or modify the source code of the application, navigate to the Project SE folder and open the files using a text editor or integrated development environment (IDE) such as Visual Studio Code or PyCharm.
+
+- To run the executable version of the application, navigate to the ProjectApp folder and double-click on the executable file. The application will launch, allowing users to access its features without requiring Python or additional dependencies.
+
+Please refer to the README file within the "PROJECT SE" Folder
+
+For any questions or assistance, please contact CodeZen.
+
